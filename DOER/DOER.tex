@@ -1,0 +1,50 @@
+\documentclass[12pt]{article}
+\usepackage{parskip}
+\usepackage[a4paper, portrait, margin=1in, headheight=0.7in]{geometry}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\usepackage{fancyhdr}
+\addbibresource{citations.bib}
+
+\title{CS4099 - DOER\\Rubik's Cube Variant Solvers}
+\author{Student ID: 210020136}
+\date{September 26, 2024}
+
+\pagestyle{fancy}
+\fancyhead[L]{CS4099 - DOER}
+\fancyhead[R]{Student ID: 210020136}
+
+\begin{document}
+\maketitle
+
+\section{Description}
+The Rubik's Cube \cite{rubikscube} is the most well-known combination puzzle of all time, and has led to the creation of a large number of variants as part of a family of puzzles called "Twisty Puzzles". One such puzzle in this family is the Kilominx \cite{kilominx}, a 2x2 dodecahedron shaped puzzle with 12 faces. While the Rubik's Cube has been widely researched, leading to the creation of optimal solvers and the proof that "God's Number" (the minimum number of moves to solve \textit{any} cube state) is 20 \cite{godsnumber}, the Kilominx has not been as widely studied.
+
+This project aims to create an optimal solver for the Kilominx which can guarantee a solution in as few moves as possible. In addition to this, the project will also aim to create a simple web application which will allow users to interact with and learn how to solve a Kilominx (displayed using a 3D model).
+
+\section{Objectives}
+\subsection{Primary Objectives}
+\begin{itemize}
+    \item Create an optimal solver for the Kilominx, guaranteeing a solution in as few moves as possible. The solver should make use of algorithms and techniques used in Rubik's Cube solvers, such as Korf's algorithm \cite{korf} (which uses a combination of IDA* and Pattern Databases).
+    \item Create a simple web application which allows users to interact with a 3D model of a Kilominx and input a state to get a solution using both the optimal solver and a simple beginner's solution. The beginner's solution should provide information about each phase of the solve and why they are being made.
+\end{itemize}
+
+\subsection{Secondary Objectives}
+\begin{itemize}
+    \item Attempt to find tighter bounds on God's Number for the Kilominx \cite{kilominxgodbounds}.
+    \item Survey users about their experience with the web application to gather feedback on its usefulness how it can be improved.
+\end{itemize}
+
+\section{Ethics}
+As this project involves surveying members of the University and collecting anonymous data about their experience with an artefact (the web application), the Artefact Evaluation form has been filled out and submitted. The project will be covered by the ethical application CS15727.
+
+\section{Resources}
+No additional resources will be needed for this project.
+
+\section{Risks}
+One potential risk is that the solver may not be optimal, i.e. it will not be able to guarantee a solution in as few moves as possible. This could be due to the greater complexity of the Kilominx compared to the Rubik's Cube, or due to other differences between the two puzzles which will prevent the use of algorithms used in Rubik's Cube solvers. In this case, the project will instead aim to create a solver which can guarantee a solution in a reasonable number of moves.
+
+Another potential risk is that the 3D model in the web application may not be able to accurately represent the Kilominx, or may not be able to be interacted with in a way that is useful for the user. In this case, the project will aim to create some other user interface which will still allow the user to input a state and get a solution.
+
+\printbibliography
+
+\end{document}
