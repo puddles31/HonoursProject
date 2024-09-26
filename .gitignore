@@ -1,0 +1,5 @@
+# LaTeX build files
+DOER/
+!DOER/DOER.tex
+!DOER/citations.bib
+!DOER/DOER.pdf
