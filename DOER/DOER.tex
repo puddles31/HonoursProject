@@ -7,12 +7,12 @@
 \addbibresource{citations.bib}
 
 \title{CS4099 - DOER\\Rubik's Cube Variant Solvers}
-\author{Student ID: 210020136}
+\author{Samuel Borg}
 \date{September 26, 2024}
 
 \pagestyle{fancy}
 \fancyhead[L]{CS4099 - DOER}
-\fancyhead[R]{Student ID: 210020136}
+\fancyhead[R]{Samuel Borg}
 
 \begin{document}
 \maketitle
@@ -26,13 +26,18 @@ This project aims to create an optimal solver for the Kilominx which can guarant
 \subsection{Primary Objectives}
 \begin{itemize}
     \item Create an optimal solver for the Kilominx, guaranteeing a solution in as few moves as possible. The solver should make use of algorithms and techniques used in Rubik's Cube solvers, such as Korf's algorithm \cite{korf} (which uses a combination of IDA* and Pattern Databases).
-    \item Create a simple web application which allows users to interact with a 3D model of a Kilominx and input a state to get a solution using both the optimal solver and a simple beginner's solution. The beginner's solution should provide information about each phase of the solve and why they are being made.
+    \item Create a simple web application which allows users to interact with a 3D model \cite{3dmodel} of a Kilominx.
+    \begin{itemize}
+        \item Allow users to input a puzzle state, which can then be solved using the optimal solver.
+        \item Allow users to choose between using the optimal solver and a simple beginner's solution. The beginner's solution should provide information about each phase of the solve and why they are being made.
+    \end{itemize}
 \end{itemize}
 
 \subsection{Secondary Objectives}
 \begin{itemize}
     \item Attempt to find tighter bounds on God's Number for the Kilominx \cite{kilominxgodbounds}.
     \item Survey users about their experience with the web application to gather feedback on its usefulness and how it can be improved.
+    \item Investigate better ways to allow users to input their puzzle state into the web application (e.g. by using a camera to scan the puzzle).
 \end{itemize}
 
 \section{Ethics}
