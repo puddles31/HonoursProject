@@ -1,44 +1,34 @@
 package CubeAlgorithm;
 import java.util.Scanner;
 
-/**
- * Cube
- */
+
 public class Cube {
 
     enum Colour {
-        W, R, G, B, Y, O
+        W, Y, R, O, G, B
     };
 
-    final int EDGE_UL = 0,
-              EDGE_UF = 1,
-              EDGE_UR = 2,
-              EDGE_UB = 3,
-              EDGE_FL = 4,
-              EDGE_FR = 5,
-              EDGE_BR = 6,
-              EDGE_BL = 7,
+    final int EDGE_UB = 0,
+              EDGE_UR = 1,
+              EDGE_UF = 2,
+              EDGE_UL = 3,
+              EDGE_FR = 4,
+              EDGE_FL = 5,
+              EDGE_BL = 6,
+              EDGE_BR = 7,
               EDGE_DF = 8,
-              EDGE_DR = 9,
+              EDGE_DL = 9,
               EDGE_DB = 10,
-              EDGE_DL = 11;
+              EDGE_DR = 11;
 
-    final int CORNER_UFL = 0,
-              CORNER_UFR = 1,
-              CORNER_UBR = 2,
-              CORNER_UBL = 3,
-              CORNER_DFL = 4,
-              CORNER_DFR = 5,
-              CORNER_DBR = 6,
-              CORNER_DBL = 7;
-
-    /*
-     
-    Todo:
-        - test with an interactive mode
-        - begin pattern databases / lehmer codes
-     */
-
+    final int CORNER_ULB = 0,
+              CORNER_URB = 1,
+              CORNER_URF = 2,
+              CORNER_ULF = 3,
+              CORNER_DLF = 4,
+              CORNER_DLB = 5,
+              CORNER_DRB = 6,
+              CORNER_DRF = 7;
 
 
     public static void main(String[] args) {
@@ -131,17 +121,24 @@ public class Cube {
 
     class Cubie {
         // Edge cubies are indexed from 0 to 11 in the following order, with the following initial colours:
-        // UL, UF, UR, UB, FL, FR, BR, BL, DF, DR, DB, DL
-        // WG, WR, WB, WY, RG, RB, YB, YG, OR, OB, OY, OG
+        // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11
+        // UB, UR, UF, UL, FR, FL, BL, BR, DF, DL, DB, DR
+        // WO, WB, WR, WG, RB, RG, OG, OB, YR, YG, YO, YB
 
         // Edge cubies have an orientation of 0 (oriented) or 1 (flipped)
         // (an edge is "oriented" if it can be solved using only R, L, U, D moves)
+        // (edges are flipped after quarter turns on the F and B faces)
 
         // Corner cubies are indexed from 0 to 7 in the following order, with the following initial colours:
-        // UFL, UFR, UBR, UBL, DFL, DFR, DBR, DBL
-        // WRG, WRB, WYB, WYG, ORG, ORB, OYB, OYG
+        // 0,   1,   2,   3,   4,   5,   6,   7
+        // ULB, URB, URF, ULF, DLF, DLB, DRB, DRF
+        // WGO, WBO, WBR, WGR, YGR, YGO, YBO, YBR
 
-        // Corner cubies have an orientation of 0 (oriented - red/orange on top/bottom), 1 (red/orange clockwise from nearest up/down face), or 2 (red/orange counter-clockwise from nearest up/down face)
+        // (note: corners that are an odd number of quarter turns away are also an odd number of indices apart
+        //  e.g. ULB can turn to corners URB, ULF and DLB in 1 turn, and to DRF in 3 turns;
+        //  ULB is index 0 (even), so URB (1), ULF (3), DLB (5) and DRF (7) are all an odd number of indices away)
+
+        // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
 
         int index, orientation;
     }
@@ -170,6 +167,24 @@ public class Cube {
     }
 
 
+    public boolean isSolved() {
+        
+        for (int i = 0; i < cornerCubies.length; i++) {
+            if (cornerCubies[i].index != i || cornerCubies[i].orientation != 0) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < edgeCubies.length; i++) {
+            if (edgeCubies[i].index != i || edgeCubies[i].orientation != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     public void flipEdgeOrientation(int index) {
         Cubie edge = edgeCubies[index];
         edge.orientation ^= 1;  // XOR orientation with 1 results in flip between 0 and 1
@@ -186,14 +201,9 @@ public class Cube {
         Colour[] colours = new Colour[2];
 
         switch (edge.index) {
-            case EDGE_UL:
+            case EDGE_UB:
                 colours[0] = Colour.W;
-                colours[1] = Colour.G;
-                break;
-                
-            case EDGE_UF:
-                colours[0] = Colour.W;
-                colours[1] = Colour.R;
+                colours[1] = Colour.O;
                 break;
                 
             case EDGE_UR:
@@ -201,13 +211,13 @@ public class Cube {
                 colours[1] = Colour.B;
                 break;
                 
-            case EDGE_UB:
+            case EDGE_UF:
                 colours[0] = Colour.W;
-                colours[1] = Colour.Y;
+                colours[1] = Colour.R;
                 break;
                 
-            case EDGE_FL:
-                colours[0] = Colour.R;
+            case EDGE_UL:
+                colours[0] = Colour.W;
                 colours[1] = Colour.G;
                 break;
                 
@@ -216,34 +226,39 @@ public class Cube {
                 colours[1] = Colour.B;
                 break;
                 
-            case EDGE_BR:
-                colours[0] = Colour.Y;
-                colours[1] = Colour.B;
+            case EDGE_FL:
+                colours[0] = Colour.R;
+                colours[1] = Colour.G;
                 break;
                 
             case EDGE_BL:
-                colours[0] = Colour.Y;
+                colours[0] = Colour.O;
                 colours[1] = Colour.G;
                 break;
                 
-            case EDGE_DF:
-                colours[0] = Colour.O;
-                colours[1] = Colour.R;
-                break;
-                
-            case EDGE_DR:
+            case EDGE_BR:
                 colours[0] = Colour.O;
                 colours[1] = Colour.B;
                 break;
                 
-            case EDGE_DB:
-                colours[0] = Colour.O;
-                colours[1] = Colour.Y;
+            case EDGE_DF:
+                colours[0] = Colour.Y;
+                colours[1] = Colour.R;
                 break;
                 
             case EDGE_DL:
-                colours[0] = Colour.O;
+                colours[0] = Colour.Y;
                 colours[1] = Colour.G;
+                break;
+                
+            case EDGE_DB:
+                colours[0] = Colour.Y;
+                colours[1] = Colour.O;
+                break;
+                
+            case EDGE_DR:
+                colours[0] = Colour.Y;
+                colours[1] = Colour.B;
                 break;
         }
 
@@ -263,88 +278,108 @@ public class Cube {
 
         int i0, i1, i2;
 
+        // white/yellow on top/bottom
         if (corner.orientation == 0) {
             i0 = 0;
             i1 = 1;
             i2 = 2;
 
+            // corner is an odd number of indices away, so the other two colours are flipped
             if ((corner.index + posIndex) % 2 == 1) {
                 int temp = i1;
                 i1 = i2;
                 i2 = temp;
             }
         }
+        // white/yellow turned CW from nearest up/down face
         else if (corner.orientation == 1) {
-            i0 = 1;
-            i1 = 2;
-            i2 = 0;
+            if ((posIndex % 2) == 0) {
+                i0 = 1;
+                i1 = 2;
+                i2 = 0;
+            }
+            else {
+                i0 = 2;
+                i1 = 0;
+                i2 = 1;
+            }
 
+            // corner is an odd number of indices away, so the other two colours are flipped
             if ((corner.index + posIndex) % 2 == 1) {
-                int temp = i0;
-                i0 = i1;
-                i1 = temp;
+                int temp = i1;
+                i1 = i2;
+                i2 = temp;
             }
         }
+        // white/yellow turned CCW from nearest up/down face
         else {
-            i0 = 2;
-            i1 = 0;
-            i2 = 1;
+            if ((posIndex % 2) == 0) {
+                i0 = 2;
+                i1 = 1;
+                i2 = 0;
+            }
+            else {
+                i0 = 1;
+                i1 = 0;
+                i2 = 2;
+            }
 
-            if ((corner.index + posIndex) % 2 == 1) {
-                int temp = i0;
-                i0 = i2;
+            // corner is an EVEN number of indices away, so the other two colours are flipped
+            if ((corner.index + posIndex) % 2 == 0) {
+                int temp = i1;
+                i1 = i2;
                 i2 = temp;
             }
         }
 
 
         switch (corner.index) {
-            case CORNER_UFL:
+            case CORNER_ULB:
                 colours[i0] = Colour.W;
-                colours[i1] = Colour.R;
-                colours[i2] = Colour.G;
+                colours[i1] = Colour.G;
+                colours[i2] = Colour.O;
                 break;
 
-            case CORNER_UFR:
+            case CORNER_URB:
                 colours[i0] = Colour.W;
-                colours[i1] = Colour.R;
-                colours[i2] = Colour.B;
+                colours[i1] = Colour.B;
+                colours[i2] = Colour.O;
                 break;
 
-            case CORNER_UBR:
+            case CORNER_URF:
                 colours[i0] = Colour.W;
-                colours[i1] = Colour.Y;
-                colours[i2] = Colour.B;
+                colours[i1] = Colour.B;
+                colours[i2] = Colour.R;
                 break;
 
-            case CORNER_UBL:
+            case CORNER_ULF:
                 colours[i0] = Colour.W;
-                colours[i1] = Colour.Y;
-                colours[i2] = Colour.G;
+                colours[i1] = Colour.G;
+                colours[i2] = Colour.R;
                 break;
 
-            case CORNER_DFL:
-                colours[i0] = Colour.O;
-                colours[i1] = Colour.R;
-                colours[i2] = Colour.G;
+            case CORNER_DLF:
+                colours[i0] = Colour.Y;
+                colours[i1] = Colour.G;
+                colours[i2] = Colour.R;
                 break;
 
-            case CORNER_DFR:
-                colours[i0] = Colour.O;
-                colours[i1] = Colour.R;
-                colours[i2] = Colour.B;
+            case CORNER_DLB:
+                colours[i0] = Colour.Y;
+                colours[i1] = Colour.G;
+                colours[i2] = Colour.O;
                 break;
 
-            case CORNER_DBR:
-                colours[i0] = Colour.O;
-                colours[i1] = Colour.Y;
-                colours[i2] = Colour.B;
+            case CORNER_DRB:
+                colours[i0] = Colour.Y;
+                colours[i1] = Colour.B;
+                colours[i2] = Colour.O;
                 break;
 
-            case CORNER_DBL:
-                colours[i0] = Colour.O;
-                colours[i1] = Colour.Y;
-                colours[i2] = Colour.G;
+            case CORNER_DRF:
+                colours[i0] = Colour.Y;
+                colours[i1] = Colour.B;
+                colours[i2] = Colour.R;
                 break;
 
         }
@@ -354,11 +389,11 @@ public class Cube {
 
 
     public void moveU() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = temp;
 
         temp                = edgeCubies[EDGE_UL];
         edgeCubies[EDGE_UL] = edgeCubies[EDGE_UF];
@@ -368,225 +403,225 @@ public class Cube {
     }
 
     public void moveUPrime() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = temp;
 
-        temp                = edgeCubies[EDGE_UL];
-        edgeCubies[EDGE_UL] = edgeCubies[EDGE_UB];
+        temp                = edgeCubies[EDGE_UB];
         edgeCubies[EDGE_UB] = edgeCubies[EDGE_UR];
         edgeCubies[EDGE_UR] = edgeCubies[EDGE_UF];
-        edgeCubies[EDGE_UF] = temp;
+        edgeCubies[EDGE_UF] = edgeCubies[EDGE_UL];
+        edgeCubies[EDGE_UL] = temp;
     }
 
     public void moveU2() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = temp;
+        Cubie temp               = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = temp;
 
-        temp                     = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = temp;
-
-        temp                = edgeCubies[EDGE_UL];
-        edgeCubies[EDGE_UL] = edgeCubies[EDGE_UR];
-        edgeCubies[EDGE_UR] = temp;
+        temp                     = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = temp;
 
         temp                = edgeCubies[EDGE_UF];
         edgeCubies[EDGE_UF] = edgeCubies[EDGE_UB];
         edgeCubies[EDGE_UB] = temp;
+
+        temp                = edgeCubies[EDGE_UL];
+        edgeCubies[EDGE_UL] = edgeCubies[EDGE_UR];
+        edgeCubies[EDGE_UR] = temp;
     }
 
 
     public void moveL() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = temp;
+        Cubie temp               = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = temp;
 
-        temp                = edgeCubies[EDGE_UL];
-        edgeCubies[EDGE_UL] = edgeCubies[EDGE_BL];
+        temp                = edgeCubies[EDGE_BL];
         edgeCubies[EDGE_BL] = edgeCubies[EDGE_DL];
         edgeCubies[EDGE_DL] = edgeCubies[EDGE_FL];
-        edgeCubies[EDGE_FL] = temp;
+        edgeCubies[EDGE_FL] = edgeCubies[EDGE_UL];
+        edgeCubies[EDGE_UL] = temp;
 
-        increaseCornerOrientation(CORNER_UFL, 1);
-        increaseCornerOrientation(CORNER_UBL, 2);
-        increaseCornerOrientation(CORNER_DBL, 1);
-        increaseCornerOrientation(CORNER_DFL, 2);
+        increaseCornerOrientation(CORNER_DLB, 1);
+        increaseCornerOrientation(CORNER_DLF, 2);
+        increaseCornerOrientation(CORNER_ULF, 1);
+        increaseCornerOrientation(CORNER_ULB, 2);
     }
 
     public void moveLPrime() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = temp;
+        Cubie temp               = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = temp;
 
-        temp                = edgeCubies[EDGE_UL];
+        temp                = edgeCubies[EDGE_BL];
+        edgeCubies[EDGE_BL] = edgeCubies[EDGE_UL];
         edgeCubies[EDGE_UL] = edgeCubies[EDGE_FL];
         edgeCubies[EDGE_FL] = edgeCubies[EDGE_DL];
-        edgeCubies[EDGE_DL] = edgeCubies[EDGE_BL];
-        edgeCubies[EDGE_BL] = temp;
+        edgeCubies[EDGE_DL] = temp;
 
-        increaseCornerOrientation(CORNER_UFL, 1);
-        increaseCornerOrientation(CORNER_UBL, 2);
-        increaseCornerOrientation(CORNER_DBL, 1);
-        increaseCornerOrientation(CORNER_DFL, 2);
+        increaseCornerOrientation(CORNER_DLB, 1);
+        increaseCornerOrientation(CORNER_DLF, 2);
+        increaseCornerOrientation(CORNER_ULF, 1);
+        increaseCornerOrientation(CORNER_ULB, 2);
     }
 
     public void moveL2() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = temp;
 
-        temp                     = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = temp;
+        temp                     = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = temp;
 
-        temp                = edgeCubies[EDGE_UL];
-        edgeCubies[EDGE_UL] = edgeCubies[EDGE_DL];
-        edgeCubies[EDGE_DL] = temp;
+        temp                = edgeCubies[EDGE_FL];
+        edgeCubies[EDGE_FL] = edgeCubies[EDGE_BL];
+        edgeCubies[EDGE_BL] = temp;
 
-        temp                = edgeCubies[EDGE_BL];
-        edgeCubies[EDGE_BL] = edgeCubies[EDGE_FL];
-        edgeCubies[EDGE_FL] = temp;
+        temp                = edgeCubies[EDGE_DL];
+        edgeCubies[EDGE_DL] = edgeCubies[EDGE_UL];
+        edgeCubies[EDGE_UL] = temp;
     }
 
 
     public void moveF() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = temp;
 
-        temp                = edgeCubies[EDGE_FL];
+        temp                = edgeCubies[EDGE_UF];
+        edgeCubies[EDGE_UF] = edgeCubies[EDGE_FL];
         edgeCubies[EDGE_FL] = edgeCubies[EDGE_DF];
         edgeCubies[EDGE_DF] = edgeCubies[EDGE_FR];
-        edgeCubies[EDGE_FR] = edgeCubies[EDGE_UF];
-        edgeCubies[EDGE_UF] = temp;
+        edgeCubies[EDGE_FR] = temp;
 
-        increaseCornerOrientation(CORNER_UFL, 2);
-        increaseCornerOrientation(CORNER_DFL, 1);
-        increaseCornerOrientation(CORNER_DFR, 2);
-        increaseCornerOrientation(CORNER_UFR, 1);
+        increaseCornerOrientation(CORNER_ULF, 2);
+        increaseCornerOrientation(CORNER_URF, 1);
+        increaseCornerOrientation(CORNER_DRF, 2);
+        increaseCornerOrientation(CORNER_DLF, 1);
 
+        flipEdgeOrientation(EDGE_UF);
         flipEdgeOrientation(EDGE_FL);
         flipEdgeOrientation(EDGE_DF);
         flipEdgeOrientation(EDGE_FR);
-        flipEdgeOrientation(EDGE_UF);
     }
 
     public void moveFPrime() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = temp;
 
-        temp                = edgeCubies[EDGE_FL];
-        edgeCubies[EDGE_FL] = edgeCubies[EDGE_UF];
+        temp                = edgeCubies[EDGE_UF];
         edgeCubies[EDGE_UF] = edgeCubies[EDGE_FR];
         edgeCubies[EDGE_FR] = edgeCubies[EDGE_DF];
-        edgeCubies[EDGE_DF] = temp;
+        edgeCubies[EDGE_DF] = edgeCubies[EDGE_FL];
+        edgeCubies[EDGE_FL] = temp;
 
-        increaseCornerOrientation(CORNER_UFL, 2);
-        increaseCornerOrientation(CORNER_DFL, 1);
-        increaseCornerOrientation(CORNER_DFR, 2);
-        increaseCornerOrientation(CORNER_UFR, 1);
+        increaseCornerOrientation(CORNER_ULF, 2);
+        increaseCornerOrientation(CORNER_URF, 1);
+        increaseCornerOrientation(CORNER_DRF, 2);
+        increaseCornerOrientation(CORNER_DLF, 1);
 
+        flipEdgeOrientation(EDGE_UF);
         flipEdgeOrientation(EDGE_FL);
         flipEdgeOrientation(EDGE_DF);
         flipEdgeOrientation(EDGE_FR);
-        flipEdgeOrientation(EDGE_UF);
     }
 
     public void moveF2() {
-        Cubie temp               = cornerCubies[CORNER_UFL];
-        cornerCubies[CORNER_UFL] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = temp;
+        Cubie temp               = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_ULF];
+        cornerCubies[CORNER_ULF] = temp;
 
-        temp                     = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = temp;
+        temp                     = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = temp;
 
-        temp                = edgeCubies[EDGE_FL];
-        edgeCubies[EDGE_FL] = edgeCubies[EDGE_FR];
-        edgeCubies[EDGE_FR] = temp;
+        temp                = edgeCubies[EDGE_DF];
+        edgeCubies[EDGE_DF] = edgeCubies[EDGE_UF];
+        edgeCubies[EDGE_UF] = temp;
 
-        temp                = edgeCubies[EDGE_UF];
-        edgeCubies[EDGE_UF] = edgeCubies[EDGE_DF];
-        edgeCubies[EDGE_DF] = temp;
+        temp                = edgeCubies[EDGE_FR];
+        edgeCubies[EDGE_FR] = edgeCubies[EDGE_FL];
+        edgeCubies[EDGE_FL] = temp;
     }
 
 
     public void moveR() {
-        Cubie temp               = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = temp;
+        Cubie temp               = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = temp;
 
-        temp                = edgeCubies[EDGE_UR];
+        temp                = edgeCubies[EDGE_BR];
+        edgeCubies[EDGE_BR] = edgeCubies[EDGE_UR];
         edgeCubies[EDGE_UR] = edgeCubies[EDGE_FR];
         edgeCubies[EDGE_FR] = edgeCubies[EDGE_DR];
-        edgeCubies[EDGE_DR] = edgeCubies[EDGE_BR];
-        edgeCubies[EDGE_BR] = temp;
+        edgeCubies[EDGE_DR] = temp;
 
-        increaseCornerOrientation(CORNER_UFR, 2);
-        increaseCornerOrientation(CORNER_DFR, 1);
-        increaseCornerOrientation(CORNER_DBR, 2);
-        increaseCornerOrientation(CORNER_UBR, 1);
+        increaseCornerOrientation(CORNER_DRB, 2);
+        increaseCornerOrientation(CORNER_DRF, 1);
+        increaseCornerOrientation(CORNER_URF, 2);
+        increaseCornerOrientation(CORNER_URB, 1);
     }
 
     public void moveRPrime() {
-        Cubie temp               = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = temp;
+        Cubie temp               = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = temp;
 
-        temp                = edgeCubies[EDGE_UR];
-        edgeCubies[EDGE_UR] = edgeCubies[EDGE_BR];
+        temp                = edgeCubies[EDGE_BR];
         edgeCubies[EDGE_BR] = edgeCubies[EDGE_DR];
         edgeCubies[EDGE_DR] = edgeCubies[EDGE_FR];
-        edgeCubies[EDGE_FR] = temp;
+        edgeCubies[EDGE_FR] = edgeCubies[EDGE_UR];
+        edgeCubies[EDGE_UR] = temp;
 
-        increaseCornerOrientation(CORNER_UFR, 2);
-        increaseCornerOrientation(CORNER_DFR, 1);
-        increaseCornerOrientation(CORNER_DBR, 2);
-        increaseCornerOrientation(CORNER_UBR, 1);
+        increaseCornerOrientation(CORNER_DRB, 2);
+        increaseCornerOrientation(CORNER_DRF, 1);
+        increaseCornerOrientation(CORNER_URF, 2);
+        increaseCornerOrientation(CORNER_URB, 1);
     }
 
     public void moveR2() {
-        Cubie temp               = cornerCubies[CORNER_UFR];
-        cornerCubies[CORNER_UFR] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = temp;
+        Cubie temp               = cornerCubies[CORNER_URF];
+        cornerCubies[CORNER_URF] = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = temp;
 
-        temp                     = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = temp;
-
-        temp                = edgeCubies[EDGE_UR];
-        edgeCubies[EDGE_UR] = edgeCubies[EDGE_DR];
-        edgeCubies[EDGE_DR] = temp;
+        temp                     = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = temp;
 
         temp                = edgeCubies[EDGE_FR];
         edgeCubies[EDGE_FR] = edgeCubies[EDGE_BR];
         edgeCubies[EDGE_BR] = temp;
+
+        temp                = edgeCubies[EDGE_DR];
+        edgeCubies[EDGE_DR] = edgeCubies[EDGE_UR];
+        edgeCubies[EDGE_UR] = temp;
     }
 
 
     public void moveB() {
-        Cubie temp               = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = temp;
 
         temp                = edgeCubies[EDGE_UB];
         edgeCubies[EDGE_UB] = edgeCubies[EDGE_BR];
@@ -594,23 +629,23 @@ public class Cube {
         edgeCubies[EDGE_DB] = edgeCubies[EDGE_BL];
         edgeCubies[EDGE_BL] = temp;
 
-        increaseCornerOrientation(CORNER_UBR, 2);
-        increaseCornerOrientation(CORNER_DBR, 1);
-        increaseCornerOrientation(CORNER_DBL, 2);
-        increaseCornerOrientation(CORNER_UBL, 1);
+        increaseCornerOrientation(CORNER_ULB, 1);
+        increaseCornerOrientation(CORNER_URB, 2);
+        increaseCornerOrientation(CORNER_DRB, 1);
+        increaseCornerOrientation(CORNER_DLB, 2);
 
         flipEdgeOrientation(EDGE_UB);
-        flipEdgeOrientation(EDGE_BR);
-        flipEdgeOrientation(EDGE_DB);
         flipEdgeOrientation(EDGE_BL);
+        flipEdgeOrientation(EDGE_DB);
+        flipEdgeOrientation(EDGE_BR);
     }
 
     public void moveBPrime() {
-        Cubie temp               = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = temp;
+        Cubie temp               = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = temp;
 
         temp                = edgeCubies[EDGE_UB];
         edgeCubies[EDGE_UB] = edgeCubies[EDGE_BL];
@@ -618,29 +653,29 @@ public class Cube {
         edgeCubies[EDGE_DB] = edgeCubies[EDGE_BR];
         edgeCubies[EDGE_BR] = temp;
 
-        increaseCornerOrientation(CORNER_UBR, 2);
-        increaseCornerOrientation(CORNER_DBR, 1);
-        increaseCornerOrientation(CORNER_DBL, 2);
-        increaseCornerOrientation(CORNER_UBL, 1);
+        increaseCornerOrientation(CORNER_ULB, 1);
+        increaseCornerOrientation(CORNER_URB, 2);
+        increaseCornerOrientation(CORNER_DRB, 1);
+        increaseCornerOrientation(CORNER_DLB, 2);
 
         flipEdgeOrientation(EDGE_UB);
-        flipEdgeOrientation(EDGE_BR);
-        flipEdgeOrientation(EDGE_DB);
         flipEdgeOrientation(EDGE_BL);
+        flipEdgeOrientation(EDGE_DB);
+        flipEdgeOrientation(EDGE_BR);
     }
 
     public void moveB2() {
-        Cubie temp               = cornerCubies[CORNER_UBR];
-        cornerCubies[CORNER_UBR] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = temp;
+        Cubie temp               = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_ULB];
+        cornerCubies[CORNER_ULB] = temp;
 
-        temp                     = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = cornerCubies[CORNER_UBL];
-        cornerCubies[CORNER_UBL] = temp;
+        temp                     = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = cornerCubies[CORNER_URB];
+        cornerCubies[CORNER_URB] = temp;
 
-        temp                = edgeCubies[EDGE_UB];
-        edgeCubies[EDGE_UB] = edgeCubies[EDGE_DB];
-        edgeCubies[EDGE_DB] = temp;
+        temp                = edgeCubies[EDGE_DB];
+        edgeCubies[EDGE_DB] = edgeCubies[EDGE_UB];
+        edgeCubies[EDGE_UB] = temp;
 
         temp                = edgeCubies[EDGE_BR];
         edgeCubies[EDGE_BR] = edgeCubies[EDGE_BL];
@@ -649,25 +684,25 @@ public class Cube {
 
 
     public void moveD() {
-        Cubie temp               = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = temp;
+        Cubie temp               = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = temp;
 
-        temp                = edgeCubies[EDGE_DL];
-        edgeCubies[EDGE_DL] = edgeCubies[EDGE_DB];
+        temp                = edgeCubies[EDGE_DB];
         edgeCubies[EDGE_DB] = edgeCubies[EDGE_DR];
         edgeCubies[EDGE_DR] = edgeCubies[EDGE_DF];
-        edgeCubies[EDGE_DF] = temp;
+        edgeCubies[EDGE_DF] = edgeCubies[EDGE_DL];
+        edgeCubies[EDGE_DL] = temp;
     }
 
     public void moveDPrime() {
-        Cubie temp               = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = temp;
+        Cubie temp               = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = temp;
 
         temp                = edgeCubies[EDGE_DL];
         edgeCubies[EDGE_DL] = edgeCubies[EDGE_DF];
@@ -677,21 +712,21 @@ public class Cube {
     }
 
     public void moveD2() {
-        Cubie temp               = cornerCubies[CORNER_DFL];
-        cornerCubies[CORNER_DFL] = cornerCubies[CORNER_DBR];
-        cornerCubies[CORNER_DBR] = temp;
+        Cubie temp               = cornerCubies[CORNER_DRF];
+        cornerCubies[CORNER_DRF] = cornerCubies[CORNER_DLB];
+        cornerCubies[CORNER_DLB] = temp;
 
-        temp                     = cornerCubies[CORNER_DFR];
-        cornerCubies[CORNER_DFR] = cornerCubies[CORNER_DBL];
-        cornerCubies[CORNER_DBL] = temp;
-
-        temp                = edgeCubies[EDGE_DL];
-        edgeCubies[EDGE_DL] = edgeCubies[EDGE_DR];
-        edgeCubies[EDGE_DR] = temp;
+        temp                     = cornerCubies[CORNER_DLF];
+        cornerCubies[CORNER_DLF] = cornerCubies[CORNER_DRB];
+        cornerCubies[CORNER_DRB] = temp;
 
         temp                = edgeCubies[EDGE_DF];
         edgeCubies[EDGE_DF] = edgeCubies[EDGE_DB];
         edgeCubies[EDGE_DB] = temp;
+
+        temp                = edgeCubies[EDGE_DL];
+        edgeCubies[EDGE_DL] = edgeCubies[EDGE_DR];
+        edgeCubies[EDGE_DR] = temp;
     }
 
 
@@ -711,86 +746,86 @@ public class Cube {
         
         // Print top face
         System.out.print("       ");
-        System.out.print(getCornerColours(3)[0] + " ");
-        System.out.print(getEdgeColours(3)[0] + " ");
-        System.out.println(getCornerColours(2)[0] + " ");
+        System.out.print(getCornerColours(CORNER_ULB)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_UB)[0] + " ");
+        System.out.println(getCornerColours(CORNER_URB)[0] + " ");
 
         System.out.print("       ");
-        System.out.print(getEdgeColours(0)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_UL)[0] + " ");
         System.out.print("W ");
-        System.out.println(getEdgeColours(2)[0] + " ");
+        System.out.println(getEdgeColours(EDGE_UR)[0] + " ");
 
         System.out.print("       ");
-        System.out.print(getCornerColours(0)[0] + " ");
-        System.out.print(getEdgeColours(1)[0] + " ");
-        System.out.println(getCornerColours(1)[0] + "\n");
+        System.out.print(getCornerColours(CORNER_ULF)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_UF)[0] + " ");
+        System.out.println(getCornerColours(CORNER_URF)[0] + "\n");
 
         // Print upper row of side faces
-        System.out.print(getCornerColours(3)[2] + " ");
-        System.out.print(getEdgeColours(0)[1] + " ");
-        System.out.print(getCornerColours(0)[2] + "  ");
+        System.out.print(getCornerColours(CORNER_ULB)[1] + " ");
+        System.out.print(getEdgeColours(EDGE_UL)[1] + " ");
+        System.out.print(getCornerColours(CORNER_ULF)[1] + "  ");
 
-        System.out.print(getCornerColours(0)[1] + " ");
-        System.out.print(getEdgeColours(1)[1] + " ");
-        System.out.print(getCornerColours(1)[1] + "  ");
+        System.out.print(getCornerColours(CORNER_ULF)[2] + " ");
+        System.out.print(getEdgeColours(EDGE_UF)[1] + " ");
+        System.out.print(getCornerColours(CORNER_URF)[2] + "  ");
 
-        System.out.print(getCornerColours(1)[2] + " ");
-        System.out.print(getEdgeColours(2)[1] + " ");
-        System.out.print(getCornerColours(2)[2] + "  ");
+        System.out.print(getCornerColours(CORNER_URF)[1] + " ");
+        System.out.print(getEdgeColours(EDGE_UR)[1] + " ");
+        System.out.print(getCornerColours(CORNER_URB)[1] + "  ");
 
-        System.out.print(getCornerColours(2)[1] + " ");
-        System.out.print(getEdgeColours(3)[1] + " ");
-        System.out.println(getCornerColours(3)[1]);
+        System.out.print(getCornerColours(CORNER_URB)[2] + " ");
+        System.out.print(getEdgeColours(EDGE_UB)[1] + " ");
+        System.out.println(getCornerColours(CORNER_ULB)[2]);
 
         // Print middle row of side faces
-        System.out.print(getEdgeColours(7)[1] + " ");
+        System.out.print(getEdgeColours(EDGE_BL)[1] + " ");
         System.out.print("G ");
-        System.out.print(getEdgeColours(4)[1] + "  ");
+        System.out.print(getEdgeColours(EDGE_FL)[1] + "  ");
 
-        System.out.print(getEdgeColours(4)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_FL)[0] + " ");
         System.out.print("R ");
-        System.out.print(getEdgeColours(5)[0] + "  ");
+        System.out.print(getEdgeColours(EDGE_FR)[0] + "  ");
         
-        System.out.print(getEdgeColours(5)[1] + " ");
+        System.out.print(getEdgeColours(EDGE_FR)[1] + " ");
         System.out.print("B ");
-        System.out.print(getEdgeColours(6)[1] + "  ");
+        System.out.print(getEdgeColours(EDGE_BR)[1] + "  ");
 
-        System.out.print(getEdgeColours(6)[0] + " ");
-        System.out.print("Y ");
-        System.out.println(getEdgeColours(7)[0]);
+        System.out.print(getEdgeColours(EDGE_BR)[0] + " ");
+        System.out.print("O ");
+        System.out.println(getEdgeColours(EDGE_BL)[0]);
 
         // Print bottom row of side faces
-        System.out.print(getCornerColours(7)[2] + " ");
-        System.out.print(getEdgeColours(11)[1] + " ");
-        System.out.print(getCornerColours(4)[2] + "  ");
+        System.out.print(getCornerColours(CORNER_DLB)[1] + " ");
+        System.out.print(getEdgeColours(EDGE_DL)[1] + " ");
+        System.out.print(getCornerColours(CORNER_DLF)[1] + "  ");
 
-        System.out.print(getCornerColours(4)[1] + " ");
-        System.out.print(getEdgeColours(8)[1] + " ");
-        System.out.print(getCornerColours(5)[1] + "  ");
+        System.out.print(getCornerColours(CORNER_DLF)[2] + " ");
+        System.out.print(getEdgeColours(EDGE_DF)[1] + " ");
+        System.out.print(getCornerColours(CORNER_DRF)[2] + "  ");
 
-        System.out.print(getCornerColours(5)[2] + " ");
-        System.out.print(getEdgeColours(9)[1] + " ");
-        System.out.print(getCornerColours(6)[2] + "  ");
+        System.out.print(getCornerColours(CORNER_DRF)[1] + " ");
+        System.out.print(getEdgeColours(EDGE_DR)[1] + " ");
+        System.out.print(getCornerColours(CORNER_DRB)[1] + "  ");
 
-        System.out.print(getCornerColours(6)[1] + " ");
-        System.out.print(getEdgeColours(10)[1] + " ");
-        System.out.println(getCornerColours(7)[1] + "\n");
+        System.out.print(getCornerColours(CORNER_DRB)[2] + " ");
+        System.out.print(getEdgeColours(EDGE_DB)[1] + " ");
+        System.out.println(getCornerColours(CORNER_DLB)[2] + "\n");
 
         // Print bottom face
         System.out.print("       ");
-        System.out.print(getCornerColours(4)[0] + " ");
-        System.out.print(getEdgeColours(8)[0] + " ");
-        System.out.println(getCornerColours(5)[0] + " ");
+        System.out.print(getCornerColours(CORNER_DLF)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_DF)[0] + " ");
+        System.out.println(getCornerColours(CORNER_DRF)[0] + " ");
 
         System.out.print("       ");
-        System.out.print(getEdgeColours(11)[0] + " ");
-        System.out.print("O ");
-        System.out.println(getEdgeColours(9)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_DL)[0] + " ");
+        System.out.print("Y ");
+        System.out.println(getEdgeColours(EDGE_DR)[0] + " ");
 
         System.out.print("       ");
-        System.out.print(getCornerColours(7)[0] + " ");
-        System.out.print(getEdgeColours(10)[0] + " ");
-        System.out.println(getCornerColours(6)[0]);
+        System.out.print(getCornerColours(CORNER_DLB)[0] + " ");
+        System.out.print(getEdgeColours(EDGE_DB)[0] + " ");
+        System.out.println(getCornerColours(CORNER_DRB)[0]);
         System.out.println("\n");
     }
 
