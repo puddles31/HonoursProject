@@ -1,4 +1,3 @@
-package CubeAlgorithm;
 import java.util.Scanner;
 
 
@@ -8,27 +7,27 @@ public class Cube {
         W, Y, R, O, G, B
     };
 
-    final int EDGE_UB = 0,
-              EDGE_UR = 1,
-              EDGE_UF = 2,
-              EDGE_UL = 3,
-              EDGE_FR = 4,
-              EDGE_FL = 5,
-              EDGE_BL = 6,
-              EDGE_BR = 7,
-              EDGE_DF = 8,
-              EDGE_DL = 9,
-              EDGE_DB = 10,
-              EDGE_DR = 11;
+    final byte EDGE_UB = 0,
+               EDGE_UR = 1,
+               EDGE_UF = 2,
+               EDGE_UL = 3,
+               EDGE_FR = 4,
+               EDGE_FL = 5,
+               EDGE_BL = 6,
+               EDGE_BR = 7,
+               EDGE_DF = 8,
+               EDGE_DL = 9,
+               EDGE_DB = 10,
+               EDGE_DR = 11;
 
-    final int CORNER_ULB = 0,
-              CORNER_URB = 1,
-              CORNER_URF = 2,
-              CORNER_ULF = 3,
-              CORNER_DLF = 4,
-              CORNER_DLB = 5,
-              CORNER_DRB = 6,
-              CORNER_DRF = 7;
+    final byte CORNER_ULB = 0,
+               CORNER_URB = 1,
+               CORNER_URF = 2,
+               CORNER_ULF = 3,
+               CORNER_DLF = 4,
+               CORNER_DLB = 5,
+               CORNER_DRB = 6,
+               CORNER_DRF = 7;
 
 
     public static void main(String[] args) {
@@ -140,7 +139,7 @@ public class Cube {
 
         // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
 
-        int index, orientation;
+        byte index, orientation;
     }
 
     // Cube state is stored as an array of 12 edge cubies and an array of 8 corner cubies
@@ -152,14 +151,14 @@ public class Cube {
     public Cube() {
 
         // Initialize edge cubies
-        for (int i = 0; i < 12; i++) {
+        for (byte i = 0; i < 12; i++) {
             edgeCubies[i] = new Cubie();
             edgeCubies[i].index = i;
             edgeCubies[i].orientation = 0;
         }
 
         // Initialize corner cubies
-        for (int i = 0; i < 8; i++) {
+        for (byte i = 0; i < 8; i++) {
             cornerCubies[i] = new Cubie();
             cornerCubies[i].index = i;
             cornerCubies[i].orientation = 0;
@@ -167,15 +166,56 @@ public class Cube {
     }
 
 
+    public byte[] getEdgeIndices() {
+        byte[] indices = new byte[12];
+
+        for (byte i = 0; i < 12; i++) {
+            indices[i] = edgeCubies[i].index;
+        }
+
+        return indices;
+    }
+
+    public byte[] getEdgeOrientations() {
+        byte[] orientations = new byte[12];
+
+        for (byte i = 0; i < 12; i++) {
+            orientations[i] = edgeCubies[i].orientation;
+        }
+
+        return orientations;
+    }
+    
+    public byte[] getCornerIndices() {
+        byte[] indices = new byte[8];
+
+        for (byte i = 0; i < 8; i++) {
+            indices[i] = cornerCubies[i].index;
+        }
+
+        return indices;
+    }
+
+    public byte[] getCornerOrientations() {
+        byte[] orientations = new byte[8];
+
+        for (byte i = 0; i < 8; i++) {
+            orientations[i] = cornerCubies[i].orientation;
+        }
+
+        return orientations;
+    }
+
+
     public boolean isSolved() {
         
-        for (int i = 0; i < cornerCubies.length; i++) {
+        for (byte i = 0; i < cornerCubies.length; i++) {
             if (cornerCubies[i].index != i || cornerCubies[i].orientation != 0) {
                 return false;
             }
         }
 
-        for (int i = 0; i < edgeCubies.length; i++) {
+        for (byte i = 0; i < edgeCubies.length; i++) {
             if (edgeCubies[i].index != i || edgeCubies[i].orientation != 0) {
                 return false;
             }
@@ -185,18 +225,25 @@ public class Cube {
     }
 
 
-    public void flipEdgeOrientation(int index) {
+    public void flipEdgeOrientation(byte index) {
         Cubie edge = edgeCubies[index];
         edge.orientation ^= 1;  // XOR orientation with 1 results in flip between 0 and 1
     }
 
-    public void increaseCornerOrientation(int index, int incr) {
+    public void increaseCornerOrientation(byte index, byte incr) {
         Cubie corner = cornerCubies[index];
-        corner.orientation = (corner.orientation + incr) % 3;
+
+        // faster equivalent to corner.orientation = (corner.orientation + incr) % 3
+        if (corner.orientation + incr == 3) {
+            corner.orientation = 0;
+        }
+        else if (corner.orientation + incr == 4) {
+            corner.orientation = 1;
+        }
     }
 
 
-    public Colour[] getEdgeColours(int posIndex) {
+    public Colour[] getEdgeColours(byte posIndex) {
         Cubie edge = edgeCubies[posIndex];
         Colour[] colours = new Colour[2];
 
@@ -272,11 +319,11 @@ public class Cube {
         return colours;
     }
 
-    public Colour[] getCornerColours(int posIndex) {
+    public Colour[] getCornerColours(byte posIndex) {
         Cubie corner = cornerCubies[posIndex];
         Colour[] colours = new Colour[3];
 
-        int i0, i1, i2;
+        byte i0, i1, i2;
 
         // white/yellow on top/bottom
         if (corner.orientation == 0) {
@@ -286,7 +333,7 @@ public class Cube {
 
             // corner is an odd number of indices away, so the other two colours are flipped
             if ((corner.index + posIndex) % 2 == 1) {
-                int temp = i1;
+                byte temp = i1;
                 i1 = i2;
                 i2 = temp;
             }
@@ -306,7 +353,7 @@ public class Cube {
 
             // corner is an odd number of indices away, so the other two colours are flipped
             if ((corner.index + posIndex) % 2 == 1) {
-                int temp = i1;
+                byte temp = i1;
                 i1 = i2;
                 i2 = temp;
             }
@@ -326,7 +373,7 @@ public class Cube {
 
             // corner is an EVEN number of indices away, so the other two colours are flipped
             if ((corner.index + posIndex) % 2 == 0) {
-                int temp = i1;
+                byte temp = i1;
                 i1 = i2;
                 i2 = temp;
             }
@@ -448,10 +495,10 @@ public class Cube {
         edgeCubies[EDGE_FL] = edgeCubies[EDGE_UL];
         edgeCubies[EDGE_UL] = temp;
 
-        increaseCornerOrientation(CORNER_DLB, 1);
-        increaseCornerOrientation(CORNER_DLF, 2);
-        increaseCornerOrientation(CORNER_ULF, 1);
-        increaseCornerOrientation(CORNER_ULB, 2);
+        increaseCornerOrientation(CORNER_DLB, (byte) 1);
+        increaseCornerOrientation(CORNER_DLF, (byte) 2);
+        increaseCornerOrientation(CORNER_ULF, (byte) 1);
+        increaseCornerOrientation(CORNER_ULB, (byte) 2);
     }
 
     public void moveLPrime() {
@@ -467,10 +514,10 @@ public class Cube {
         edgeCubies[EDGE_FL] = edgeCubies[EDGE_DL];
         edgeCubies[EDGE_DL] = temp;
 
-        increaseCornerOrientation(CORNER_DLB, 1);
-        increaseCornerOrientation(CORNER_DLF, 2);
-        increaseCornerOrientation(CORNER_ULF, 1);
-        increaseCornerOrientation(CORNER_ULB, 2);
+        increaseCornerOrientation(CORNER_DLB, (byte) 1);
+        increaseCornerOrientation(CORNER_DLF, (byte) 2);
+        increaseCornerOrientation(CORNER_ULF, (byte) 1);
+        increaseCornerOrientation(CORNER_ULB, (byte) 2);
     }
 
     public void moveL2() {
@@ -505,10 +552,10 @@ public class Cube {
         edgeCubies[EDGE_DF] = edgeCubies[EDGE_FR];
         edgeCubies[EDGE_FR] = temp;
 
-        increaseCornerOrientation(CORNER_ULF, 2);
-        increaseCornerOrientation(CORNER_URF, 1);
-        increaseCornerOrientation(CORNER_DRF, 2);
-        increaseCornerOrientation(CORNER_DLF, 1);
+        increaseCornerOrientation(CORNER_ULF, (byte) 2);
+        increaseCornerOrientation(CORNER_URF, (byte) 1);
+        increaseCornerOrientation(CORNER_DRF, (byte) 2);
+        increaseCornerOrientation(CORNER_DLF, (byte) 1);
 
         flipEdgeOrientation(EDGE_UF);
         flipEdgeOrientation(EDGE_FL);
@@ -529,10 +576,10 @@ public class Cube {
         edgeCubies[EDGE_DF] = edgeCubies[EDGE_FL];
         edgeCubies[EDGE_FL] = temp;
 
-        increaseCornerOrientation(CORNER_ULF, 2);
-        increaseCornerOrientation(CORNER_URF, 1);
-        increaseCornerOrientation(CORNER_DRF, 2);
-        increaseCornerOrientation(CORNER_DLF, 1);
+        increaseCornerOrientation(CORNER_ULF, (byte) 2);
+        increaseCornerOrientation(CORNER_URF, (byte) 1);
+        increaseCornerOrientation(CORNER_DRF, (byte) 2);
+        increaseCornerOrientation(CORNER_DLF, (byte) 1);
 
         flipEdgeOrientation(EDGE_UF);
         flipEdgeOrientation(EDGE_FL);
@@ -572,10 +619,10 @@ public class Cube {
         edgeCubies[EDGE_FR] = edgeCubies[EDGE_DR];
         edgeCubies[EDGE_DR] = temp;
 
-        increaseCornerOrientation(CORNER_DRB, 2);
-        increaseCornerOrientation(CORNER_DRF, 1);
-        increaseCornerOrientation(CORNER_URF, 2);
-        increaseCornerOrientation(CORNER_URB, 1);
+        increaseCornerOrientation(CORNER_DRB, (byte) 2);
+        increaseCornerOrientation(CORNER_DRF, (byte) 1);
+        increaseCornerOrientation(CORNER_URF, (byte) 2);
+        increaseCornerOrientation(CORNER_URB, (byte) 1);
     }
 
     public void moveRPrime() {
@@ -591,10 +638,10 @@ public class Cube {
         edgeCubies[EDGE_FR] = edgeCubies[EDGE_UR];
         edgeCubies[EDGE_UR] = temp;
 
-        increaseCornerOrientation(CORNER_DRB, 2);
-        increaseCornerOrientation(CORNER_DRF, 1);
-        increaseCornerOrientation(CORNER_URF, 2);
-        increaseCornerOrientation(CORNER_URB, 1);
+        increaseCornerOrientation(CORNER_DRB, (byte) 2);
+        increaseCornerOrientation(CORNER_DRF, (byte) 1);
+        increaseCornerOrientation(CORNER_URF, (byte) 2);
+        increaseCornerOrientation(CORNER_URB, (byte) 1);
     }
 
     public void moveR2() {
@@ -629,10 +676,10 @@ public class Cube {
         edgeCubies[EDGE_DB] = edgeCubies[EDGE_BL];
         edgeCubies[EDGE_BL] = temp;
 
-        increaseCornerOrientation(CORNER_ULB, 1);
-        increaseCornerOrientation(CORNER_URB, 2);
-        increaseCornerOrientation(CORNER_DRB, 1);
-        increaseCornerOrientation(CORNER_DLB, 2);
+        increaseCornerOrientation(CORNER_ULB, (byte) 1);
+        increaseCornerOrientation(CORNER_URB, (byte) 2);
+        increaseCornerOrientation(CORNER_DRB, (byte) 1);
+        increaseCornerOrientation(CORNER_DLB, (byte) 2);
 
         flipEdgeOrientation(EDGE_UB);
         flipEdgeOrientation(EDGE_BL);
@@ -653,10 +700,10 @@ public class Cube {
         edgeCubies[EDGE_DB] = edgeCubies[EDGE_BR];
         edgeCubies[EDGE_BR] = temp;
 
-        increaseCornerOrientation(CORNER_ULB, 1);
-        increaseCornerOrientation(CORNER_URB, 2);
-        increaseCornerOrientation(CORNER_DRB, 1);
-        increaseCornerOrientation(CORNER_DLB, 2);
+        increaseCornerOrientation(CORNER_ULB, (byte) 1);
+        increaseCornerOrientation(CORNER_URB, (byte) 2);
+        increaseCornerOrientation(CORNER_DRB, (byte) 1);
+        increaseCornerOrientation(CORNER_DLB, (byte) 2);
 
         flipEdgeOrientation(EDGE_UB);
         flipEdgeOrientation(EDGE_BL);
