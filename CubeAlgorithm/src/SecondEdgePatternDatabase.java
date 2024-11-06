@@ -1,10 +1,24 @@
+/**
+ * The pattern database for the last 7 edge cubies.
+ * @see PatternDatabase
+ */
 public class SecondEdgePatternDatabase extends PatternDatabase {
-    
-    public SecondEdgePatternDatabase(byte n, byte k) {
-        super(n, k);
+
+    // For this database, we are looking at the last 7 edges out of 12, so n=12 and k=7
+    // There are 12(P)7 * 2^7 (7 of 12 edges; each of 7 edges can be in one of 2 states) = 510935040 possible states
+    // Also note that roughly 487MB storage needed (510935040 bytes / 1024^2 = ~487MB)
+    final static int DATABASE_SIZE = 510935040;
+    final static byte N = 12, K = 7;
+
+    /**
+     * Constructor for the second edge pattern database.
+     * Sets the database size to 510935040, n to 12, and k to 7.
+     */
+    public SecondEdgePatternDatabase() {
+        super(DATABASE_SIZE, N, K);
     }
 
-    public int getDatabaseIndex(Cube cube) {
+    protected int getDatabaseIndex(Cube cube) {
         // Get the edge indices and orientations from the cube
         byte[] allEdgeIndices = cube.getEdgeIndices();
         byte[] allEdgeOrientations = cube.getEdgeOrientations();
@@ -44,6 +58,4 @@ public class SecondEdgePatternDatabase extends PatternDatabase {
         // (128 = 2^7)
         return indexRank * 128 + orientationRank;
     }
-
-
 }

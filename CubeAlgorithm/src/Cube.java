@@ -1,12 +1,18 @@
-import java.util.Scanner;
-
-
+/**
+ * A Rubik's Cube, represented as an array of edge cubies and an array corner cubies.
+ * @see #Cube()
+ * @see #Cubie
+ * @see #CubeInteractive
+ * @see #isSolved()
+ */
 public class Cube {
 
-    enum Colour {
+    // Colours of the Rubik's Cube (white, yellow, red, orange, green, blue)
+    private enum Colour {
         W, Y, R, O, G, B
     };
 
+    // Edge cubies are indexed from 0 to 11 in the following order:
     final byte EDGE_UB = 0,
                EDGE_UR = 1,
                EDGE_UF = 2,
@@ -20,6 +26,7 @@ public class Cube {
                EDGE_DB = 10,
                EDGE_DR = 11;
 
+    // Corner cubies are indexed from 0 to 7 in the following order:
     final byte CORNER_ULB = 0,
                CORNER_URB = 1,
                CORNER_URF = 2,
@@ -30,94 +37,13 @@ public class Cube {
                CORNER_DRF = 7;
 
 
-    public static void main(String[] args) {
-        Cube cube = new Cube();
-
-        Scanner sc = new Scanner(System.in);
-        String input = "";
-
-        while (!input.equals("QUIT")) {
-            cube.printCubeState();
-
-            System.out.println("Make a move:");
-            input = sc.nextLine().toUpperCase();
-
-            switch (input) {
-                case "U":
-                    cube.moveU();
-                    break;
-                case "U'":
-                    cube.moveUPrime();
-                    break;
-                case "U2":
-                    cube.moveU2();
-                    break;
-
-                case "L":
-                    cube.moveL();
-                    break;
-                case "L'":
-                    cube.moveLPrime();
-                    break;
-                case "L2":
-                    cube.moveL2();
-                    break;
-
-                case "F":
-                    cube.moveF();
-                    break;
-                case "F'":
-                    cube.moveFPrime();
-                    break;
-                case "F2":
-                    cube.moveF2();
-                    break;
-
-                case "R":
-                    cube.moveR();
-                    break;
-                case "R'":
-                    cube.moveRPrime();
-                    break;
-                case "R2":
-                    cube.moveR2();
-                    break;
-
-                case "B":
-                    cube.moveB();
-                    break;
-                case "B'":
-                    cube.moveBPrime();
-                    break;
-                case "B2":
-                    cube.moveB2();
-                    break;
-
-                case "D":
-                    cube.moveD();
-                    break;
-                case "D'":
-                    cube.moveDPrime();
-                    break;
-                case "D2":
-                    cube.moveD2();
-                    break;
-
-                case "QUIT":
-                    break;
-
-                default:
-                    System.out.println("ERROR: '" + input + "' is not a valid move.");
-                    break;
-            }
-        }
-
-        sc.close();
-    }
-
-
-    // Default cube orientation has white on top, red on front
-
+    /**
+     * A cubie on the Rubik's Cube.
+     * The cubie has an index (which represents which colours are on the cubie's sides)
+     * and an orientation ({0, 1} for edge cubies, {0, 1, 2} for corner cubies).
+     * @see #Cubie(byte, byte)
+     * @see #Cube
+     */
     class Cubie {
         // Edge cubies are indexed from 0 to 11 in the following order, with the following initial colours:
         // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11
@@ -138,34 +64,50 @@ public class Cube {
         //  ULB is index 0 (even), so URB (1), ULF (3), DLB (5) and DRF (7) are all an odd number of indices away)
 
         // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
+        private byte index, orientation;
 
-        byte index, orientation;
+        /**
+         * Constructor for a cubie.
+         * @param index - The index of the cubie.
+         * @param orientation - The orientation of the cubie.
+         * @see #Cubie
+         */
+        private Cubie(byte index, byte orientation) {
+            this.index = index;
+            this.orientation = orientation;
+        }
     }
+
 
     // Cube state is stored as an array of 12 edge cubies and an array of 8 corner cubies
     private Cubie[] edgeCubies = new Cubie[12];
     private Cubie[] cornerCubies = new Cubie[8];
 
-
-    // Initialize a solved cube
+    /**
+     * Constructor for a Rubik's Cube.
+     * The cube is initialised in the solved state, with the white face on top and the red face on front.
+     * @see #Cube
+     * @see #Cubie(byte, byte)
+     */
     public Cube() {
-
         // Initialize edge cubies
         for (byte i = 0; i < 12; i++) {
-            edgeCubies[i] = new Cubie();
-            edgeCubies[i].index = i;
-            edgeCubies[i].orientation = 0;
+            edgeCubies[i] = new Cubie(i, (byte) 0);
         }
 
         // Initialize corner cubies
         for (byte i = 0; i < 8; i++) {
-            cornerCubies[i] = new Cubie();
-            cornerCubies[i].index = i;
-            cornerCubies[i].orientation = 0;
+            cornerCubies[i] = new Cubie(i, (byte) 0);
         }
     }
 
 
+    /**
+     * Get the indices of the edge cubies.
+     * @return An array of the indices of the edge cubies.
+     * @see #getEdgeOrientations()
+     * @see #getCornerIndices()
+     */
     public byte[] getEdgeIndices() {
         byte[] indices = new byte[12];
 
@@ -176,6 +118,12 @@ public class Cube {
         return indices;
     }
 
+    /**
+     * Get the orientations of the edge cubies.
+     * @return An array of the orientations of the edge cubies.
+     * @see #getEdgeIndices()
+     * @see #getCornerOrientations()
+     */
     public byte[] getEdgeOrientations() {
         byte[] orientations = new byte[12];
 
@@ -186,6 +134,12 @@ public class Cube {
         return orientations;
     }
     
+    /**
+     * Get the indices of the corner cubies.
+     * @return An array of the indices of the corner cubies.
+     * @see #getCornerOrientations()
+     * @see #getEdgeIndices()
+     */
     public byte[] getCornerIndices() {
         byte[] indices = new byte[8];
 
@@ -196,6 +150,12 @@ public class Cube {
         return indices;
     }
 
+    /**
+     * Get the orientations of the corner cubies.
+     * @return An array of the orientations of the corner cubies.
+     * @see #getCornerIndices()
+     * @see #getEdgeOrientations()
+     */
     public byte[] getCornerOrientations() {
         byte[] orientations = new byte[8];
 
@@ -207,14 +167,19 @@ public class Cube {
     }
 
 
+    /**
+     * Check if the cube is solved.
+     * @return {@code true} if the cube is solved, {@code false} otherwise.
+     */
     public boolean isSolved() {
-        
+        // Check that all corner cubies are in the correct position and orientation
         for (byte i = 0; i < cornerCubies.length; i++) {
             if (cornerCubies[i].index != i || cornerCubies[i].orientation != 0) {
                 return false;
             }
         }
 
+        // Check that all edge cubies are in the correct position and orientation
         for (byte i = 0; i < edgeCubies.length; i++) {
             if (edgeCubies[i].index != i || edgeCubies[i].orientation != 0) {
                 return false;
@@ -225,25 +190,44 @@ public class Cube {
     }
 
 
-    public void flipEdgeOrientation(byte index) {
-        Cubie edge = edgeCubies[index];
+    /**
+     * Flip the orientation of an edge cubie.
+     * @param posIndex - The position index of the edge cubie.
+     * @see #increaseCornerOrientation(byte, byte)
+     */
+    private void flipEdgeOrientation(byte posIndex) {
+        Cubie edge = edgeCubies[posIndex];
         edge.orientation ^= 1;  // XOR orientation with 1 results in flip between 0 and 1
     }
 
-    public void increaseCornerOrientation(byte index, byte incr) {
-        Cubie corner = cornerCubies[index];
+    /**
+     * Increase the orientation of a corner cubie (modulo 3).
+     * @param posIndex - The position index of the corner cubie.
+     * @param incr - The amount to increase the orientation by.
+     * @see #flipEdgeOrientation(byte)
+     */
+    private void increaseCornerOrientation(byte posIndex, byte incr) {
+        Cubie corner = cornerCubies[posIndex];
+
+        corner.orientation += incr;
 
         // faster equivalent to corner.orientation = (corner.orientation + incr) % 3
-        if (corner.orientation + incr == 3) {
+        if (corner.orientation == 3) {
             corner.orientation = 0;
         }
-        else if (corner.orientation + incr == 4) {
+        else if (corner.orientation == 4) {
             corner.orientation = 1;
         }
     }
 
 
-    public Colour[] getEdgeColours(byte posIndex) {
+    /**
+     * Get the colours of an edge cubie.
+     * @param posIndex - The position index of the edge cubie.
+     * @return An array of the colours of the edge cubie.
+     * @see #getCornerColours(byte)
+     */
+    private Colour[] getEdgeColours(byte posIndex) {
         Cubie edge = edgeCubies[posIndex];
         Colour[] colours = new Colour[2];
 
@@ -319,7 +303,14 @@ public class Cube {
         return colours;
     }
 
-    public Colour[] getCornerColours(byte posIndex) {
+
+    /**
+     * Get the colours of a corner cubie.
+     * @param posIndex - The position index of the corner cubie.
+     * @return An array of the colours of the corner cubie. The colours are in the order top/bottom, left/right, front/back. 
+     * @see #getEdgeColours(byte)
+     */
+    private Colour[] getCornerColours(byte posIndex) {
         Cubie corner = cornerCubies[posIndex];
         Colour[] colours = new Colour[3];
 
@@ -379,7 +370,6 @@ public class Cube {
             }
         }
 
-
         switch (corner.index) {
             case CORNER_ULB:
                 colours[i0] = Colour.W;
@@ -435,6 +425,9 @@ public class Cube {
     }
 
 
+    /**
+     * Perform a clockwise turn of the U face.
+     */
     public void moveU() {
         Cubie temp               = cornerCubies[CORNER_ULF];
         cornerCubies[CORNER_ULF] = cornerCubies[CORNER_URF];
@@ -449,6 +442,9 @@ public class Cube {
         edgeCubies[EDGE_UB] = temp;
     }
 
+    /**
+     * Perform a counter-clockwise turn of the U face.
+     */
     public void moveUPrime() {
         Cubie temp               = cornerCubies[CORNER_ULB];
         cornerCubies[CORNER_ULB] = cornerCubies[CORNER_URB];
@@ -463,6 +459,9 @@ public class Cube {
         edgeCubies[EDGE_UL] = temp;
     }
 
+    /**
+     * Perform a double turn of the U face.
+     */
     public void moveU2() {
         Cubie temp               = cornerCubies[CORNER_URF];
         cornerCubies[CORNER_URF] = cornerCubies[CORNER_ULB];
@@ -481,7 +480,9 @@ public class Cube {
         edgeCubies[EDGE_UR] = temp;
     }
 
-
+    /**
+     * Perform a clockwise turn of the L face.
+     */
     public void moveL() {
         Cubie temp               = cornerCubies[CORNER_DLB];
         cornerCubies[CORNER_DLB] = cornerCubies[CORNER_DLF];
@@ -501,6 +502,9 @@ public class Cube {
         increaseCornerOrientation(CORNER_ULB, (byte) 2);
     }
 
+    /**
+     * Perform a counter-clockwise turn of the L face.
+     */
     public void moveLPrime() {
         Cubie temp               = cornerCubies[CORNER_DLB];
         cornerCubies[CORNER_DLB] = cornerCubies[CORNER_ULB];
@@ -520,6 +524,9 @@ public class Cube {
         increaseCornerOrientation(CORNER_ULB, (byte) 2);
     }
 
+    /**
+     * Perform a double turn of the L face.
+     */
     public void moveL2() {
         Cubie temp               = cornerCubies[CORNER_ULF];
         cornerCubies[CORNER_ULF] = cornerCubies[CORNER_DLB];
@@ -538,7 +545,9 @@ public class Cube {
         edgeCubies[EDGE_UL] = temp;
     }
 
-
+    /**
+     * Perform a clockwise turn of the F face.
+     */
     public void moveF() {
         Cubie temp               = cornerCubies[CORNER_ULF];
         cornerCubies[CORNER_ULF] = cornerCubies[CORNER_DLF];
@@ -563,6 +572,9 @@ public class Cube {
         flipEdgeOrientation(EDGE_FR);
     }
 
+    /**
+     * Perform a counter-clockwise turn of the F face.
+     */
     public void moveFPrime() {
         Cubie temp               = cornerCubies[CORNER_ULF];
         cornerCubies[CORNER_ULF] = cornerCubies[CORNER_URF];
@@ -587,6 +599,9 @@ public class Cube {
         flipEdgeOrientation(EDGE_FR);
     }
 
+    /**
+     * Perform a double turn of the F face.
+     */
     public void moveF2() {
         Cubie temp               = cornerCubies[CORNER_DRF];
         cornerCubies[CORNER_DRF] = cornerCubies[CORNER_ULF];
@@ -605,7 +620,9 @@ public class Cube {
         edgeCubies[EDGE_FL] = temp;
     }
 
-
+    /**
+     * Perform a clockwise turn of the R face.
+     */
     public void moveR() {
         Cubie temp               = cornerCubies[CORNER_DRB];
         cornerCubies[CORNER_DRB] = cornerCubies[CORNER_URB];
@@ -625,6 +642,9 @@ public class Cube {
         increaseCornerOrientation(CORNER_URB, (byte) 1);
     }
 
+    /**
+     * Perform a counter-clockwise turn of the R face.
+     */
     public void moveRPrime() {
         Cubie temp               = cornerCubies[CORNER_DRB];
         cornerCubies[CORNER_DRB] = cornerCubies[CORNER_DRF];
@@ -644,6 +664,9 @@ public class Cube {
         increaseCornerOrientation(CORNER_URB, (byte) 1);
     }
 
+    /**
+     * Perform a double turn of the R face.
+     */
     public void moveR2() {
         Cubie temp               = cornerCubies[CORNER_URF];
         cornerCubies[CORNER_URF] = cornerCubies[CORNER_DRB];
@@ -662,7 +685,9 @@ public class Cube {
         edgeCubies[EDGE_UR] = temp;
     }
 
-
+    /**
+     * Perform a clockwise turn of the B face.
+     */
     public void moveB() {
         Cubie temp               = cornerCubies[CORNER_ULB];
         cornerCubies[CORNER_ULB] = cornerCubies[CORNER_URB];
@@ -687,6 +712,9 @@ public class Cube {
         flipEdgeOrientation(EDGE_BR);
     }
 
+    /**
+     * Perform a counter-clockwise turn of the B face.
+     */
     public void moveBPrime() {
         Cubie temp               = cornerCubies[CORNER_ULB];
         cornerCubies[CORNER_ULB] = cornerCubies[CORNER_DLB];
@@ -711,6 +739,9 @@ public class Cube {
         flipEdgeOrientation(EDGE_BR);
     }
 
+    /**
+     * Perform a double turn of the B face.
+     */
     public void moveB2() {
         Cubie temp               = cornerCubies[CORNER_DRB];
         cornerCubies[CORNER_DRB] = cornerCubies[CORNER_ULB];
@@ -729,7 +760,9 @@ public class Cube {
         edgeCubies[EDGE_BL] = temp;
     }
 
-
+    /**
+     * Perform a clockwise turn of the D face.
+     */
     public void moveD() {
         Cubie temp               = cornerCubies[CORNER_DLB];
         cornerCubies[CORNER_DLB] = cornerCubies[CORNER_DRB];
@@ -744,6 +777,9 @@ public class Cube {
         edgeCubies[EDGE_DL] = temp;
     }
 
+    /**
+     * Perform a counter-clockwise turn of the D face.
+     */
     public void moveDPrime() {
         Cubie temp               = cornerCubies[CORNER_DLF];
         cornerCubies[CORNER_DLF] = cornerCubies[CORNER_DRF];
@@ -758,6 +794,9 @@ public class Cube {
         edgeCubies[EDGE_DB] = temp;
     }
 
+    /**
+     * Perform a double turn of the D face.
+     */
     public void moveD2() {
         Cubie temp               = cornerCubies[CORNER_DRF];
         cornerCubies[CORNER_DRF] = cornerCubies[CORNER_DLB];
@@ -777,18 +816,9 @@ public class Cube {
     }
 
 
-
-    /* Print the cube state in the following format:
-               U U U
-               U U U
-               U U U
-        L L L  F F F  R R R  B B B
-        L L L  F F F  R R R  B B B
-        L L L  F F F  R R R  B B B
-               D D D
-               D D D
-               D D D
-    */
+    /**
+     * Print the cube state in a human-readable format.
+     */
     public void printCubeState() {
         
         // Print top face
@@ -875,5 +905,4 @@ public class Cube {
         System.out.println(getCornerColours(CORNER_DRB)[0]);
         System.out.println("\n");
     }
-
 }

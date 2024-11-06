@@ -1,10 +1,24 @@
+/**
+ * The pattern database for the corner cubies.
+ * @see PatternDatabase
+ */
 public class CornerPatternDatabase extends PatternDatabase {
 
-    public CornerPatternDatabase(byte n, byte k) {
-        super(n, k);
+    // For this database, we are looking at all 8 corners, so n=8 and k=8
+    // There are 8! * 3^7 (8 corners; 7 of which can be in one of 3 states (the 8th is fixed)) = 88179840 possible states
+    // Also note that roughly 84MB storage needed (88179840 bytes / 1024^2 = ~84MB)
+    final static int DATABASE_SIZE = 88179840;
+    final static byte N = 8, K = 8;
+
+    /**
+     * Constructor for the corner pattern database.
+     * Sets the database size to 88179840, n to 8, and k to 8.
+     */
+    public CornerPatternDatabase() {
+        super(DATABASE_SIZE, N, K);
     }
 
-    public int getDatabaseIndex(Cube cube) {
+    protected int getDatabaseIndex(Cube cube) {
         // Get the corner indices and orientations from the cube
         byte[] cornerIndices = cube.getCornerIndices();
         byte[] cornerOrientations = cube.getCornerOrientations();
@@ -26,5 +40,4 @@ public class CornerPatternDatabase extends PatternDatabase {
         // (2187 = 3^7)
         return indexRank * 2187 + orientationRank;
     }
-
 }
