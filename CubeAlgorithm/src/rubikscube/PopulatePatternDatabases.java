@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import rubikscube.Cube.Move;
 
 public class PopulatePatternDatabases {
-
-    private static final String DATABASES_PATH = "CubeAlgorithm/databases/";
     
     public static void main(String[] args) {
-        populateCornerDatabase();
-        populateFirstEdgeDatabase();
-        populateSecondEdgeDatabase();
+        // populateCornerDatabase();
+        // populateFirstEdgeDatabase();
+        // populateSecondEdgeDatabase();
     }
 
 
@@ -21,8 +19,8 @@ public class PopulatePatternDatabases {
 
         System.out.println("Populating corner database...");
         breadthFirstSearch(cube, cornerPDB);
-        cornerPDB.writeDatabaseToFile(DATABASES_PATH + "corners.pdb");
-        System.out.println("Corner database populated.");
+        cornerPDB.writeDatabaseToFile("corners.pdb");
+        System.out.println("Corner database populated.\n");
     }
 
     private static void populateFirstEdgeDatabase() {
@@ -31,8 +29,8 @@ public class PopulatePatternDatabases {
 
         System.out.println("Populating first edge database...");
         breadthFirstSearch(cube, firstEdgePDB);
-        firstEdgePDB.writeDatabaseToFile(DATABASES_PATH + "first_edges.pdb");
-        System.out.println("First edge database populated.");
+        firstEdgePDB.writeDatabaseToFile("first_edges.pdb");
+        System.out.println("First edge database populated.\n");
     }
 
     private static void populateSecondEdgeDatabase() {
@@ -41,8 +39,8 @@ public class PopulatePatternDatabases {
 
         System.out.println("Populating second edge database...");
         breadthFirstSearch(cube, secondEdgePDB);
-        secondEdgePDB.writeDatabaseToFile(DATABASES_PATH + "second_edges.pdb");
-        System.out.println("Second edge database populated.");
+        secondEdgePDB.writeDatabaseToFile("second_edges.pdb");
+        System.out.println("Second edge database populated.\n");
     }
 
 
@@ -90,6 +88,7 @@ public class PopulatePatternDatabases {
             // Move to the node (updates movesList and cube)
             moveToNode(currentNode, movesList, cube);
             totalVisitedNodes++;
+            System.out.print("nodes visited: " + totalVisitedNodes + "\r");
 
             // Update the max depth
             if (movesList.size() > maxDepth) {

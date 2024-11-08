@@ -186,13 +186,16 @@ public abstract class PatternDatabase {
 
     /**
      * Write the pattern database to a file.
-     * @param path - The path to write the database to.
+     * @param path - The name of the file to write the database to (should end in .pdb).
      * @see #readDatabaseFromFile(String)
      */
-    void writeDatabaseToFile(String path) {
+    public void writeDatabaseToFile(String filename) {
         try {
-            // Create the file if it does not exist
-            File databaseFile = new File(path);
+            final String DATABASES_PATH = "CubeAlgorithm/databases/";
+
+            // Create the file and directories if they don't exist
+            new File(DATABASES_PATH).mkdirs();
+            File databaseFile = new File(DATABASES_PATH + filename);
             databaseFile.createNewFile();
 
             // Write the database to the file
@@ -212,7 +215,7 @@ public abstract class PatternDatabase {
      * @return {@code true} if the database was read successfully, {@code false} if an error occurred.
      * @see #writeDatabaseToFile(String)
      */
-    boolean readDatabaseFromFile(String path) {
+    public boolean readDatabaseFromFile(String path) {
         File file = new File(path);
 
         try (FileInputStream in = new FileInputStream(file)) {
