@@ -7,9 +7,11 @@ import rubikscube.Cube.Move;
 public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
-        // populateCornerDatabase();
+        populateCornerDatabase();
         // populateFirstEdgeDatabase();
         // populateSecondEdgeDatabase();
+        populateSmallFirstEdgeDatabase();
+        populateSmallSecondEdgeDatabase();
     }
 
 
@@ -40,6 +42,27 @@ public class PopulatePatternDatabases {
         System.out.println("Populating second edge database...");
         breadthFirstSearch(cube, secondEdgePDB);
         secondEdgePDB.writeDatabaseToFile("second_edges.pdb");
+        System.out.println("Second edge database populated.\n");
+    }
+
+
+    private static void populateSmallFirstEdgeDatabase() {
+        Cube cube = new Cube();
+        SmallFirstEdgePatternDatabase firstEdgePDB = new SmallFirstEdgePatternDatabase();
+
+        System.out.println("Populating first edge database (6 edges)...");
+        breadthFirstSearch(cube, firstEdgePDB);
+        firstEdgePDB.writeDatabaseToFile("first_six_edges.pdb");
+        System.out.println("First edge database populated.\n");
+    }
+
+    private static void populateSmallSecondEdgeDatabase() {
+        Cube cube = new Cube();
+        SmallSecondEdgePatternDatabase secondEdgePDB = new SmallSecondEdgePatternDatabase();
+
+        System.out.println("Populating second edge database...");
+        breadthFirstSearch(cube, secondEdgePDB);
+        secondEdgePDB.writeDatabaseToFile("second__six_edges.pdb");
         System.out.println("Second edge database populated.\n");
     }
 
