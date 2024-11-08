@@ -10,6 +10,8 @@ public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         populateCornerDatabase();
+        populateFirstEdgeDatabase();
+        populateSecondEdgeDatabase();
     }
 
 
