@@ -1,3 +1,4 @@
+package rubikscube;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.io.File;
@@ -13,20 +14,6 @@ import java.io.FileInputStream;
  * @see SecondEdgePatternDatabase
  */
 public abstract class PatternDatabase {
-    
-    public static void main(String[] args) {
-        Cube cube = new Cube();
-        CornerPatternDatabase cornerPDB = new CornerPatternDatabase();
-        FirstEdgePatternDatabase edgePDB = new FirstEdgePatternDatabase();
-
-        cube.moveF();
-
-        int cornerInd = cornerPDB.getDatabaseIndex(cube);
-        int edgeInd = edgePDB.getDatabaseIndex(cube);
-        System.out.println("corner index: " + cornerInd);
-        System.out.println("edge index: " + edgeInd);
-    }
-
 
     private byte[] database;
     private int entriesSet;
@@ -138,6 +125,14 @@ public abstract class PatternDatabase {
         return entriesSet;
     }
 
+    /**
+     * Check if the database is full (all entries have been set).
+     * @return {@code true} if the database is full, {@code false} if there are still unset entries.
+     */
+    public boolean isFull() {
+        return entriesSet == database.length;
+    }
+
 
     /**
      * Calculate the database index for a cube (by using the indices and orientations of a subset of cubies).
@@ -195,9 +190,15 @@ public abstract class PatternDatabase {
      * @see #readDatabaseFromFile(String)
      */
     void writeDatabaseToFile(String path) {
-        try (FileOutputStream out = new FileOutputStream(path)) {
+        try {
+            // Create the file if it does not exist
+            File databaseFile = new File(path);
+            databaseFile.createNewFile();
+
             // Write the database to the file
-            out.write(database);
+            FileOutputStream outStream = new FileOutputStream(databaseFile, false);
+            outStream.write(database);
+            outStream.close();
         }
         catch (Exception e) {
             System.err.println("Error writing database to file:");

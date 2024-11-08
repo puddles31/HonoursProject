@@ -1,3 +1,5 @@
+package rubikscube;
+
 /**
  * A Rubik's Cube, represented as an array of edge cubies and an array corner cubies.
  * @see #Cube()
@@ -8,9 +10,20 @@
 public class Cube {
 
     // Colours of the Rubik's Cube (white, yellow, red, orange, green, blue)
-    private enum Colour {
+    public static enum Colour {
         W, Y, R, O, G, B
     };
+
+    // Moves that can be made on the Rubik's Cube
+    public static enum Move {
+        U, UPRIME, U2,
+        L, LPRIME, L2,
+        F, FPRIME, F2,
+        R, RPRIME, R2,
+        B, BPRIME, B2,
+        D, DPRIME, D2,
+        NONE    // placeholder move for root node
+    }
 
     // Edge cubies are indexed from 0 to 11 in the following order:
     final byte EDGE_UB = 0,
@@ -424,6 +437,148 @@ public class Cube {
         return colours;
     }
 
+
+    /**
+     * Make a move on the Rubik's Cube.
+     * @param move - The move to make.
+     */
+    public void makeMove(Move move) {
+        switch (move) {
+            case U:
+                moveU();
+                break;
+            case UPRIME:
+                moveUPrime();
+                break;
+            case U2:
+                moveU2();
+                break;
+            
+            case L:
+                moveL();
+                break;
+            case LPRIME:
+                moveLPrime();
+                break;
+            case L2:
+                moveL2();
+                break;
+
+            case F:
+                moveF();
+                break;
+            case FPRIME:
+                moveFPrime();
+                break;
+            case F2:
+                moveF2();
+                break;
+            
+            case R:
+                moveR();
+                break;
+            case RPRIME:
+                moveRPrime();
+                break;
+            case R2:
+                moveR2();
+                break;
+            
+            case B:
+                moveB();
+                break;
+            case BPRIME:
+                moveBPrime();
+                break;
+            case B2:
+                moveB2();
+                break;
+            
+            case D:
+                moveD();
+                break;
+            case DPRIME:
+                moveDPrime();
+                break;
+            case D2:
+                moveD2();
+                break;
+            
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Undo a move on the Rubik's Cube by performing the inverse move (e.g. L' is the inverse of L).
+     * @param move - The move to undo.
+     */
+    public void undoMove(Move move) {
+        switch (move) {
+            case U:
+                moveUPrime();
+                break;
+            case UPRIME:
+                moveU();
+                break;
+            case U2:
+                moveU2();
+                break;
+            
+            case L:
+                moveLPrime();
+                break;
+            case LPRIME:
+                moveL();
+                break;
+            case L2:
+                moveL2();
+                break;
+
+            case F:
+                moveFPrime();
+                break;
+            case FPRIME:
+                moveF();
+                break;
+            case F2:
+                moveF2();
+                break;
+            
+            case R:
+                moveRPrime();
+                break;
+            case RPRIME:
+                moveR();
+                break;
+            case R2:
+                moveR2();
+                break;
+            
+            case B:
+                moveBPrime();
+                break;
+            case BPRIME:
+                moveB();
+                break;
+            case B2:
+                moveB2();
+                break;
+            
+            case D:
+                moveDPrime();
+                break;
+            case DPRIME:
+                moveD();
+                break;
+            case D2:
+                moveD2();
+                break;
+            
+            default:
+                break;
+        }
+    }
 
     /**
      * Perform a clockwise turn of the U face.

@@ -1,3 +1,4 @@
+package rubikscube;
 import java.util.Scanner;
 
 /**

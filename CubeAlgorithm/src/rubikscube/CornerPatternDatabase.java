@@ -1,3 +1,5 @@
+package rubikscube;
+
 /**
  * The pattern database for the corner cubies.
  * @see PatternDatabase
