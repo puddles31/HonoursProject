@@ -78,13 +78,11 @@ public abstract class PatternDatabase {
      * Set the number of moves required to solve a cube state in the database.
      * Only succeeds if the number of moves is less than the current number of moves stored.
      * Also increases a counter for the number of set entries if the number of moves was not already set.
-     * @param cube - The cube to set the number of moves for.
+     * @param index - The database index to set the number of moves for.
      * @param noMoves - The number of moves required to solve the subset of cubies.
      * @return {@code true} if the number of moves was set successfully, {@code false} if the number of moves was already set.
      */
-    public boolean setNumberOfMoves(Cube cube, byte noMoves) {
-        int index = getDatabaseIndex(cube);
-
+    public boolean setNumberOfMoves(int index, byte noMoves) {
         // If database entry is not set (MAX_VALUE is the initial val), increment the number of set entries
         if (database[index] == Byte.MAX_VALUE) {
             entriesSet++;
@@ -99,6 +97,18 @@ public abstract class PatternDatabase {
             return false;
         }
     }
+
+    /**
+     * Set the number of moves required to solve a cube state in the database.
+     * Only succeeds if the number of moves is less than the current number of moves stored.
+     * Also increases a counter for the number of set entries if the number of moves was not already set.
+     * @param cube - The cube to set the number of moves for.
+     * @param noMoves - The number of moves required to solve the subset of cubies.
+     * @return {@code true} if the number of moves was set successfully, {@code false} if the number of moves was already set.
+     */
+    public boolean setNumberOfMoves(Cube cube, byte noMoves) {
+        return setNumberOfMoves(getDatabaseIndex(cube), noMoves);
+    }
     
     /**
      * Get the number of moves required to solve a cube state from the database.
@@ -107,6 +117,15 @@ public abstract class PatternDatabase {
      */
     public byte getNumberOfMoves(Cube cube) {
         return database[getDatabaseIndex(cube)];
+    }
+
+    /**
+     * Get the number of moves required to solve a cube state from the database.
+     * @param index - The database index to get the number of moves for.
+     * @return The number of moves required to solve the subset of cubies.
+     */
+    public byte getNumberOfMoves(int index) {
+        return database[index];
     }
 
     /**

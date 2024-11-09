@@ -1,17 +1,18 @@
 package rubikscube;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import rubikscube.Cube.Move;
 
 public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
-        populateCornerDatabase();
-        // populateFirstEdgeDatabase();
-        // populateSecondEdgeDatabase();
-        populateSmallFirstEdgeDatabase();
-        populateSmallSecondEdgeDatabase();
+        // populateCornerDatabase();
+        populateFirstEdgeDatabase();
+        populateSecondEdgeDatabase();
+        // populateSmallFirstEdgeDatabase();
+        // populateSmallSecondEdgeDatabase();
     }
 
 
@@ -30,7 +31,7 @@ public class PopulatePatternDatabases {
         FirstEdgePatternDatabase firstEdgePDB = new FirstEdgePatternDatabase();
 
         System.out.println("Populating first edge database...");
-        breadthFirstSearch(cube, firstEdgePDB);
+        iterativeDeepeningDepthFirstSearch(cube, firstEdgePDB);
         firstEdgePDB.writeDatabaseToFile("first_edges.pdb");
         System.out.println("First edge database populated.\n");
     }
@@ -40,7 +41,7 @@ public class PopulatePatternDatabases {
         SecondEdgePatternDatabase secondEdgePDB = new SecondEdgePatternDatabase();
 
         System.out.println("Populating second edge database...");
-        breadthFirstSearch(cube, secondEdgePDB);
+        iterativeDeepeningDepthFirstSearch(cube, secondEdgePDB);
         secondEdgePDB.writeDatabaseToFile("second_edges.pdb");
         System.out.println("Second edge database populated.\n");
     }
@@ -67,20 +68,19 @@ public class PopulatePatternDatabases {
     }
 
 
-    private static class Node {
+    private static class BFSNode {
         Move move;
-        Node parent;
+        BFSNode parent;
 
-        public Node(Move move, Node parent) {
+        public BFSNode(Move move, BFSNode parent) {
             this.move = move;
             this.parent = parent;
         }
     }
 
-
     private static ArrayList<Move> breadthFirstSearch(Cube cube, PatternDatabase database) {
         // nodeQueue is a queue of nodes to be visited in the breadth-first search
-        ArrayDeque<Node> nodeQueue = new ArrayDeque<Node>();
+        ArrayDeque<BFSNode> nodeQueue = new ArrayDeque<BFSNode>();
 
         // movesList is a list of moves to get to the current node
         ArrayList<Move> movesList = new ArrayList<Move>();
@@ -92,7 +92,7 @@ public class PopulatePatternDatabases {
         long startTime = System.currentTimeMillis();
 
         // Create the root node and add it to the queue
-        Node root = new Node(Move.NONE, null);
+        BFSNode root = new BFSNode(Move.NONE, null);
         nodeQueue.push(root);
 
         // Set the number of moves in the database to solve the initial state to 0
@@ -103,7 +103,7 @@ public class PopulatePatternDatabases {
         while (!nodeQueue.isEmpty()) {
 
             // Get next node in the queue
-            Node currentNode = nodeQueue.removeFirst();   
+            BFSNode currentNode = nodeQueue.removeFirst();   
             
             // Clear the moves list
             movesList.clear();
@@ -136,7 +136,7 @@ public class PopulatePatternDatabases {
                     // Try to update the number of moves in the database
                     // If successful, add the node to the queue; if not, the node was visited before with fewer moves
                     if (database.setNumberOfMoves(cube, (byte) (movesList.size() + 1))) {
-                        nodeQueue.addLast(new Node(move, currentNode));
+                        nodeQueue.addLast(new BFSNode(move, currentNode));
 
                         // If the database is full, search is complete
                         if (database.isFull()) {
@@ -146,6 +146,7 @@ public class PopulatePatternDatabases {
                             System.out.println("Moves to complete the database: " + movesList.size());
                             System.out.println("Visited " + totalVisitedNodes + " nodes.");
                             System.out.println("Max queue size: " + maxQueueSize);
+                            System.out.println("Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000.0) + "s");
 
                             // Undo all of the moves to get back to the initial cube state
                             undoAllMoves(nodeQueue.getLast(), cube);
@@ -174,11 +175,94 @@ public class PopulatePatternDatabases {
     }
 
 
+    private static class IDDFSNode {
+        Cube cube;
+        Move move;
+        byte depth;
+
+        public IDDFSNode(Cube cube, Move move, byte depth) {
+            this.cube = cube;
+            this.move = move;
+            this.depth = depth;
+        }
+    }
+
+    private static void iterativeDeepeningDepthFirstSearch(Cube cube, PatternDatabase database) {
+        // Use a deque as a stack for nodes
+        ArrayDeque<IDDFSNode> nodeStack = new ArrayDeque<IDDFSNode>();
+        IDDFSNode currentNode;
+        int currentDepth = 0;
+        int statesIndexed = 0;
+        long startTime = System.currentTimeMillis();
+        
+        // Set the number of moves in the database to solve the initial state to 0
+        database.setNumberOfMoves(cube, (byte) 0);
+        statesIndexed++;
+
+        // Keep searching nodes until database is full
+        while (!database.isFull()) {
+
+            if (nodeStack.isEmpty()) {
+                // Depth level complete
+                System.out.println("IDDFS: finished depth " + currentDepth + " after " + ((System.currentTimeMillis() - startTime) / 1000.0) + "s. Indexed " + statesIndexed + " states.");
+
+                // Increate the current depth
+                currentDepth++;
+
+                // Push the root node onto the stack
+                nodeStack.addFirst(new IDDFSNode(cube, Move.NONE, (byte) 0));
+            }
+
+            // Pop node off top of stack
+            currentNode = nodeStack.removeFirst();
+
+            // Iterate over all possible moves from the current node
+            for (Move move : Move.values()) {
+
+                // Skip the empty move
+                if (move == Move.NONE) {
+                    continue;
+                }
+
+                // If at the root node or the move shouldn't be skipped
+                if (currentNode.depth == 0 || !skipMove(move, currentNode.move)) {
+
+                    // Create a copy of the current cube state
+                    Cube cubeCopy = new Cube(currentNode.cube);
+                    byte cubeCopyDepth = (byte) (currentNode.depth + 1);
+
+                    // Make the move on the copy
+                    cubeCopy.makeMove(move);
+
+                    int databaseIndex = database.getDatabaseIndex(cubeCopy);
+                    
+                    // If the cube state has been encountered at an earlier depth, skip it
+                    if (database.getNumberOfMoves(databaseIndex) < cubeCopyDepth) {
+                        continue;
+                    }
+
+                    // Index states at the depth limit; otherwise, add them to the stack
+                    if (cubeCopyDepth == currentDepth) {
+                        if (database.setNumberOfMoves(cubeCopy, cubeCopyDepth)) {
+                            statesIndexed++;
+                            System.out.print("states indexed: " + statesIndexed + "\r");
+                        }
+                    }
+                    else {
+                        nodeStack.addFirst(new IDDFSNode(cubeCopy, move, cubeCopyDepth));
+                    }
+                }
+            }
+        }
+        System.out.println("Iterative-deepening depth-first search complete. Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000.0) + "s");
+    }
+
+
     // Apply the moves to get to the target by traversing from the root node to the target
-    private static void moveToNode(Node target, ArrayList<Move> movesList, Cube cube) {
+    private static void moveToNode(BFSNode target, ArrayList<Move> movesList, Cube cube) {
         // Use a deque as a stack to store the moves
         ArrayDeque<Move> movesStack = new ArrayDeque<Move>();
-        Node currentNode = target;
+        BFSNode currentNode = target;
 
         // First go from the target node to the root, adding the moves to the stack
         while (currentNode.parent != null) {
@@ -195,8 +279,8 @@ public class PopulatePatternDatabases {
     }
 
     // Undo all of the moves starting with the target, going back to the root node
-    private static void undoAllMoves(Node target, Cube cube) {
-        Node currentNode = target;
+    private static void undoAllMoves(BFSNode target, Cube cube) {
+        BFSNode currentNode = target;
 
         while (currentNode.parent != null) {
             cube.undoMove(currentNode.move);

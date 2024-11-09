@@ -113,7 +113,27 @@ public class Cube {
             cornerCubies[i] = new Cubie(i, (byte) 0);
         }
     }
+    
+    /**
+     * Copy constructor for a Rubik's Cube.
+     * The cube is initialised with the same edge/corner cubie indices/orientations as the given cube.
+     * @param otherCube - The cube to copy.
+     */
+    public Cube(Cube otherCube) {
+        byte[] otherEdgeIndices = otherCube.getEdgeIndices();
+        byte[] otherEdgeOrientations = otherCube.getEdgeOrientations();
 
+        for (byte i = 0; i < 12; i++) {
+            edgeCubies[i] = new Cubie(otherEdgeIndices[i], otherEdgeOrientations[i]);
+        }
+
+        byte[] otherCornerIndices = otherCube.getCornerIndices();
+        byte[] otherCornerOrientations = otherCube.getCornerOrientations();
+
+        for (byte i = 0; i < 8; i++) {
+            cornerCubies[i] = new Cubie(otherCornerIndices[i], otherCornerOrientations[i]);
+        }
+    }
 
     /**
      * Get the indices of the edge cubies.
