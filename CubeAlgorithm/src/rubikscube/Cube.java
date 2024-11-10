@@ -9,20 +9,23 @@ package rubikscube;
  */
 public class Cube {
 
-    // Colours of the Rubik's Cube (white, yellow, red, orange, green, blue)
+    /**
+     * Colours on the Rubik's Cube (W, Y, R, O, G, B).
+     */
     public static enum Colour {
         W, Y, R, O, G, B
     };
 
-    // Moves that can be made on the Rubik's Cube
+    /**
+     * Moves that can be made on the Rubik's Cube.
+     */
     public static enum Move {
         U, UPRIME, U2,
         L, LPRIME, L2,
         F, FPRIME, F2,
         R, RPRIME, R2,
         B, BPRIME, B2,
-        D, DPRIME, D2,
-        NONE    // placeholder move for root node
+        D, DPRIME, D2
     }
 
     // Edge cubies are indexed from 0 to 11 in the following order:

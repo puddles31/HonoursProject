@@ -235,11 +235,12 @@ public abstract class PatternDatabase {
      * @see #writeDatabaseToFile(String)
      */
     public boolean readDatabaseFromFile(String path) {
-        File file = new File(path);
+        final String DATABASES_PATH = "CubeAlgorithm/databases/";
+        File databaseFile = new File(DATABASES_PATH + path);
 
-        try (FileInputStream in = new FileInputStream(file)) {
+        try (FileInputStream in = new FileInputStream(databaseFile)) {
             // If the file size (number of bytes) does not match the database size (number of entries, each 1 byte)
-            if (file.length() != database.length) {
+            if (databaseFile.length() != database.length) {
                 System.err.println("Error reading database from file: file size does not match database size");
                 return false;
             }
