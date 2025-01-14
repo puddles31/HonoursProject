@@ -75,7 +75,7 @@ public class Kilominx {
 
         // 10,     11,     12,     13,     14,     15,     16,     17,     18,     19
         // BRD,    MBM,    BLD,    MBL,    FLD,    DFM,    DFL,    DFR,    DBL,    DBR
-        // YeLGOr, YePuOr, PuOrLB, PuDGLB, DGLBBe, BePiGr, LBBeGr, PiLGGr, OrLBGr, LGOrGr
+        // YeLGOr, YePuOr, PuOrLB, PuDGLB, DGLBBe, BePiGy, LBBeGy, PiLGGy, OrLBGy, LGOrGy
 
         // Kubies have an orientation of:
         //  - 0 (oriented),
@@ -202,8 +202,189 @@ public class Kilominx {
      * up-front-right/down-back-left, down-front-left/up-back-right, down-front-right/up-back-left.
      */
     private Colour[] getKubieColours(byte posIndex) {
-        System.out.println("Not implemented yet");
-        return null;
+        Kubie kubie = kubies[posIndex];
+        Colour[] colours = new Colour[3];
+
+        byte i0, i1, i2;
+
+        // correct orientation
+        if (kubie.orientation == 0) {
+            i0 = 0;
+            i1 = 1;
+            i2 = 2;
+
+            // // corner is an odd number of indices away, so the other two colours are flipped
+            // if ((kubie.index + posIndex) % 2 == 1) {
+            //     byte temp = i1;
+            //     i1 = i2;
+            //     i2 = temp;
+            // }
+        }
+        // colours turned CW
+        else if (kubie.orientation == 1) {
+            if ((posIndex % 2) == 0) {
+                i0 = 1;
+                i1 = 2;
+                i2 = 0;
+            }
+            else {
+                i0 = 2;
+                i1 = 0;
+                i2 = 1;
+            }
+
+            // // corner is an odd number of indices away, so the other two colours are flipped
+            // if ((kubie.index + posIndex) % 2 == 1) {
+            //     byte temp = i1;
+            //     i1 = i2;
+            //     i2 = temp;
+            // }
+        }
+        // colours turned CCW
+        else {
+            if ((posIndex % 2) == 0) {
+                i0 = 2;
+                i1 = 1;
+                i2 = 0;
+            }
+            else {
+                i0 = 1;
+                i1 = 0;
+                i2 = 2;
+            }
+
+            // // corner is an EVEN number of indices away, so the other two colours are flipped
+            // if ((kubie.index + posIndex) % 2 == 0) {
+            //     byte temp = i1;
+            //     i1 = i2;
+            //     i2 = temp;
+            // }
+        }
+
+        switch (kubie.index) {
+            case KUBIE_UFL:
+                colours[i0] = Colour.Wh;
+                colours[i1] = Colour.DG;
+                colours[i2] = Colour.Re;
+                break;
+
+            case KUBIE_UFR:
+                colours[i0] = Colour.Wh;
+                colours[i1] = Colour.Re;
+                colours[i2] = Colour.DB;
+                break;
+
+            case KUBIE_UBL:
+                colours[i0] = Colour.Wh;
+                colours[i1] = Colour.DG;
+                colours[i2] = Colour.Pu;
+                break;
+
+            case KUBIE_UBR:
+                colours[i0] = Colour.Wh;
+                colours[i1] = Colour.DB;
+                colours[i2] = Colour.Ye;
+                break;
+
+            case KUBIE_UBM:
+                colours[i0] = Colour.Wh;
+                colours[i1] = Colour.Ye;
+                colours[i2] = Colour.Pu;
+                break;
+
+            case KUBIE_MFL:
+                colours[i0] = Colour.DG;
+                colours[i1] = Colour.Re;
+                colours[i2] = Colour.Be;
+                break;
+
+            case KUBIE_FMD:
+                colours[i0] = Colour.Re;
+                colours[i1] = Colour.Be;
+                colours[i2] = Colour.Pi;
+                break;
+
+            case KUBIE_MFR:
+                colours[i0] = Colour.Re;
+                colours[i1] = Colour.DB;
+                colours[i2] = Colour.Pi;
+                break;
+
+            case KUBIE_FRD:
+                colours[i0] = Colour.LG;
+                colours[i1] = Colour.DB;
+                colours[i2] = Colour.Pi;
+                break;
+
+            case KUBIE_MBR:
+                colours[i0] = Colour.LG;
+                colours[i1] = Colour.DB;
+                colours[i2] = Colour.Ye;
+                break;
+
+            case KUBIE_BRD:
+                colours[i0] = Colour.LG;
+                colours[i1] = Colour.Or;
+                colours[i2] = Colour.Ye;
+                break;
+
+            case KUBIE_MBM:
+                colours[i0] = Colour.Or;
+                colours[i1] = Colour.Ye;
+                colours[i2] = Colour.Pu;
+                break;
+
+            case KUBIE_BLD:
+                colours[i0] = Colour.Or;
+                colours[i1] = Colour.LB;
+                colours[i2] = Colour.Pu;
+                break;
+
+            case KUBIE_MBL:
+                colours[i0] = Colour.DG;
+                colours[i1] = Colour.LB;
+                colours[i2] = Colour.Pu;
+                break;
+
+            case KUBIE_FLD:
+                colours[i0] = Colour.DG;
+                colours[i1] = Colour.LB;
+                colours[i2] = Colour.Be;
+                break;
+
+            case KUBIE_DFM:
+                colours[i0] = Colour.Gy;
+                colours[i1] = Colour.Be;
+                colours[i2] = Colour.Pi;
+                break;
+
+            case KUBIE_DFL:
+                colours[i0] = Colour.Gy;
+                colours[i1] = Colour.LB;
+                colours[i2] = Colour.Be;
+                break;
+
+            case KUBIE_DFR:
+                colours[i0] = Colour.Gy;
+                colours[i1] = Colour.LG;
+                colours[i2] = Colour.Pi;
+                break;
+
+            case KUBIE_DBL:
+                colours[i0] = Colour.Gy;
+                colours[i1] = Colour.Or;
+                colours[i2] = Colour.LB;
+                break;
+
+            case KUBIE_DBR:
+                colours[i0] = Colour.Gy;
+                colours[i1] = Colour.LG;
+                colours[i2] = Colour.Or;
+                break; 
+
+        }
+
+        return colours;
     }
 
 
