@@ -15,20 +15,43 @@ public class KilominxInteractive {
         while (!input.equals("QUIT")) {
             kilominx.printKilominxState();
             
-            break;  // temp break point for now
-            
-            // System.out.println("Make a move:");
-            // input = sc.nextLine().toUpperCase();
+            System.out.println("Make a move:");
+            input = sc.nextLine().toUpperCase();
 
-            // switch (input) {
+            switch (input) {
+                case "U":
+                    kilominx.moveU();
+                    break;
+                case "U'":
+                    kilominx.moveUPrime();
+                    break;
+                case "U2":
+                    kilominx.moveU2();
+                    break;
+                case "U2'":
+                    kilominx.moveU2Prime();
+                    break;
+
+                case "D":
+                    kilominx.moveD();
+                    break;
+                case "D'":
+                    kilominx.moveDPrime();
+                    break;
+                case "D2":
+                    kilominx.moveD2();
+                    break;
+                case "D2'":
+                    kilominx.moveD2Prime();
+                    break;
                 
-            //     case "QUIT":
-            //         break;
+                case "QUIT":
+                    break;
 
-            //     default:
-            //         System.out.println("ERROR: '" + input + "' is not a valid move.");
-            //         break;
-            // }
+                default:
+                    System.out.println("ERROR: '" + input + "' is not a valid move.");
+                    break;
+            }
         }
 
         sc.close();

@@ -21,42 +21,41 @@ public class Kilominx {
      * Moves that can be made on the Kilominx.
      */
     public static enum Move {
-        U,   U_PRIME,   U_2,   U_PRIME2,
-        L,   L_PRIME,   L_2,   L_PRIME2,
-        F,   F_PRIME,   F_2,   F_PRIME2,
-        R,   R_PRIME,   R_2,   R_PRIME2,
-        BL,  BL_PRIME,  BL_2,  BL_PRIME2,
-        BR,  BR_PRIME,  BR_2,  BR_PRIME2,
-        DL,  DL_PRIME,  DL_2,  DL_PRIME2,
-        DR,  DR_PRIME,  DR_2,  DR_PRIME2,
-        DBL, DBL_PRIME, DBL_2, DBL_PRIME2,
-        DBR, DBR_PRIME, DBR_2, DBR_PRIME2,
-        DB,  DB_PRIME,  DB_2,  DB_PRIME2,
-        D,   D_PRIME,   D_2,   D_PRIME2
+        U,   U_PRIME,   U_2,   U_2PRIME,
+        L,   L_PRIME,   L_2,   L_2PRIME,
+        F,   F_PRIME,   F_2,   F_2PRIME,
+        R,   R_PRIME,   R_2,   R_2PRIME,
+        BL,  BL_PRIME,  BL_2,  BL_2PRIME,
+        BR,  BR_PRIME,  BR_2,  BR_2PRIME,
+        DL,  DL_PRIME,  DL_2,  DL_2PRIME,
+        DR,  DR_PRIME,  DR_2,  DR_2PRIME,
+        DBL, DBL_PRIME, DBL_2, DBL_2PRIME,
+        DBR, DBR_PRIME, DBR_2, DBR_2PRIME,
+        DB,  DB_PRIME,  DB_2,  DB_2PRIME,
+        D,   D_PRIME,   D_2,   D_2PRIME
     }
 
     // Kubies are indexed from 0 to 19 in the following order:
-    // Todo: Figure out what correct index order should be
-    final byte KUBIE_UFL = 0,
-               KUBIE_UFR = 1,
-               KUBIE_UBL = 2,
-               KUBIE_UBR = 3,
-               KUBIE_UBM = 4,
+    final byte KUBIE_UFL = 0,   // even
+               KUBIE_UFR = 2,   // even
+               KUBIE_UBL = 1,   // odd
+               KUBIE_UBR = 4,   // even
+               KUBIE_UBM = 6,   // even
                KUBIE_MFL = 5,
-               KUBIE_FMD = 6,
+               KUBIE_FMD = 3,   //
                KUBIE_MFR = 7,
                KUBIE_FRD = 8,
                KUBIE_MBR = 9,
                KUBIE_BRD = 10,
                KUBIE_MBM = 11,
                KUBIE_BLD = 12,
-               KUBIE_MBL = 13,
+               KUBIE_MBL = 16,  //
                KUBIE_FLD = 14,
-               KUBIE_DFM = 15,
-               KUBIE_DFL = 16,
-               KUBIE_DFR = 17,
-               KUBIE_DBL = 18,
-               KUBIE_DBR = 19;
+               KUBIE_DFM = 13,  // odd
+               KUBIE_DFL = 15,  // odd
+               KUBIE_DFR = 18,  // even
+               KUBIE_DBL = 17,  // odd
+               KUBIE_DBR = 19;  // odd
 
 
     /**
@@ -213,12 +212,12 @@ public class Kilominx {
             i1 = 1;
             i2 = 2;
 
-            // // corner is an odd number of indices away, so the other two colours are flipped
-            // if ((kubie.index + posIndex) % 2 == 1) {
-            //     byte temp = i1;
-            //     i1 = i2;
-            //     i2 = temp;
-            // }
+            // Kubie is an odd number of indices away, so the other two colours are flipped
+            if ((kubie.index + posIndex) % 2 == 1) {
+                byte temp = i1;
+                i1 = i2;
+                i2 = temp;
+            }
         }
         // colours turned CW
         else if (kubie.orientation == 1) {
@@ -393,7 +392,69 @@ public class Kilominx {
      * @param move - The move to make.
      */
     public void makeMove(Move move) {
-        System.out.println("Not implemented yet");
+        switch (move) {
+            case U: moveU(); break;
+            case U_PRIME: moveUPrime(); break;
+            case U_2: moveU2(); break;
+            case U_2PRIME: moveU2Prime(); break;
+
+            case L: moveL(); break;
+            case L_PRIME: moveLPrime(); break;
+            case L_2: moveL2(); break;
+            case L_2PRIME: moveL2Prime(); break;
+
+            case F: moveF(); break;
+            case F_PRIME: moveFPrime(); break;
+            case F_2: moveF2(); break;
+            case F_2PRIME: moveF2Prime(); break;
+
+            case R: moveR(); break;
+            case R_PRIME: moveRPrime(); break;
+            case R_2: moveR2(); break;
+            case R_2PRIME: moveR2Prime(); break;
+
+            case BL: moveBL(); break;
+            case BL_PRIME: moveBLPrime(); break;
+            case BL_2: moveBL2(); break;
+            case BL_2PRIME: moveBL2Prime(); break;
+
+            case BR: moveBR(); break;
+            case BR_PRIME: moveBRPrime(); break;
+            case BR_2: moveBR2(); break;
+            case BR_2PRIME: moveBR2Prime(); break;
+
+            case DL: moveDL(); break;
+            case DL_PRIME: moveDLPrime(); break;
+            case DL_2: moveDL2(); break;
+            case DL_2PRIME: moveDL2Prime(); break;
+
+            case DR: moveDR(); break;
+            case DR_PRIME: moveDRPrime(); break;
+            case DR_2: moveDR2(); break;
+            case DR_2PRIME: moveDR2Prime(); break;
+
+            case DBL: moveDBL(); break;
+            case DBL_PRIME: moveDBLPrime(); break;
+            case DBL_2: moveDBL2(); break;
+            case DBL_2PRIME: moveDBL2Prime(); break;
+
+            case DBR: moveDBR(); break;
+            case DBR_PRIME: moveDBRPrime(); break;
+            case DBR_2: moveDBR2(); break;
+            case DBR_2PRIME: moveDBR2Prime(); break;
+
+            case DB: moveDB(); break;
+            case DB_PRIME: moveDBPrime(); break;
+            case DB_2: moveDB2(); break;
+            case DB_2PRIME: moveDB2Prime(); break;
+
+            case D: moveD(); break;
+            case D_PRIME: moveDPrime(); break;
+            case D_2: moveD2(); break;
+            case D_2PRIME: moveD2Prime(); break;
+
+            default: break;
+        }
     }
 
     /**
@@ -401,7 +462,69 @@ public class Kilominx {
      * @param move - The move to undo.
      */
     public void undoMove(Move move) {
-        System.out.println("Not implemented yet");
+        switch (move) {
+            case U: moveUPrime(); break;
+            case U_PRIME: moveU(); break;
+            case U_2: moveU2Prime(); break;
+            case U_2PRIME: moveU2(); break;
+
+            case L: moveLPrime(); break;
+            case L_PRIME: moveL(); break;
+            case L_2: moveL2Prime(); break;
+            case L_2PRIME: moveL2(); break;
+
+            case F: moveFPrime(); break;
+            case F_PRIME: moveF(); break;
+            case F_2: moveF2Prime(); break;
+            case F_2PRIME: moveF2(); break;
+
+            case R: moveRPrime(); break;
+            case R_PRIME: moveR(); break;
+            case R_2: moveR2Prime(); break;
+            case R_2PRIME: moveR2(); break;
+
+            case BL: moveBLPrime(); break;
+            case BL_PRIME: moveBL(); break;
+            case BL_2: moveBL2Prime(); break;
+            case BL_2PRIME: moveBL2(); break;
+
+            case BR: moveBRPrime(); break;
+            case BR_PRIME: moveBR(); break;
+            case BR_2: moveBR2Prime(); break;
+            case BR_2PRIME: moveBR2(); break;
+
+            case DL: moveDLPrime(); break;
+            case DL_PRIME: moveDL(); break;
+            case DL_2: moveDL2Prime(); break;
+            case DL_2PRIME: moveDL2(); break;
+
+            case DR: moveDRPrime(); break;
+            case DR_PRIME: moveDR(); break;
+            case DR_2: moveDR2Prime(); break;
+            case DR_2PRIME: moveDR2(); break;
+
+            case DBL: moveDBLPrime(); break;
+            case DBL_PRIME: moveDBL(); break;
+            case DBL_2: moveDBL2Prime(); break;
+            case DBL_2PRIME: moveDBL2(); break;
+
+            case DBR: moveDBRPrime(); break;
+            case DBR_PRIME: moveDBR(); break;
+            case DBR_2: moveDBR2Prime(); break;
+            case DBR_2PRIME: moveDBR2(); break;
+
+            case DB: moveDBPrime(); break;
+            case DB_PRIME: moveDB(); break;
+            case DB_2: moveDB2Prime(); break;
+            case DB_2PRIME: moveDB2(); break;
+
+            case D: moveDPrime(); break;
+            case D_PRIME: moveD(); break;
+            case D_2: moveD2Prime(); break;
+            case D_2PRIME: moveD2(); break;
+
+            default: break;
+        }
     }
 
 
@@ -409,7 +532,385 @@ public class Kilominx {
      * Perform a clockwise turn of the U face.
      */
     public void moveU() {
+        Kubie temp        = kubies[KUBIE_UFL];
+        kubies[KUBIE_UFL] = kubies[KUBIE_UFR];
+        kubies[KUBIE_UFR] = kubies[KUBIE_UBR];
+        kubies[KUBIE_UBR] = kubies[KUBIE_UBM];
+        kubies[KUBIE_UBM] = kubies[KUBIE_UBL];
+        kubies[KUBIE_UBL] = temp;
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the U face.
+     */
+    public void moveUPrime() {
+        Kubie temp        = kubies[KUBIE_UFL];
+        kubies[KUBIE_UFL] = kubies[KUBIE_UBL];
+        kubies[KUBIE_UBL] = kubies[KUBIE_UBM];
+        kubies[KUBIE_UBM] = kubies[KUBIE_UBR];
+        kubies[KUBIE_UBR] = kubies[KUBIE_UFR];
+        kubies[KUBIE_UFR] = temp;
+    }
+
+    /**
+     * Perform two clockwise turns of the U face.
+     */
+    public void moveU2() {
+        Kubie temp        = kubies[KUBIE_UFL];
+        kubies[KUBIE_UFL] = kubies[KUBIE_UBR];
+        kubies[KUBIE_UBR] = kubies[KUBIE_UBL];
+        kubies[KUBIE_UBL] = kubies[KUBIE_UFR];
+        kubies[KUBIE_UFR] = kubies[KUBIE_UBM];
+        kubies[KUBIE_UBM] = temp;
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the U face.
+     */
+    public void moveU2Prime() {
+        Kubie temp        = kubies[KUBIE_UFL];
+        kubies[KUBIE_UFL] = kubies[KUBIE_UBM];
+        kubies[KUBIE_UBM] = kubies[KUBIE_UFR];
+        kubies[KUBIE_UFR] = kubies[KUBIE_UBL];
+        kubies[KUBIE_UBL] = kubies[KUBIE_UBR];
+        kubies[KUBIE_UBR] = temp;
+    }
+
+    /**
+     * Perform a clockwise turn of the L face.
+     */
+    public void moveL() {
         System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the L face.
+     */
+    public void moveLPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the L face.
+     */
+    public void moveL2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the L face.
+     */
+    public void moveL2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the F face.
+     */
+    public void moveF() {
+        System.err.println("Not implemented yet");
+
+        // Kubie temp        = kubies[KUBIE_UFL];
+        // kubies[KUBIE_UFL] = kubies[KUBIE_MFL];
+        // kubies[KUBIE_MFL] = kubies[KUBIE_FMD];
+        // kubies[KUBIE_FMD] = kubies[KUBIE_MFR];
+        // kubies[KUBIE_MFR] = kubies[KUBIE_UFR];
+        // kubies[KUBIE_UFR] = temp;
+
+        // orientation changes??
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the F face.
+     */
+    public void moveFPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the F face.
+     */
+    public void moveF2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the F face.
+     */
+    public void moveF2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the R face.
+     */
+    public void moveR() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the R face.
+     */
+    public void moveRPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the R face.
+     */
+    public void moveR2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the R face.
+     */
+    public void moveR2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the BL face.
+     */
+    public void moveBL() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the BL face.
+     */
+    public void moveBLPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the BL face.
+     */
+    public void moveBL2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the BL face.
+     */
+    public void moveBL2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the BR face.
+     */
+    public void moveBR() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the BR face.
+     */
+    public void moveBRPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the BR face.
+     */
+    public void moveBR2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the BR face.
+     */
+    public void moveBR2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the DL face.
+     */
+    public void moveDL() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the DL face.
+     */
+    public void moveDLPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the DL face.
+     */
+    public void moveDL2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the DL face.
+     */
+    public void moveDL2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the DR face.
+     */
+    public void moveDR() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the DR face.
+     */
+    public void moveDRPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the DR face.
+     */
+    public void moveDR2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the DR face.
+     */
+    public void moveDR2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the DBL face.
+     */
+    public void moveDBL() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the DBL face.
+     */
+    public void moveDBLPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the DBL face.
+     */
+    public void moveDBL2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the DBL face.
+     */
+    public void moveDBL2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the DBR face.
+     */
+    public void moveDBR() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the DBR face.
+     */
+    public void moveDBRPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the DBR face.
+     */
+    public void moveDBR2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the DBR face.
+     */
+    public void moveDBR2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the DB face.
+     */
+    public void moveDB() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the DB face.
+     */
+    public void moveDBPrime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two clockwise turns of the DB face.
+     */
+    public void moveDB2() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the DB face.
+     */
+    public void moveDB2Prime() {
+        System.out.println("Not implemented yet");
+    }
+
+    /**
+     * Perform a clockwise turn of the D face.
+     */
+    public void moveD() {
+        Kubie temp        = kubies[KUBIE_DFM];
+        kubies[KUBIE_DFM] = kubies[KUBIE_DFL];
+        kubies[KUBIE_DFL] = kubies[KUBIE_DBL];
+        kubies[KUBIE_DBL] = kubies[KUBIE_DBR];
+        kubies[KUBIE_DBR] = kubies[KUBIE_DFR];
+        kubies[KUBIE_DFR] = temp;
+    }
+
+    /**
+     * Perform a counter-clockwise turn of the D face.
+     */
+    public void moveDPrime() {
+        Kubie temp        = kubies[KUBIE_DFM];
+        kubies[KUBIE_DFM] = kubies[KUBIE_DFR];
+        kubies[KUBIE_DFR] = kubies[KUBIE_DBR];
+        kubies[KUBIE_DBR] = kubies[KUBIE_DBL];
+        kubies[KUBIE_DBL] = kubies[KUBIE_DFL];
+        kubies[KUBIE_DFL] = temp;
+    }
+
+    /**
+     * Perform two clockwise turns of the D face.
+     */
+    public void moveD2() {
+        Kubie temp        = kubies[KUBIE_DFM];
+        kubies[KUBIE_DFM] = kubies[KUBIE_DBL];
+        kubies[KUBIE_DBL] = kubies[KUBIE_DFR];
+        kubies[KUBIE_DFR] = kubies[KUBIE_DFL];
+        kubies[KUBIE_DFL] = kubies[KUBIE_DBR];
+        kubies[KUBIE_DBR] = temp;
+    }
+
+    /**
+     * Perform two counter-clockwise turns of the D face.
+     */
+    public void moveD2Prime() {
+        Kubie temp        = kubies[KUBIE_DFM];
+        kubies[KUBIE_DFM] = kubies[KUBIE_DBR];
+        kubies[KUBIE_DBR] = kubies[KUBIE_DFL];
+        kubies[KUBIE_DFL] = kubies[KUBIE_DFR];
+        kubies[KUBIE_DFR] = kubies[KUBIE_DBL];
+        kubies[KUBIE_DBL] = temp;
     }
 
 
