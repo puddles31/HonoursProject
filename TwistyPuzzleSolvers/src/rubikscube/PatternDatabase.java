@@ -210,7 +210,7 @@ public abstract class PatternDatabase {
      */
     public void writeDatabaseToFile(String filename) {
         try {
-            final String DATABASES_PATH = "CubeAlgorithm/databases/";
+            final String DATABASES_PATH = "TwistyPuzzleSolvers/databases/";
 
             // Create the file and directories if they don't exist
             new File(DATABASES_PATH).mkdirs();
@@ -235,7 +235,7 @@ public abstract class PatternDatabase {
      * @see #writeDatabaseToFile(String)
      */
     public boolean readDatabaseFromFile(String path) {
-        final String DATABASES_PATH = "CubeAlgorithm/databases/";
+        final String DATABASES_PATH = "TwistyPuzzleSolvers/databases/";
         File databaseFile = new File(DATABASES_PATH + path);
 
         try (FileInputStream in = new FileInputStream(databaseFile)) {

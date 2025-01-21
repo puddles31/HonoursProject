@@ -79,6 +79,17 @@ public class CubeInteractive {
                     cube.moveD2();
                     break;
 
+                case "SCRAMBLE":
+                    // cube.scramble();
+                    System.out.println("ERROR: Scramble is not implemented.");
+                    break;
+
+                case "SOLVE":
+                    CubeSolver solver = new CubeSolver(cube);
+                    solver.solveCube();
+                    input = "QUIT";
+                    break;
+
                 case "QUIT":
                     break;
 

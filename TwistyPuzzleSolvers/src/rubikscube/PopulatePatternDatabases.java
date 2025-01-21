@@ -314,7 +314,7 @@ public class PopulatePatternDatabases {
      * @param lastMove - The last move made.
      * @return {@code true} if the move should be skipped, {@code false} otherwise.
      */
-    private static boolean skipMove(Move move, Move lastMove) {
+    public static boolean skipMove(Move move, Move lastMove) {
         // Skip moves that are on the same face as the last move (e.g. L, L2 = L')
         if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
             (lastMove == Move.L || lastMove == Move.LPRIME || lastMove == Move.L2)) {
