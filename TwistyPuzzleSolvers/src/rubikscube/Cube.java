@@ -1,5 +1,7 @@
 package rubikscube;
 
+import java.util.Random;
+
 /**
  * A Rubik's Cube, represented as an array of edge cubies and an array corner cubies.
  * @see #Cube()
@@ -601,6 +603,88 @@ public class Cube {
             default:
                 break;
         }
+    }
+
+    /**
+     * Scramble the cube by making 10 random moves, excluding moves that cancel previous moves.
+     */
+    public void scramble() {
+        Random rand = new Random();
+        Move[] moves = Move.values();
+
+        Move move, lastMove = null;
+
+        System.out.println("Moves made during scramble:");
+        
+        for (int i = 0; i < 10; i++) {
+            do {
+                move = moves[rand.nextInt(moves.length)];
+            } while (i > 0 && skipMove(move, lastMove));
+            
+            makeMove(move);
+            System.out.print(move.name() + " ");
+
+            lastMove = move;
+        }
+        System.out.println();
+    }
+
+    /**
+     * Determine if a move should be skipped based on the last move.
+     * Moves are skipped if they are on the same face as the last move, or if they are on opposite faces in specific orders ([R, L], [D, U], [B, F]).
+     * @param move - The move to check.
+     * @param lastMove - The last move made.
+     * @return {@code true} if the move should be skipped, {@code false} otherwise.
+     */
+    public static boolean skipMove(Move move, Move lastMove) {
+        // Skip moves that are on the same face as the last move (e.g. L, L2 = L')
+        if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
+            (lastMove == Move.L || lastMove == Move.LPRIME || lastMove == Move.L2)) {
+            return true;
+        }
+
+        if ((move == Move.R || move == Move.RPRIME || move == Move.R2) &&
+            (lastMove == Move.R || lastMove == Move.RPRIME || lastMove == Move.R2)) {
+            return true;
+        }
+
+        if ((move == Move.U || move == Move.UPRIME || move == Move.U2) &&
+            (lastMove == Move.U || lastMove == Move.UPRIME || lastMove == Move.U2)) {
+            return true;
+        }
+
+        if ((move == Move.D || move == Move.DPRIME || move == Move.D2) &&
+            (lastMove == Move.D || lastMove == Move.DPRIME || lastMove == Move.D2)) {
+            return true;
+        }
+
+        if ((move == Move.F || move == Move.FPRIME || move == Move.F2) &&
+            (lastMove == Move.F || lastMove == Move.FPRIME || lastMove == Move.F2)) {
+            return true;
+        }
+
+        if ((move == Move.B || move == Move.BPRIME || move == Move.B2) &&
+            (lastMove == Move.B || lastMove == Move.BPRIME || lastMove == Move.B2)) {
+            return true;
+        }
+
+        // Skip moves on opposite faces in specific orders (e.g. L, R = R, L; so prevent R, L)
+        if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
+            (lastMove == Move.R || lastMove == Move.RPRIME || lastMove == Move.R2)) {
+            return true;
+        }
+
+        if ((move == Move.U || move == Move.UPRIME || move == Move.U2) &&
+            (lastMove == Move.D || lastMove == Move.DPRIME || lastMove == Move.D2)) {
+            return true;
+        }
+
+        if ((move == Move.F || move == Move.FPRIME || move == Move.F2) &&
+            (lastMove == Move.B || lastMove == Move.BPRIME || lastMove == Move.B2)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

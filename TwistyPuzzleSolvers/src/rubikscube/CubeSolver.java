@@ -198,7 +198,7 @@ public class CubeSolver {
                 // Iterate over all possible moves from the current node
                 for (Move move : Move.values()) {
                     // If at the root node or the move shouldn't be skipped
-                    if (currentNode.depth == 0 || !PopulatePatternDatabases.skipMove(move, currentNode.move)) {
+                    if (currentNode.depth == 0 || !Cube.skipMove(move, currentNode.move)) {
                         
                         // Create a copy of the current cube state and make the move on the copy
                         Cube cubeCopy = new Cube(currentNode.cube);

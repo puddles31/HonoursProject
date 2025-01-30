@@ -80,8 +80,7 @@ public class CubeInteractive {
                     break;
 
                 case "SCRAMBLE":
-                    // cube.scramble();
-                    System.out.println("ERROR: Scramble is not implemented.");
+                    cube.scramble();
                     break;
 
                 case "SOLVE":

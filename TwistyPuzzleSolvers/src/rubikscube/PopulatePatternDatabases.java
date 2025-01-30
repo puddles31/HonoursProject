@@ -136,7 +136,7 @@ public class PopulatePatternDatabases {
             // Iterate over all possible moves from the current node
             for (Move move : Move.values()) {
                 // If at the root node or the move shouldn't be skipped
-                if (movesList.size() == 0 || !skipMove(move, movesList.getLast())) {
+                if (movesList.size() == 0 || !Cube.skipMove(move, movesList.getLast())) {
                     
                     // Make the move
                     cube.makeMove(move);
@@ -272,7 +272,7 @@ public class PopulatePatternDatabases {
             // Iterate over all possible moves from the current node
             for (Move move : Move.values()) {
                 // If at the root node or the move shouldn't be skipped
-                if (currentNode.depth == 0 || !skipMove(move, currentNode.move)) {
+                if (currentNode.depth == 0 || !Cube.skipMove(move, currentNode.move)) {
 
                     // Create a copy of the current cube state
                     Cube cubeCopy = new Cube(currentNode.cube);
@@ -306,62 +306,4 @@ public class PopulatePatternDatabases {
                            "Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000.0) + "s");
     }
     
-
-    /**
-     * Determine if a move should be skipped based on the last move.
-     * Moves are skipped if they are on the same face as the last move, or if they are on opposite faces in specific orders ([R, L], [D, U], [B, F]).
-     * @param move - The move to check.
-     * @param lastMove - The last move made.
-     * @return {@code true} if the move should be skipped, {@code false} otherwise.
-     */
-    public static boolean skipMove(Move move, Move lastMove) {
-        // Skip moves that are on the same face as the last move (e.g. L, L2 = L')
-        if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
-            (lastMove == Move.L || lastMove == Move.LPRIME || lastMove == Move.L2)) {
-            return true;
-        }
-
-        if ((move == Move.R || move == Move.RPRIME || move == Move.R2) &&
-            (lastMove == Move.R || lastMove == Move.RPRIME || lastMove == Move.R2)) {
-            return true;
-        }
-
-        if ((move == Move.U || move == Move.UPRIME || move == Move.U2) &&
-            (lastMove == Move.U || lastMove == Move.UPRIME || lastMove == Move.U2)) {
-            return true;
-        }
-
-        if ((move == Move.D || move == Move.DPRIME || move == Move.D2) &&
-            (lastMove == Move.D || lastMove == Move.DPRIME || lastMove == Move.D2)) {
-            return true;
-        }
-
-        if ((move == Move.F || move == Move.FPRIME || move == Move.F2) &&
-            (lastMove == Move.F || lastMove == Move.FPRIME || lastMove == Move.F2)) {
-            return true;
-        }
-
-        if ((move == Move.B || move == Move.BPRIME || move == Move.B2) &&
-            (lastMove == Move.B || lastMove == Move.BPRIME || lastMove == Move.B2)) {
-            return true;
-        }
-
-        // Skip moves on opposite faces in specific orders (e.g. L, R = R, L; so prevent R, L)
-        if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
-            (lastMove == Move.R || lastMove == Move.RPRIME || lastMove == Move.R2)) {
-            return true;
-        }
-
-        if ((move == Move.U || move == Move.UPRIME || move == Move.U2) &&
-            (lastMove == Move.D || lastMove == Move.DPRIME || lastMove == Move.D2)) {
-            return true;
-        }
-
-        if ((move == Move.F || move == Move.FPRIME || move == Move.F2) &&
-            (lastMove == Move.B || lastMove == Move.BPRIME || lastMove == Move.B2)) {
-            return true;
-        }
-
-        return false;
-    }
 }
