@@ -237,7 +237,7 @@ public class CubeSolver {
 
         // Print the moves to solve the cube (TODO: Possibly return these values instead)
         for (int i = 0; i < bound; i++) {
-            System.out.print(moves[i].name() + " ");
+            System.out.print(moves[i].toString() + " ");
         }
     }
 

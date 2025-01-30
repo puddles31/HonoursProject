@@ -27,7 +27,15 @@ public class Cube {
         F, FPRIME, F2,
         R, RPRIME, R2,
         B, BPRIME, B2,
-        D, DPRIME, D2
+        D, DPRIME, D2;
+
+        /**
+         * Return the String representation of the move.
+         * (replaces PRIME with ')
+        */
+        public String toString() {
+            return name().replace("PRIME", "'");
+        }
     }
 
     // Edge cubies are indexed from 0 to 11 in the following order:
@@ -606,27 +614,35 @@ public class Cube {
     }
 
     /**
-     * Scramble the cube by making 10 random moves, excluding moves that cancel previous moves.
+     * Scramble the cube by making {@code noMoves} random moves, excluding moves that cancel previous moves.
+     * @param noMoves - The number of moves to make.
      */
-    public void scramble() {
+    public void scramble(int noMoves) {
         Random rand = new Random();
         Move[] moves = Move.values();
 
         Move move, lastMove = null;
 
-        System.out.println("Moves made during scramble:");
+        System.out.println("\nMoves made during scramble:");
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < noMoves; i++) {
             do {
                 move = moves[rand.nextInt(moves.length)];
             } while (i > 0 && skipMove(move, lastMove));
             
             makeMove(move);
-            System.out.print(move.name() + " ");
+            System.out.print(move.toString() + " ");
 
             lastMove = move;
         }
         System.out.println();
+    }
+
+    /**
+     * Scramble the cube by making 20 random moves, excluding moves that cancel previous moves.
+     */
+    public void scramble() {
+        scramble(20);
     }
 
     /**
@@ -1082,89 +1098,100 @@ public class Cube {
      * Print the cube state in a human-readable format.
      */
     public void printCubeState() {
+        printEditCubeState(-1);
+    }
+
+
+    /**
+     * Print an editable version of the cube state in a human-readable format.
+     * @param index - The index of the cubie face to highlight for editing. Set to -1 to not highlight any face.
+     */
+    public void printEditCubeState(int index) {
         
         // Print top face
         System.out.print("       ");
-        System.out.print(getCornerColours(CORNER_ULB)[0] + " ");
-        System.out.print(getEdgeColours(EDGE_UB)[0] + " ");
-        System.out.println(getCornerColours(CORNER_URB)[0] + " ");
+        System.out.print((index == 0 ? "_" : getCornerColours(CORNER_ULB)[0]) + " ");
+        System.out.print((index == 1 ? "_" : getEdgeColours(EDGE_UB)[0]) + " ");
+        System.out.println((index == 2 ? "_" : getCornerColours(CORNER_URB)[0]) + " ");
 
         System.out.print("       ");
-        System.out.print(getEdgeColours(EDGE_UL)[0] + " ");
+        System.out.print((index == 3 ? "_" : getEdgeColours(EDGE_UL)[0]) + " ");
         System.out.print("W ");
-        System.out.println(getEdgeColours(EDGE_UR)[0] + " ");
+        System.out.println((index == 4 ? "_" : getEdgeColours(EDGE_UR)[0]) + " ");
 
         System.out.print("       ");
-        System.out.print(getCornerColours(CORNER_ULF)[0] + " ");
-        System.out.print(getEdgeColours(EDGE_UF)[0] + " ");
-        System.out.println(getCornerColours(CORNER_URF)[0] + "\n");
+        System.out.print((index == 5 ? "_" : getCornerColours(CORNER_ULF)[0]) + " ");
+        System.out.print((index == 6 ? "_" : getEdgeColours(EDGE_UF)[0]) + " ");
+        System.out.println((index == 7 ? "_" : getCornerColours(CORNER_URF)[0]) + "\n");
 
         // Print upper row of side faces
-        System.out.print(getCornerColours(CORNER_ULB)[1] + " ");
-        System.out.print(getEdgeColours(EDGE_UL)[1] + " ");
-        System.out.print(getCornerColours(CORNER_ULF)[1] + "  ");
+        System.out.print((index == 8 ? "_" : getCornerColours(CORNER_ULB)[1]) + " ");
+        System.out.print((index == 9 ? "_" : getEdgeColours(EDGE_UL)[1]) + " ");
+        System.out.print((index == 10 ? "_" : getCornerColours(CORNER_ULF)[1]) + "  ");
 
-        System.out.print(getCornerColours(CORNER_ULF)[2] + " ");
-        System.out.print(getEdgeColours(EDGE_UF)[1] + " ");
-        System.out.print(getCornerColours(CORNER_URF)[2] + "  ");
+        System.out.print((index == 11 ? "_" : getCornerColours(CORNER_ULF)[2]) + " ");
+        System.out.print((index == 12 ? "_" : getEdgeColours(EDGE_UF)[1]) + " ");
+        System.out.print((index == 13 ? "_" : getCornerColours(CORNER_URF)[2]) + "  ");
 
-        System.out.print(getCornerColours(CORNER_URF)[1] + " ");
-        System.out.print(getEdgeColours(EDGE_UR)[1] + " ");
-        System.out.print(getCornerColours(CORNER_URB)[1] + "  ");
+        System.out.print((index == 14 ? "_" : getCornerColours(CORNER_URF)[1]) + " ");
+        System.out.print((index == 15 ? "_" : getEdgeColours(EDGE_UR)[1]) + " ");
+        System.out.print((index == 16 ? "_" : getCornerColours(CORNER_URB)[1]) + "  ");
 
-        System.out.print(getCornerColours(CORNER_URB)[2] + " ");
-        System.out.print(getEdgeColours(EDGE_UB)[1] + " ");
-        System.out.println(getCornerColours(CORNER_ULB)[2]);
+        System.out.print((index == 17 ? "_" : getCornerColours(CORNER_URB)[2]) + " ");
+        System.out.print((index == 18 ? "_" : getEdgeColours(EDGE_UB)[1]) + " ");
+        System.out.println((index == 19 ? "_" : getCornerColours(CORNER_ULB)[2]));
 
         // Print middle row of side faces
-        System.out.print(getEdgeColours(EDGE_BL)[1] + " ");
+        System.out.print((index == 20 ? "_" : getEdgeColours(EDGE_BL)[1]) + " ");
         System.out.print("G ");
-        System.out.print(getEdgeColours(EDGE_FL)[1] + "  ");
+        System.out.print((index == 21 ? "_" : getEdgeColours(EDGE_FL)[1]) + "  ");
 
-        System.out.print(getEdgeColours(EDGE_FL)[0] + " ");
+        System.out.print((index == 22 ? "_" : getEdgeColours(EDGE_FL)[0]) + " ");
         System.out.print("R ");
-        System.out.print(getEdgeColours(EDGE_FR)[0] + "  ");
+        System.out.print((index == 23 ? "_" : getEdgeColours(EDGE_FR)[0]) + "  ");
         
-        System.out.print(getEdgeColours(EDGE_FR)[1] + " ");
+        System.out.print((index == 24 ? "_" : getEdgeColours(EDGE_FR)[1]) + " ");
         System.out.print("B ");
-        System.out.print(getEdgeColours(EDGE_BR)[1] + "  ");
+        System.out.print((index == 25 ? "_" : getEdgeColours(EDGE_BR)[1]) + "  ");
 
-        System.out.print(getEdgeColours(EDGE_BR)[0] + " ");
+        System.out.print((index == 26 ? "_" : getEdgeColours(EDGE_BR)[0]) + " ");
         System.out.print("O ");
-        System.out.println(getEdgeColours(EDGE_BL)[0]);
+        System.out.println((index == 27 ? "_" : getEdgeColours(EDGE_BL)[0]));
 
         // Print bottom row of side faces
-        System.out.print(getCornerColours(CORNER_DLB)[1] + " ");
-        System.out.print(getEdgeColours(EDGE_DL)[1] + " ");
-        System.out.print(getCornerColours(CORNER_DLF)[1] + "  ");
+        System.out.print((index == 28 ? "_" : getCornerColours(CORNER_DLB)[1]) + " ");
+        System.out.print((index == 29 ? "_" : getEdgeColours(EDGE_DL)[1]) + " ");
+        System.out.print((index == 30 ? "_" : getCornerColours(CORNER_DLF)[1]) + "  ");
 
-        System.out.print(getCornerColours(CORNER_DLF)[2] + " ");
-        System.out.print(getEdgeColours(EDGE_DF)[1] + " ");
-        System.out.print(getCornerColours(CORNER_DRF)[2] + "  ");
+        System.out.print((index == 31 ? "_" : getCornerColours(CORNER_DLF)[2]) + " ");
+        System.out.print((index == 32 ? "_" : getEdgeColours(EDGE_DF)[1]) + " ");
+        System.out.print((index == 33 ? "_" : getCornerColours(CORNER_DRF)[2]) + "  ");
 
-        System.out.print(getCornerColours(CORNER_DRF)[1] + " ");
-        System.out.print(getEdgeColours(EDGE_DR)[1] + " ");
-        System.out.print(getCornerColours(CORNER_DRB)[1] + "  ");
+        System.out.print((index == 34 ? "_" : getCornerColours(CORNER_DRF)[1]) + " ");
+        System.out.print((index == 35 ? "_" : getEdgeColours(EDGE_DR)[1]) + " ");
+        System.out.print((index == 36 ? "_" : getCornerColours(CORNER_DRB)[1]) + "  ");
 
-        System.out.print(getCornerColours(CORNER_DRB)[2] + " ");
-        System.out.print(getEdgeColours(EDGE_DB)[1] + " ");
-        System.out.println(getCornerColours(CORNER_DLB)[2] + "\n");
+        System.out.print((index == 37 ? "_" : getCornerColours(CORNER_DRB)[2]) + " ");
+        System.out.print((index == 38 ? "_" : getEdgeColours(EDGE_DB)[1]) + " ");
+        System.out.println((index == 39 ? "_" : getCornerColours(CORNER_DLB)[2]) + "\n");
 
         // Print bottom face
         System.out.print("       ");
-        System.out.print(getCornerColours(CORNER_DLF)[0] + " ");
-        System.out.print(getEdgeColours(EDGE_DF)[0] + " ");
-        System.out.println(getCornerColours(CORNER_DRF)[0] + " ");
+        System.out.print((index == 40 ? "_" : getCornerColours(CORNER_DLF)[0]) + " ");
+        System.out.print((index == 41 ? "_" : getEdgeColours(EDGE_DF)[0]) + " ");
+        System.out.println((index == 42 ? "_" : getCornerColours(CORNER_DRF)[0]) + " ");
 
         System.out.print("       ");
-        System.out.print(getEdgeColours(EDGE_DL)[0] + " ");
+        System.out.print((index == 43 ? "_" : getEdgeColours(EDGE_DL)[0]) + " ");
         System.out.print("Y ");
-        System.out.println(getEdgeColours(EDGE_DR)[0] + " ");
+        System.out.println((index == 44 ? "_" : getEdgeColours(EDGE_DR)[0]) + " ");
 
         System.out.print("       ");
-        System.out.print(getCornerColours(CORNER_DLB)[0] + " ");
-        System.out.print(getEdgeColours(EDGE_DB)[0] + " ");
-        System.out.println(getCornerColours(CORNER_DRB)[0]);
+        System.out.print((index == 45 ? "_" : getCornerColours(CORNER_DLB)[0]) + " ");
+        System.out.print((index == 46 ? "_" : getEdgeColours(EDGE_DB)[0]) + " ");
+        System.out.println((index == 47 ? "_" : getCornerColours(CORNER_DRB)[0]));
         System.out.println("\n");
     }
+
+
 }

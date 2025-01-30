@@ -79,9 +79,31 @@ public class CubeInteractive {
                     cube.moveD2();
                     break;
 
-                case "SCRAMBLE":
-                    cube.scramble();
-                    break;
+                case "EDIT":
+                    System.out.println("Cube is now in EDIT mode. Enter a colour (W, G, R, B, O, Y) to change the cube state. Enter 'DONE' to exit EDIT mode.");    
+                    int index = 0;
+
+                    while (!input.equals("DONE")) {
+                        cube.printEditCubeState(index);
+
+                        input = sc.nextLine().toUpperCase();
+                        
+                        switch (input) {
+                            case "W": index++; break;
+                            case "G": index++; break;
+                            case "R": index++; break;
+                            case "B": index++; break;
+                            case "O": index++; break;
+                            case "Y": index++; break;
+                            case "DONE": break;
+                            default:
+                                break;
+                        }
+
+                        index = Math.max(0, Math.min(index, 47));
+                    }
+
+                    continue;
 
                 case "SOLVE":
                     CubeSolver solver = new CubeSolver(cube);
@@ -93,7 +115,14 @@ public class CubeInteractive {
                     break;
 
                 default:
-                    System.out.println("ERROR: '" + input + "' is not a valid move.");
+                    if (input.startsWith("SCRAMBLE") && input.split(" ").length == 2) {
+                        int n = Integer.parseInt(input.split(" ")[1]);
+                        cube.scramble(n);
+                    }
+                    else {
+                        System.out.println("ERROR: '" + input + "' is not a valid move.");
+                    }
+
                     break;
             }
         }
