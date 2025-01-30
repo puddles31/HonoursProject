@@ -1,10 +1,3 @@
-// R = F
-// F = L
-// L = B
-// B = R
-
-// f b' l' U f' r2 b2 U' b U2 r2 U2 f2 U'
-
 package rubikscube;
 
 import java.util.ArrayDeque;
@@ -13,6 +6,9 @@ import java.util.PriorityQueue;
 
 import rubikscube.Cube.Move;
 
+/**
+ * This class contains methods used to solve a Rubik's Cube using an IDA* search method, guaranteeing an optimal solution.
+ */
 public class CubeSolver {
     
     Cube cube;
@@ -119,6 +115,10 @@ public class CubeSolver {
     }
 
 
+    /**
+     * A move with an estimated number of moves required to solve the cube state after the move.
+     * Used to prioritize moves in the IDA* search.
+     */
     private static class PrioritizedMove {
         Cube cube;
         Move move;
@@ -131,7 +131,9 @@ public class CubeSolver {
         } 
     }
 
-
+    /**
+     * Perform an iterative-deepening A* (IDA*) search to find a solution to the cube.
+     */
     public void solveCube() {
         // Use a deque as a stack for nodes
         ArrayDeque<IDAStarNode> nodeStack = new ArrayDeque<IDAStarNode>();
@@ -164,7 +166,7 @@ public class CubeSolver {
                     System.out.println("ERROR: nextBound set to 0. Bad database.");
                     return;
                 }
-                // If nextBound is 0, all branches have been pruned
+                // If nextBound was not updated from max value, all branches were pruned
                 if (nextBound == Byte.MAX_VALUE) {
                     System.out.println("ERROR: nextBound set to max value. Bad database.");
                     return;
@@ -175,24 +177,28 @@ public class CubeSolver {
                 nextBound = Byte.MAX_VALUE;
             }
 
+            // Pop node off of top of stac
             currentNode = nodeStack.removeFirst();
 
+            // Update the moves array
             moves[currentNode.depth] = null;
-
             if (currentNode.depth != 0) {
                 moves[currentNode.depth - 1] = currentNode.move;
             }
 
+            // If the current node is at the bound depth, check if the cube is solved
             if (currentNode.depth == bound) {
                 if (currentNode.cube.isSolved()) {
                     isSolved = true;
                 }
             }
             else {
+                // Create a comparator to sort the children nodes by estimated moves in ascending order
                 Comparator<PrioritizedMove> prioritizedMoveComparator = (PrioritizedMove a, PrioritizedMove b) -> {
                     return Byte.compare(a.estimatedMoves, b.estimatedMoves);
                 };
 
+                // Create a priority queue using the comparator to store the children nodes
                 PriorityQueue<PrioritizedMove> children = new PriorityQueue<PrioritizedMove>(prioritizedMoveComparator);
 
                 // Iterate over all possible moves from the current node
@@ -204,10 +210,11 @@ public class CubeSolver {
                         Cube cubeCopy = new Cube(currentNode.cube);
                         cubeCopy.makeMove(move);
 
+                        // Calculate an estimate for the number of moves required to solve the child node
                         byte estimatedChildMoves = (byte)(currentNode.depth + (byte) 1 + getMaxNumberOfMoves(cubeCopy, bound, (byte)(currentNode.depth + 1)));
 
                         if (estimatedChildMoves <= bound) {
-                            // If twisted cube is estimated to take less moves than the current bound, push to queue
+                            // If child node is estimated to take less moves than the current bound, push to queue
                             children.add(new PrioritizedMove(cubeCopy, move, estimatedChildMoves));
                         }
                         else if (estimatedChildMoves < nextBound) {
@@ -228,6 +235,7 @@ public class CubeSolver {
 
         System.out.println("IDA*: Solution found at depth " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
 
+        // Print the moves to solve the cube (TODO: Possibly return these values instead)
         for (int i = 0; i < bound; i++) {
             System.out.print(moves[i].name() + " ");
         }
