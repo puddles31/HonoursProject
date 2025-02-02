@@ -110,7 +110,6 @@ public class CubeInteractive {
                     else {
                         System.out.println("ERROR: '" + input + "' is not a valid move.");
                     }
-
                     break;
             }
         }
