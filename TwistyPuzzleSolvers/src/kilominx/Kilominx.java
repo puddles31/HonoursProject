@@ -653,6 +653,7 @@ public class Kilominx {
         kubies[KUBIE_UFR] = temp;
 
         // orientation changes??
+        increaseKubieOrientation(KUBIE_UFR, (byte) 1);
     }
 
     /**
@@ -667,6 +668,7 @@ public class Kilominx {
         kubies[KUBIE_MFL] = temp;
 
         // orientation changes??
+        increaseKubieOrientation(KUBIE_UFL, (byte) 2);
     }
 
     /**
