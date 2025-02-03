@@ -200,6 +200,115 @@ public class Cube {
     }
 
 
+    public Colour[] getColours() {
+        Colour[] colours = new Colour[48];
+
+        // Edge cubies
+        for (byte i = 0; i < 12; i++) {
+            Colour[] edges = getEdgeColours(i);
+            switch (i) {
+                case EDGE_UB:
+                    colours[1] = edges[0];
+                    colours[18] = edges[1];
+                    break;
+                case EDGE_UR:
+                    colours[4] = edges[0];
+                    colours[15] = edges[1];
+                    break;
+                case EDGE_UF:
+                    colours[6] = edges[0];
+                    colours[12] = edges[1];
+                    break;
+                case EDGE_UL:
+                    colours[3] = edges[0];
+                    colours[9] = edges[1];
+                    break;
+                case EDGE_FR:
+                    colours[23] = edges[0];
+                    colours[24] = edges[1];
+                    break;
+                case EDGE_FL:
+                    colours[22] = edges[0];
+                    colours[21] = edges[1];
+                    break;
+                case EDGE_BL:
+                    colours[27] = edges[0];
+                    colours[20] = edges[1];
+                    break;
+                case EDGE_BR:
+                    colours[26] = edges[0];
+                    colours[25] = edges[1];
+                    break;
+                case EDGE_DF:
+                    colours[41] = edges[0];
+                    colours[32] = edges[1];
+                    break;
+                case EDGE_DL:
+                    colours[43] = edges[0];
+                    colours[29] = edges[1];
+                    break;
+                case EDGE_DB:
+                    colours[46] = edges[0];
+                    colours[38] = edges[1];
+                    break;
+                case EDGE_DR:
+                    colours[44] = edges[0];
+                    colours[35] = edges[1];
+                    break;
+            }
+        }
+
+        // Corner cubies
+        for (byte i = 0; i < 8; i++) {
+            Colour[] corners = getCornerColours(i);
+            switch (i) {
+                case CORNER_ULB:
+                    colours[0] = corners[0];
+                    colours[8] = corners[1];
+                    colours[19] = corners[2];
+                    break;
+                case CORNER_URB:
+                    colours[2] = corners[0];
+                    colours[16] = corners[1];
+                    colours[17] = corners[2];
+                    break;
+                case CORNER_URF:
+                    colours[7] = corners[0];
+                    colours[14] = corners[1];
+                    colours[13] = corners[2];
+                    break;
+                case CORNER_ULF:
+                    colours[5] = corners[0];
+                    colours[10] = corners[1];
+                    colours[11] = corners[2];
+                    break;
+                case CORNER_DLF:
+                    colours[40] = corners[0];
+                    colours[30] = corners[1];
+                    colours[31] = corners[2];
+                    break;
+                case CORNER_DLB:
+                    colours[45] = corners[0];
+                    colours[28] = corners[1];
+                    colours[39] = corners[2];
+                    break;
+                case CORNER_DRB:
+                    colours[47] = corners[0];
+                    colours[36] = corners[1];
+                    colours[37] = corners[2];
+                    break;
+                case CORNER_DRF:
+                    colours[42] = corners[0];
+                    colours[34] = corners[1];
+                    colours[33] = corners[2];
+                    break;
+            }
+        }
+
+        return colours;
+    }
+
+
     private int countSwaps(Cubie[] cubies) {
         int swaps = 0;
         for (int i = 0; i < cubies.length; i++) {

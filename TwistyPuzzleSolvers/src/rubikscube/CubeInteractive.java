@@ -1,5 +1,4 @@
 package rubikscube;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import rubikscube.Cube.Colour;
@@ -119,36 +118,12 @@ public class CubeInteractive {
 
 
     private static Cube editCube(Cube cube) {
+        Colour[] colours = cube.getColours();
+        
         System.out.println("Cube is now in EDIT mode. Enter a colour (W, G, R, B, O, Y) to change the selected cell. " +
-                           "Enter '-' or 'BACK' to go to the previous cell. Enter 'DONE' to exit EDIT mode.");    
+        "Enter '-' or 'BACK' to go to the previous cell. Enter 'DONE' to exit EDIT mode.");    
+        
         int index = 0;
-        Colour[] colours = new Colour[48];
-
-        // Temp: set colours array to a solved cube state
-        Arrays.fill(colours, 0, 8, Colour.W);
-
-        Arrays.fill(colours, 8, 11, Colour.G);
-        Arrays.fill(colours, 11, 14, Colour.R);
-        Arrays.fill(colours, 14, 17, Colour.B);
-        Arrays.fill(colours, 17, 20, Colour.O);
-
-        Arrays.fill(colours, 20, 22, Colour.G);
-        Arrays.fill(colours, 22, 24, Colour.R);
-        Arrays.fill(colours, 24, 26, Colour.B);
-        Arrays.fill(colours, 26, 28, Colour.O);
-
-        Arrays.fill(colours, 28, 31, Colour.G);
-        Arrays.fill(colours, 31, 34, Colour.R);
-        Arrays.fill(colours, 34, 37, Colour.B);
-        Arrays.fill(colours, 37, 40, Colour.O);
-
-        Arrays.fill(colours, 40, 48, Colour.Y);
-
-        // // Copy the cube state to the colours array
-        // for (int i = 0; i < 48; i++) {
-        //     colours[i] = cube.getColour(i);
-        // }
-
         String input = "";
 
         while (!input.equals("DONE")) {
