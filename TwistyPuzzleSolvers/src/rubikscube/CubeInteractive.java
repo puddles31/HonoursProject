@@ -20,7 +20,7 @@ public class CubeInteractive {
         while (!input.equals("QUIT")) {
             cube.printCubeState();
 
-            System.out.println("Make a move:");
+            System.out.println("Make a move, or enter a command:");
             input = sc.nextLine().toUpperCase();
 
             switch (input) {
@@ -87,6 +87,10 @@ public class CubeInteractive {
                 case "SCRAMBLE":
                     cube.scramble(10);
                     break;
+                
+                case "RESET":
+                    cube = new Cube();
+                    break;
 
                 case "EDIT":
                     cube = editCube(cube);
@@ -97,6 +101,20 @@ public class CubeInteractive {
                     solver.solveCube();
                     input = "QUIT";
                     break;
+                
+                case "HELP":
+                    System.out.println("\nCommands:\n" +
+                                       "  HELP           -   Display this help message\n" +
+                                       "  RESET          -   Reset the cube to the solved state\n" +
+                                       "  EDIT           -   Edit the cube\n" +
+                                       "  SCRAMBLE [n]   -   Scramble the cube with n random moves\n" +
+                                       "  SOLVE          -   Solve the cube\n" +
+                                       "  QUIT           -   Exit the program\n\n" +
+                                       "Make moves on the cube with the syntax: <FACE>[MODIFIER]\n" +
+                                       "  where <FACE> is one of U, L, F, R, B, D\n" +
+                                       "  and [MODIFIER] (optional argument) is either ' (counter-clockwise turn), or 2 (double turn).\n" +
+                                       "  For example, D' is the counter-clockwise turn of the Down face.\n"
+                    );
 
                 case "QUIT":
                     break;
