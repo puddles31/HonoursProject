@@ -134,7 +134,7 @@ public class CubeSolver {
     /**
      * Perform an iterative-deepening A* (IDA*) search to find a solution to the cube.
      */
-    public void solveCube() {
+    public Move[] solveCube() throws IllegalStateException {
         // Use a deque as a stack for nodes
         ArrayDeque<IDAStarNode> nodeStack = new ArrayDeque<IDAStarNode>();
         IDAStarNode currentNode;
@@ -163,13 +163,11 @@ public class CubeSolver {
 
                 // If nextBound is 0, database not initialised correctly
                 if (nextBound == 0) {
-                    System.out.println("ERROR: nextBound set to 0. Bad database.");
-                    return;
+                    throw new IllegalStateException("nextBound set to 0. Bad database.");
                 }
                 // If nextBound was not updated from max value, all branches were pruned
                 if (nextBound == Byte.MAX_VALUE) {
-                    System.out.println("ERROR: nextBound set to max value. Bad database.");
-                    return;
+                    throw new IllegalStateException("nextBound set to max value. Bad database.");
                 }
 
                 // Update the bound to the next bound
@@ -234,11 +232,7 @@ public class CubeSolver {
         }
 
         System.out.println("IDA*: Solution found at depth " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
-
-        // Print the moves to solve the cube (TODO: Possibly return these values instead)
-        for (int i = 0; i < bound; i++) {
-            System.out.print(moves[i].toString() + " ");
-        }
+        return moves;
     }
 
 }

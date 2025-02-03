@@ -637,7 +637,7 @@ public class Cube {
      * @return An array of the colours of the edge cubie.
      * @see #getCornerColours(byte)
      */
-    private Colour[] getEdgeColours(byte posIndex) {
+    public Colour[] getEdgeColours(byte posIndex) {
         Cubie edge = edgeCubies[posIndex];
         Colour[] colours = new Colour[2];
 
@@ -720,7 +720,7 @@ public class Cube {
      * @return An array of the colours of the corner cubie. The colours are in the order top/bottom, left/right, front/back. 
      * @see #getEdgeColours(byte)
      */
-    private Colour[] getCornerColours(byte posIndex) {
+    public Colour[] getCornerColours(byte posIndex) {
         Cubie corner = cornerCubies[posIndex];
         Colour[] colours = new Colour[3];
 

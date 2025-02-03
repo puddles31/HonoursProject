@@ -2,13 +2,25 @@ package rubikscube;
 import java.util.Scanner;
 
 import rubikscube.Cube.Colour;
+import rubikscube.Cube.Move;
 
 /**
- * This class contains a main method which allows the user to interact with a Rubik's Cube.
+ * This class contains a main method which allows the user to interact with a Rubik's Cube by making moves or entering commands.
  */
-public class CubeInteractive {
+public class CubeTerminal {
 
     private static Scanner sc;
+    private static final String USAGE_MESSAGE = "\nCommands:\n" +
+                                                "  HELP           -   Display this help message\n" +
+                                                "  RESET          -   Reset the cube to the solved state\n" +
+                                                "  EDIT           -   Edit the cube\n" +
+                                                "  SCRAMBLE [n]   -   Scramble the cube with n random moves\n" +
+                                                "  SOLVE          -   Solve the cube\n" +
+                                                "  QUIT           -   Exit the program\n\n" +
+                                                "Make moves on the cube with the syntax: <FACE>[MODIFIER]\n" +
+                                                "  where <FACE> is one of U, L, F, R, B, D\n" +
+                                                "  and [MODIFIER] (optional argument) is either ' (counter-clockwise turn), or 2 (double turn).\n" +
+                                                "  For example, D' is the counter-clockwise turn of the Down face.\n"; 
 
     public static void main(String[] args) {
         Cube cube = new Cube();
@@ -98,23 +110,25 @@ public class CubeInteractive {
 
                 case "SOLVE":
                     CubeSolver solver = new CubeSolver(cube);
-                    solver.solveCube();
-                    input = "QUIT";
+                    try {
+                        Move[] moves = solver.solveCube();
+                    
+                        // Print the moves to solve the cube
+                        System.out.println("Moves to solve the cube:");
+                        for (int i = 0; i < moves.length; i++) {
+                            System.out.print(moves[i].toString() + " ");
+                        }
+                        System.out.println("\n");
+
+                        // TODO: Perform moves to solve the cube? Or leave to user?
+                    }
+                    catch (IllegalStateException e) {
+                        System.out.println("ERROR: " + e.getMessage() + "\n");
+                    }
                     break;
                 
                 case "HELP":
-                    System.out.println("\nCommands:\n" +
-                                       "  HELP           -   Display this help message\n" +
-                                       "  RESET          -   Reset the cube to the solved state\n" +
-                                       "  EDIT           -   Edit the cube\n" +
-                                       "  SCRAMBLE [n]   -   Scramble the cube with n random moves\n" +
-                                       "  SOLVE          -   Solve the cube\n" +
-                                       "  QUIT           -   Exit the program\n\n" +
-                                       "Make moves on the cube with the syntax: <FACE>[MODIFIER]\n" +
-                                       "  where <FACE> is one of U, L, F, R, B, D\n" +
-                                       "  and [MODIFIER] (optional argument) is either ' (counter-clockwise turn), or 2 (double turn).\n" +
-                                       "  For example, D' is the counter-clockwise turn of the Down face.\n"
-                    );
+                    System.out.println(USAGE_MESSAGE);
 
                 case "QUIT":
                     break;
