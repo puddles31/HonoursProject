@@ -119,9 +119,6 @@ public class CubeInteractive {
 
 
     private static Cube editCube(Cube cube) {
-        // remove this in future, allow user to edit current state instead of creating a new cube
-        cube = new Cube(); 
-
         System.out.println("Cube is now in EDIT mode. Enter a colour (W, G, R, B, O, Y) to change the selected cell. " +
                            "Enter '-' or 'BACK' to go to the previous cell. Enter 'DONE' to exit EDIT mode.");    
         int index = 0;
@@ -156,6 +153,9 @@ public class CubeInteractive {
 
         while (!input.equals("DONE")) {
             Cube.printEditCubeState(colours, index);
+            if (index == 48) {
+                System.out.println("Press ENTER to finish editing. Enter '-' or 'BACK' to go back and continue editing.");
+            }
 
             input = sc.nextLine().toUpperCase();
             
@@ -176,11 +176,10 @@ public class CubeInteractive {
                 }
             }
             else {
-                System.out.println("Enter 'DONE' to exit EDIT mode.");
                 if (input.equals("-") || input.equals("BACK")) {
                     index--;
                 }
-                else if (input.equals("DONE")) {
+                else if (input.equals("") || input.equals("DONE")) {
                     break;
                 }
             }
@@ -190,7 +189,13 @@ public class CubeInteractive {
         }
 
         // Convert the colours array to a cube state
-        return new Cube(colours);
+        try {
+            return new Cube(colours);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage() + " Cube reset to previous state.\n");
+            return cube;
+        }
     }
 
 }

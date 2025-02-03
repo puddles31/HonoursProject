@@ -1,6 +1,7 @@
 package rubikscube;
 
 import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * A Rubik's Cube, represented as an array of edge cubies and an array corner cubies.
@@ -117,6 +118,20 @@ public class Cube {
             this.index = index;
             this.orientation = orientation;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+
+            if (obj == null || obj.getClass() != this.getClass()) {
+                return false;
+            }
+
+            Cubie other = (Cubie) obj;
+            return index == other.index && orientation == other.orientation;
+        }
     }
 
 
@@ -151,14 +166,54 @@ public class Cube {
 
         for (int i = 0; i < 8; i++) {
             cornerCubies[i] = getCornerCubie(colours, i);
+            if (cornerCubies[i] == null) {
+                throw new IllegalArgumentException("Invalid cube stickering.");
+            }
         }
 
         for (int i = 0; i < 12; i++) {
             edgeCubies[i] = getEdgeCubie(colours, i);
+            if (edgeCubies[i] == null) {
+                throw new IllegalArgumentException("Invalid cube stickering.");
+            }
         }
 
+        // Check for duplicate cubies
+        if (Stream.of(edgeCubies).distinct().count() != 12 || Stream.of(cornerCubies).distinct().count() != 8) {
+            throw new IllegalArgumentException("Duplicate cubie(s).");
+        }
 
+        // Check for parity errors
+        // Corner parity: the sum of the orientations of the corner cubies must be a multiple of 3
+        if (Stream.of(cornerCubies).mapToInt(cubie -> cubie.orientation).sum() % 3 != 0) {
+            throw new IllegalArgumentException("Corner parity error.");
+        }
+        // Edge parity: the sum of the orientations of the edge cubies must be even
+        if (Stream.of(edgeCubies).mapToInt(cubie -> cubie.orientation).sum() % 2 != 0) {
+            throw new IllegalArgumentException("Edge parity error.");
+        }
+        // Permutation parity: the sum of the number of swaps needed to solve the corner and edge cubies must be even
+        // https://puzzling.stackexchange.com/questions/53846/how-to-determine-whether-a-rubiks-cube-is-solvable
+        if (countSwaps(cornerCubies) + countSwaps(edgeCubies) % 2 != 0) {
+            throw new IllegalArgumentException("Permutation parity error.");
+        }
     }
+
+
+    private int countSwaps(Cubie[] cubies) {
+        int swaps = 0;
+        for (int i = 0; i < cubies.length; i++) {
+            // If cubie not in correct position, swap it with the cubie in its correct position
+            if (cubies[i].index != i) {
+                byte temp = cubies[i].index;
+                cubies[i].index = cubies[temp].index;
+                cubies[temp].index = temp;
+                swaps++;
+                i--;
+            }
+        }
+    return swaps;
+}
 
 
     private Cubie getCornerCubie(Colour[] colours, int index) {
@@ -205,7 +260,7 @@ public class Cube {
             case 50: cubieIndex = CORNER_DLB; break; // YGO 
             case 56: cubieIndex = CORNER_DRB; break; // YBO 
             case 44: cubieIndex = CORNER_DRF; break; // YBR 
-            default: System.err.println("Invalid cubieValue"); return null;
+            default: return null; // Invalid cube state
         }
 
         // Determine the orientation of the corner cubie
@@ -239,7 +294,7 @@ public class Cube {
                     return new Cubie(cubieIndex, (byte) 2);
                 }
 
-            default: System.err.println("Invalid index"); return null;
+            default: return null; // Invalid index
         }
     }
 
@@ -304,7 +359,7 @@ public class Cube {
             case 34: cubieIndex = EDGE_DL; break; // YG
             case 48: cubieIndex = EDGE_DB; break; // YO
             case 40: cubieIndex = EDGE_DR; break; // YB
-            default: System.err.println("Invalid cubieValue"); return null;
+            default: return null; // Invalid cube state
         }
 
         // Determine the orientation of the edge cubie
