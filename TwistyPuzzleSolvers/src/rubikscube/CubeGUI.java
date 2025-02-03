@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.stream.Stream;
 
 public class CubeGUI extends JFrame {
 
@@ -19,11 +20,14 @@ public class CubeGUI extends JFrame {
     public CubeGUI() {
         super("Rubik's Cube GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 750);
+        setSize(1250, 750);
+        setLayout(new GridLayout(1, 2));
 
-        JPanel panel = new JPanel(new GridLayout(3, 4, 10, 10));
-        panel.setBackground(Color.decode("#cccccc"));
-        panel.setBorder(new EmptyBorder(50, 50, 50, 50));
+
+        JPanel cubePanel = new JPanel(new GridLayout(3, 4, 10, 10));
+        cubePanel.setBackground(Color.decode("#cccccc"));
+        cubePanel.setBorder(new EmptyBorder(50, 50, 50, 50));
+        cubePanel.setSize(1000, 750);
         
         CubeFacePanel wFace = new CubeFacePanel(Color.WHITE);
         CubeFacePanel gFace = new CubeFacePanel(Color.GREEN);
@@ -31,25 +35,33 @@ public class CubeGUI extends JFrame {
         CubeFacePanel bFace = new CubeFacePanel(Color.BLUE);
         CubeFacePanel oFace = new CubeFacePanel(Color.ORANGE);
         CubeFacePanel yFace = new CubeFacePanel(Color.YELLOW);
-
         faces = new CubeFacePanel[] {wFace, gFace, rFace, bFace, oFace, yFace};
         
-        panel.add(new JLabel());
-        panel.add(wFace);
-        panel.add(new JLabel());
-        panel.add(new JLabel());
+        cubePanel.add(new JLabel());
+        cubePanel.add(wFace);
+        cubePanel.add(new JLabel());
+        cubePanel.add(new JLabel());
+        cubePanel.add(gFace);
+        cubePanel.add(rFace);
+        cubePanel.add(bFace);
+        cubePanel.add(oFace);
+        cubePanel.add(new JLabel());
+        cubePanel.add(yFace);
 
-        panel.add(gFace);
-        panel.add(rFace);
-        panel.add(bFace);
-        panel.add(oFace);
 
-        panel.add(new JLabel());
-        panel.add(yFace);
+        // TODO: switch to use GridBagLayout because java swing suckssss :((((
 
-        add(panel);
+        JPanel controlPanel = new JPanel();
+        controlPanel.setBackground(Color.decode("#aaaaaa"));
+        controlPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
+        controlPanel.setSize(150, 750);
+
+        JLabel controlLabel = new JLabel("Controls:");
+        controlPanel.add(controlLabel);
+
         setVisible(true);
-
+        add(cubePanel);
+        add(controlPanel);
         addKeyListener(new CubeKeyListener());
 
         cube = new Cube();
@@ -95,65 +107,67 @@ public class CubeGUI extends JFrame {
     }
 
     private void renderCube() {
+        Color[] colours = Stream.of(cube.getColours()).map(cubeCol -> getColour(cubeCol)).toArray(Color[]::new);
+
         // Top face
-        faces[0].cells[0].setBackground(getColour(cube.getCornerColours(cube.CORNER_ULB)[0]));
-        faces[0].cells[1].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UB)[0]));
-        faces[0].cells[2].setBackground(getColour(cube.getCornerColours(cube.CORNER_URB)[0]));
-        faces[0].cells[3].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UL)[0]));
-        faces[0].cells[4].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UR)[0]));
-        faces[0].cells[5].setBackground(getColour(cube.getCornerColours(cube.CORNER_ULF)[0]));
-        faces[0].cells[6].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UF)[0]));
-        faces[0].cells[7].setBackground(getColour(cube.getCornerColours(cube.CORNER_URF)[0]));
+        faces[0].cells[0].setBackground(colours[0]);
+        faces[0].cells[1].setBackground(colours[1]);
+        faces[0].cells[2].setBackground(colours[2]);
+        faces[0].cells[3].setBackground(colours[3]);
+        faces[0].cells[4].setBackground(colours[4]);
+        faces[0].cells[5].setBackground(colours[5]);
+        faces[0].cells[6].setBackground(colours[6]);
+        faces[0].cells[7].setBackground(colours[7]);
 
         // Left face
-        faces[1].cells[0].setBackground(getColour(cube.getCornerColours(cube.CORNER_ULB)[1]));
-        faces[1].cells[1].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UL)[1]));
-        faces[1].cells[2].setBackground(getColour(cube.getCornerColours(cube.CORNER_ULF)[1]));
-        faces[1].cells[3].setBackground(getColour(cube.getEdgeColours(cube.EDGE_BL)[1]));
-        faces[1].cells[4].setBackground(getColour(cube.getEdgeColours(cube.EDGE_FL)[1]));
-        faces[1].cells[5].setBackground(getColour(cube.getCornerColours(cube.CORNER_DLB)[1]));
-        faces[1].cells[6].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DL)[1]));
-        faces[1].cells[7].setBackground(getColour(cube.getCornerColours(cube.CORNER_DLF)[1]));
+        faces[1].cells[0].setBackground(colours[8]);
+        faces[1].cells[1].setBackground(colours[9]);
+        faces[1].cells[2].setBackground(colours[10]);
+        faces[1].cells[3].setBackground(colours[20]);
+        faces[1].cells[4].setBackground(colours[21]);
+        faces[1].cells[5].setBackground(colours[28]);
+        faces[1].cells[6].setBackground(colours[29]);
+        faces[1].cells[7].setBackground(colours[30]);
 
         // Front face
-        faces[2].cells[0].setBackground(getColour(cube.getCornerColours(cube.CORNER_ULF)[2]));
-        faces[2].cells[1].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UF)[1]));
-        faces[2].cells[2].setBackground(getColour(cube.getCornerColours(cube.CORNER_URF)[2]));
-        faces[2].cells[3].setBackground(getColour(cube.getEdgeColours(cube.EDGE_FL)[0]));
-        faces[2].cells[4].setBackground(getColour(cube.getEdgeColours(cube.EDGE_FR)[0]));
-        faces[2].cells[5].setBackground(getColour(cube.getCornerColours(cube.CORNER_DLF)[2]));
-        faces[2].cells[6].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DF)[1]));
-        faces[2].cells[7].setBackground(getColour(cube.getCornerColours(cube.CORNER_DRF)[2]));
+        faces[2].cells[0].setBackground(colours[11]);
+        faces[2].cells[1].setBackground(colours[12]);
+        faces[2].cells[2].setBackground(colours[13]);
+        faces[2].cells[3].setBackground(colours[22]);
+        faces[2].cells[4].setBackground(colours[23]);
+        faces[2].cells[5].setBackground(colours[31]);
+        faces[2].cells[6].setBackground(colours[32]);
+        faces[2].cells[7].setBackground(colours[33]);
 
         // Right face
-        faces[3].cells[0].setBackground(getColour(cube.getCornerColours(cube.CORNER_URF)[1]));
-        faces[3].cells[1].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UR)[1]));
-        faces[3].cells[2].setBackground(getColour(cube.getCornerColours(cube.CORNER_URB)[1]));
-        faces[3].cells[3].setBackground(getColour(cube.getEdgeColours(cube.EDGE_FR)[1]));
-        faces[3].cells[4].setBackground(getColour(cube.getEdgeColours(cube.EDGE_BR)[1]));
-        faces[3].cells[5].setBackground(getColour(cube.getCornerColours(cube.CORNER_DRF)[1]));
-        faces[3].cells[6].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DR)[1]));
-        faces[3].cells[7].setBackground(getColour(cube.getCornerColours(cube.CORNER_DRB)[1]));
+        faces[3].cells[0].setBackground(colours[14]);
+        faces[3].cells[1].setBackground(colours[15]);
+        faces[3].cells[2].setBackground(colours[16]);
+        faces[3].cells[3].setBackground(colours[24]);
+        faces[3].cells[4].setBackground(colours[25]);
+        faces[3].cells[5].setBackground(colours[34]);
+        faces[3].cells[6].setBackground(colours[35]);
+        faces[3].cells[7].setBackground(colours[36]);
 
         // Back face
-        faces[4].cells[0].setBackground(getColour(cube.getCornerColours(cube.CORNER_URB)[2]));
-        faces[4].cells[1].setBackground(getColour(cube.getEdgeColours(cube.EDGE_UB)[1]));
-        faces[4].cells[2].setBackground(getColour(cube.getCornerColours(cube.CORNER_ULB)[2]));
-        faces[4].cells[3].setBackground(getColour(cube.getEdgeColours(cube.EDGE_BR)[0]));
-        faces[4].cells[4].setBackground(getColour(cube.getEdgeColours(cube.EDGE_BL)[0]));
-        faces[4].cells[5].setBackground(getColour(cube.getCornerColours(cube.CORNER_DRB)[2]));
-        faces[4].cells[6].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DB)[1]));
-        faces[4].cells[7].setBackground(getColour(cube.getCornerColours(cube.CORNER_DLB)[2]));
+        faces[4].cells[0].setBackground(colours[17]);
+        faces[4].cells[1].setBackground(colours[18]);
+        faces[4].cells[2].setBackground(colours[19]);
+        faces[4].cells[3].setBackground(colours[26]);
+        faces[4].cells[4].setBackground(colours[27]);
+        faces[4].cells[5].setBackground(colours[37]);
+        faces[4].cells[6].setBackground(colours[38]);
+        faces[4].cells[7].setBackground(colours[39]);
         
         // Bottom face
-        faces[5].cells[0].setBackground(getColour(cube.getCornerColours(cube.CORNER_DLF)[0]));
-        faces[5].cells[1].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DF)[0]));
-        faces[5].cells[2].setBackground(getColour(cube.getCornerColours(cube.CORNER_DRF)[0]));
-        faces[5].cells[3].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DL)[0]));
-        faces[5].cells[4].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DR)[0]));
-        faces[5].cells[5].setBackground(getColour(cube.getCornerColours(cube.CORNER_DLB)[0]));
-        faces[5].cells[6].setBackground(getColour(cube.getEdgeColours(cube.EDGE_DB)[0]));
-        faces[5].cells[7].setBackground(getColour(cube.getCornerColours(cube.CORNER_DRB)[0]));
+        faces[5].cells[0].setBackground(colours[40]);
+        faces[5].cells[1].setBackground(colours[41]);
+        faces[5].cells[2].setBackground(colours[42]);
+        faces[5].cells[3].setBackground(colours[43]);
+        faces[5].cells[4].setBackground(colours[44]);
+        faces[5].cells[5].setBackground(colours[45]);
+        faces[5].cells[6].setBackground(colours[46]);
+        faces[5].cells[7].setBackground(colours[47]);
     }
 
 
