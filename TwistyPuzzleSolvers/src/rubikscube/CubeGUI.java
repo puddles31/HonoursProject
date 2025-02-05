@@ -2,10 +2,19 @@ package rubikscube;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.stream.Stream;
 
 public class CubeGUI extends JFrame {
@@ -19,52 +28,58 @@ public class CubeGUI extends JFrame {
 
     public CubeGUI() {
         super("Rubik's Cube GUI");
+        cube = new Cube();
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1250, 750);
-        setLayout(new GridLayout(1, 2));
-
-
-        JPanel cubePanel = new JPanel(new GridLayout(3, 4, 10, 10));
-        cubePanel.setBackground(Color.decode("#cccccc"));
-        cubePanel.setBorder(new EmptyBorder(50, 50, 50, 50));
-        cubePanel.setSize(1000, 750);
+        setLayout(new BorderLayout());
         
-        CubeFacePanel wFace = new CubeFacePanel(Color.WHITE);
-        CubeFacePanel gFace = new CubeFacePanel(Color.GREEN);
-        CubeFacePanel rFace = new CubeFacePanel(Color.RED);
-        CubeFacePanel bFace = new CubeFacePanel(Color.BLUE);
-        CubeFacePanel oFace = new CubeFacePanel(Color.ORANGE);
-        CubeFacePanel yFace = new CubeFacePanel(Color.YELLOW);
-        faces = new CubeFacePanel[] {wFace, gFace, rFace, bFace, oFace, yFace};
-        
-        cubePanel.add(new JLabel());
-        cubePanel.add(wFace);
-        cubePanel.add(new JLabel());
-        cubePanel.add(new JLabel());
-        cubePanel.add(gFace);
-        cubePanel.add(rFace);
-        cubePanel.add(bFace);
-        cubePanel.add(oFace);
-        cubePanel.add(new JLabel());
-        cubePanel.add(yFace);
+        CubePanel cubePanel = new CubePanel();
+        ConsolePanel consolePanel = new ConsolePanel();
 
+        add(cubePanel, BorderLayout.WEST);
+        add(consolePanel, BorderLayout.CENTER);
 
-        // TODO: switch to use GridBagLayout because java swing suckssss :((((
-
-        JPanel controlPanel = new JPanel();
-        controlPanel.setBackground(Color.decode("#aaaaaa"));
-        controlPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
-        controlPanel.setSize(150, 750);
-
-        JLabel controlLabel = new JLabel("Controls:");
-        controlPanel.add(controlLabel);
+        cubePanel.addKeyListener(new CubeKeyListener(consolePanel.consoleText));
 
         setVisible(true);
-        add(cubePanel);
-        add(controlPanel);
-        addKeyListener(new CubeKeyListener());
+        cubePanel.grabFocus();        
+    }
 
-        cube = new Cube();
+    private class CubePanel extends JPanel {
+        public CubePanel() {
+            super(new GridLayout(3, 4, 10, 10));
+            setBackground(Color.decode("#cccccc"));
+            setBorder(new EmptyBorder(50, 50, 50, 50));
+            setPreferredSize(new Dimension(1000, 750));
+    
+            CubeFacePanel wFace = new CubeFacePanel(Color.WHITE);
+            CubeFacePanel gFace = new CubeFacePanel(Color.GREEN);
+            CubeFacePanel rFace = new CubeFacePanel(Color.RED);
+            CubeFacePanel bFace = new CubeFacePanel(Color.BLUE);
+            CubeFacePanel oFace = new CubeFacePanel(Color.ORANGE);
+            CubeFacePanel yFace = new CubeFacePanel(Color.YELLOW);
+            faces = new CubeFacePanel[] {wFace, gFace, rFace, bFace, oFace, yFace};
+            
+            add(new JLabel());
+            add(wFace);
+            add(new JLabel());
+            add(new JLabel());
+            add(gFace);
+            add(rFace);
+            add(bFace);
+            add(oFace);
+            add(new JLabel());
+            add(yFace);
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseReleased(e);
+                    CubePanel.this.grabFocus();
+                }
+            });
+        }
     }
 
     private class CubeFacePanel extends JPanel {
@@ -90,6 +105,77 @@ public class CubeGUI extends JFrame {
                     cells[i - 1] = cell;
                 }
             }
+        }
+    }
+
+    private class ConsolePanel extends JPanel {
+        CubeTerminal terminal = new CubeTerminal(cube);
+        JTextArea consoleText;
+
+        public ConsolePanel() {
+            JPanel textPanel = new JPanel();
+            textPanel.setLayout(new GridBagLayout());
+
+            setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+
+            JPanel fillerPanel = new JPanel();
+            fillerPanel.setBackground(Color.decode("#333333"));
+            textPanel.add(fillerPanel, gbc);
+
+            gbc.gridy = 1;
+            gbc.weighty = 0;
+
+            consoleText = new JTextArea(1, 18);
+            consoleText.setBackground(Color.decode("#333333"));
+            consoleText.setForeground(Color.WHITE);
+            consoleText.setEditable(false);
+            consoleText.setFocusable(false);
+            consoleText.setLineWrap(true);
+            consoleText.setFont(new Font(Font.MONOSPACED, Font.BOLD, 18));
+            textPanel.add(consoleText, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+
+            add(new JScrollPane(textPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), gbc);
+
+            gbc.gridy = 1;
+            gbc.weighty = 0;
+
+            JTextField consoleInput = new JTextField(18);
+            consoleInput.setBackground(Color.decode("#555555"));
+            consoleInput.setForeground(Color.WHITE);
+            consoleInput.setCaretColor(Color.WHITE);
+            consoleInput.setFont(new Font(Font.MONOSPACED, Font.BOLD, 18));
+
+            consoleInput.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (consoleText.getText().length() > 0) {
+                        consoleText.append("\n");
+                    }
+
+                    consoleText.append(consoleInput.getText());
+
+                    String out = terminal.handleInput(consoleInput.getText().toUpperCase());
+                    if (out.length() > 0) {
+                        consoleText.append("\n" + out);
+                    }
+                    
+                    consoleInput.setText("");
+                    renderCube();
+                }
+            });
+            add(consoleInput, gbc);
         }
     }
 
@@ -172,6 +258,13 @@ public class CubeGUI extends JFrame {
 
 
     private class CubeKeyListener implements KeyListener {
+
+        private JTextArea consoleText;
+
+        public CubeKeyListener(JTextArea consoleText) {
+            this.consoleText = consoleText;
+        }
+
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_U) {
@@ -184,7 +277,6 @@ public class CubeGUI extends JFrame {
                 else {
                     cube.moveU();
                 }
-                renderCube();
             }
             else if (e.getKeyCode() == KeyEvent.VK_L) {
                 if (e.isShiftDown()) {
@@ -196,7 +288,6 @@ public class CubeGUI extends JFrame {
                 else {
                     cube.moveL();
                 }
-                renderCube();
             }
             else if (e.getKeyCode() == KeyEvent.VK_F) {
                 if (e.isShiftDown()) {
@@ -208,7 +299,6 @@ public class CubeGUI extends JFrame {
                 else {
                     cube.moveF();
                 }
-                renderCube();
             }
             else if (e.getKeyCode() == KeyEvent.VK_R) {
                 if (e.isShiftDown()) {
@@ -220,7 +310,6 @@ public class CubeGUI extends JFrame {
                 else {
                     cube.moveR();
                 }
-                renderCube();
             }
             else if (e.getKeyCode() == KeyEvent.VK_B) {
                 if (e.isShiftDown()) {
@@ -232,7 +321,6 @@ public class CubeGUI extends JFrame {
                 else {
                     cube.moveB();
                 }
-                renderCube();
             }
             else if (e.getKeyCode() == KeyEvent.VK_D) {
                 if (e.isShiftDown()) {
@@ -244,7 +332,23 @@ public class CubeGUI extends JFrame {
                 else {
                     cube.moveD();
                 }
-                renderCube();
+            }
+            else {
+                return;
+            }
+
+            renderCube();
+
+            if (consoleText.getText().length() > 0) {
+                consoleText.append("\n");
+            }
+            consoleText.append(KeyEvent.getKeyText(e.getKeyCode()).toUpperCase());
+            
+            if (e.isShiftDown()) {
+                consoleText.append("2");
+            }
+            else if (e.isControlDown()) {
+                consoleText.append("'");
             }
         }
 
