@@ -17,12 +17,12 @@ import java.util.regex.Pattern;
 public class CubeTerminal {
 
     private static final String USAGE_MESSAGE = "\nCommands:\n" +
-                                                "  HELP           -   Display this help message\n" +
-                                                "  RESET          -   Reset the cube to the solved state\n" +
-                                                "  EDIT           -   Edit the cube\n" +
-                                                "  SCRAMBLE [n]   -   Scramble the cube with n random moves\n" +
-                                                "  SOLVE          -   Solve the cube\n" +
-                                                "  QUIT           -   Exit the program\n\n" +
+                                                "  HELP         - Display this help message\n" +
+                                                "  RESET        - Reset the cube to the solved state\n" +
+                                                "  EDIT         - Edit the cube\n" +
+                                                "  SCRAMBLE [n] - Scramble the cube with n random moves\n" +
+                                                "  SOLVE        - Solve the cube\n" +
+                                                "  QUIT         - Exit the program\n\n" +
                                                 "Make moves on the cube with the syntax: <FACE>[MODIFIER]\n" +
                                                 "  where <FACE> is one of U, L, F, R, B, D\n" +
                                                 "  and [MODIFIER] (optional argument) is either ' (counter-clockwise turn), or 2 (double turn).\n" +
@@ -39,19 +39,23 @@ public class CubeTerminal {
     public static void main(String[] args) {
         CubeTerminal terminal = new CubeTerminal(new Cube(), false);
 
-        String input = "";
+        String input = ".";
 
         // Keep asking for moves until the user types "QUIT"
         while (!input.equals("QUIT")) {
-            terminal.cube.printCubeState();
 
-            System.out.println("Make a move, or enter a command:");
+            if (!input.equals("")) {
+                terminal.cube.printCubeState();
+                System.out.println("Make a move, or enter a command:");
+            }
+            
             input = sc.nextLine().toUpperCase().trim();
             
             String out = terminal.handleInput(input);
-            System.out.println(out);
+            if (!out.equals("")) {
+                System.out.println(out);
+            }
         }
-
         sc.close();
     }
 
@@ -128,6 +132,10 @@ public class CubeTerminal {
                 break;
 
             case "QUIT":
+                System.exit(0);
+                break;
+
+            case "":
                 break;
 
             default:
