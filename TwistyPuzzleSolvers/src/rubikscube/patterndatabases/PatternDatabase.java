@@ -1,4 +1,6 @@
-package rubikscube;
+package rubikscube.patterndatabases;
+
+import rubikscube.Cube;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.io.File;
@@ -28,9 +30,6 @@ public abstract class PatternDatabase {
      * @param databaseSize - The size of the database. Should be equal to the number of possible states for the subset of cubies.
      * @param n - The number of elements in the permutation. Should be 8 for corners, 12 for edges.
      * @param k - The number of elements picked in the partial permutation. Should be 8 for corners, 7 for edges.
-     * @see CornerPatternDatabase#CornerPatternDatabase()
-     * @see FirstEdgePatternDatabase#FirstEdgePatternDatabase()
-     * @see SecondEdgePatternDatabase#SecondEdgePatternDatabase()
      */
     protected PatternDatabase(int databaseSize, byte n, byte k) {
         // Initialise the array with max byte values
@@ -160,7 +159,9 @@ public abstract class PatternDatabase {
      * Note that this function has different implementations for corner and edge databases.
      * @param cube - The cube to calculate the database index for.
      * @return The database index for the given cube.
-     * @see #calculateLehmerRank
+     * @see CornerPatternDatabase#getDatabaseIndex(Cube)
+     * @see FirstEdgePatternDatabase#getDatabaseIndex(Cube)
+     * @see SecondEdgePatternDatabase#getDatabaseIndex(Cube)
      */
     protected abstract int getDatabaseIndex(Cube cube);
 
@@ -206,7 +207,6 @@ public abstract class PatternDatabase {
     /**
      * Write the pattern database to a file.
      * @param path - The name of the file to write the database to (should end in .pdb).
-     * @see #readDatabaseFromFile(String)
      */
     public void writeDatabaseToFile(String filename) {
         try {
@@ -232,7 +232,6 @@ public abstract class PatternDatabase {
      * Read the pattern database from a file.
      * @param path - The path to read the database from.
      * @return {@code true} if the database was read successfully, {@code false} if an error occurred.
-     * @see #writeDatabaseToFile(String)
      */
     public boolean readDatabaseFromFile(String path) {
         final String DATABASES_PATH = "TwistyPuzzleSolvers/databases/";

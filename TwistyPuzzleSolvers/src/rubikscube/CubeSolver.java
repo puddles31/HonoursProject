@@ -1,14 +1,18 @@
 package rubikscube;
 
+import rubikscube.CubeMoves.Move;
+import rubikscube.patterndatabases.CornerPatternDatabase;
+import rubikscube.patterndatabases.FirstEdgePatternDatabase;
+import rubikscube.patterndatabases.SecondEdgePatternDatabase;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-import rubikscube.Cube.Move;
-
 /**
  * This class contains methods used to solve a Rubik's Cube using an IDA* search method, guaranteeing an optimal solution.
+ * @see Cube
+ * @see rubikscube.patterndatabases.PatternDatabase
  */
 public class CubeSolver {
     
@@ -17,6 +21,10 @@ public class CubeSolver {
     FirstEdgePatternDatabase firstEdgePDB;
     SecondEdgePatternDatabase secondEdgePDB;
 
+    /**
+     * Constructor for a CubeSolver object. Initialises the pattern databases for the cube.
+     * @param cube - The cube to solve.
+     */
     public CubeSolver(Cube cube) {
         this.cube = cube;
 
@@ -92,7 +100,6 @@ public class CubeSolver {
         return max;
     }
 
-
     /**
      * A node in the iterative-deepening A* search tree.
      * Contains the cube state, move used to get to the node, and the depth of the node.
@@ -115,7 +122,6 @@ public class CubeSolver {
         }
     }
 
-
     /**
      * A move with an estimated number of moves required to solve the cube state after the move.
      * Used to prioritize moves in the IDA* search.
@@ -134,6 +140,8 @@ public class CubeSolver {
 
     /**
      * Perform an iterative-deepening A* (IDA*) search to find a solution to the cube.
+     * @return An array of moves which can be performed to solve the cube.
+     * @throws IllegalStateException If the pattern databases are not initialised correctly.
      */
     public Move[] solveCube() throws IllegalStateException {
         // Use a deque as a stack for nodes
@@ -203,11 +211,11 @@ public class CubeSolver {
                 // Iterate over all possible moves from the current node
                 for (Move move : Move.values()) {
                     // If at the root node or the move shouldn't be skipped
-                    if (currentNode.depth == 0 || !Cube.skipMove(move, currentNode.move)) {
+                    if (currentNode.depth == 0 || !CubeMoves.skipMove(move, currentNode.move)) {
                         
                         // Create a copy of the current cube state and make the move on the copy
                         Cube cubeCopy = new Cube(currentNode.cube);
-                        cubeCopy.makeMove(move);
+                        cubeCopy.moves.makeMove(move);
 
                         // Calculate an estimate for the number of moves required to solve the child node
                         byte estimatedChildMoves = (byte)(currentNode.depth + (byte) 1 + getMaxNumberOfMoves(cubeCopy, bound, (byte)(currentNode.depth + 1)));

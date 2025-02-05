@@ -1,15 +1,21 @@
-package rubikscube;
-import java.util.Scanner;
+package rubikscube.interactive;
 
+import rubikscube.Cube;
+import rubikscube.CubeSolver;
 import rubikscube.Cube.Colour;
-import rubikscube.Cube.Move;
+import rubikscube.CubeMoves.Move;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * This class contains a main method which allows the user to interact with a Rubik's Cube by making moves or entering commands.
+ * This class contains methods which allow the user to interact with a Rubik's Cube.
+ * If running the main method, the constructor should be called with {@code guiMode} set to {@code false}.
+ * This will allow the user to make moves and enter commands via the terminal.
+ * If {@code guiMode} is set to {@code true}, the user will not be able to edit the cube, but will be able to make moves and enter commands via the GUI.
  */
 public class CubeTerminal {
 
-    private static Scanner sc;
     private static final String USAGE_MESSAGE = "\nCommands:\n" +
                                                 "  HELP           -   Display this help message\n" +
                                                 "  RESET          -   Reset the cube to the solved state\n" +
@@ -23,9 +29,15 @@ public class CubeTerminal {
                                                 "  For example, D' is the counter-clockwise turn of the Down face.\n";
 
     private Cube cube;
+    private static Scanner sc;
+    private boolean guiMode;
+    private Pattern movePattern, scramblePattern;
 
+    /**
+     * The main method which allows the user to interact with a Rubik's Cube via the terminal by making moves or entering commands.
+     */
     public static void main(String[] args) {
-        CubeTerminal terminal = new CubeTerminal(new Cube());
+        CubeTerminal terminal = new CubeTerminal(new Cube(), false);
 
         String input = "";
 
@@ -34,7 +46,7 @@ public class CubeTerminal {
             terminal.cube.printCubeState();
 
             System.out.println("Make a move, or enter a command:");
-            input = sc.nextLine().toUpperCase();
+            input = sc.nextLine().toUpperCase().trim();
             
             String out = terminal.handleInput(input);
             System.out.println(out);
@@ -43,78 +55,36 @@ public class CubeTerminal {
         sc.close();
     }
 
-    public CubeTerminal(Cube cube) {
+    /** 
+     * Constructor for a cube terminal.
+     * @param cube - The cube to interact with.
+     * @param guiMode - Whether the terminal is in GUI mode or not.
+     */
+    public CubeTerminal(Cube cube, boolean guiMode) {
         this.cube = cube;
-        sc = new Scanner(System.in);
+        this.guiMode = guiMode;
+
+        if (!guiMode) {
+            sc = new Scanner(System.in);
+        }
+
+        movePattern = Pattern.compile("^([ULFRBD]['2]?)$");
+        scramblePattern = Pattern.compile("^SCRAMBLE ([0-9]+)$");
     }
 
 
+    /**
+     * Handle the user input by making a move or executing a command.
+     * @param input - The user input.
+     * @return The output message (if any) after the input is processed.
+     */
     public String handleInput(String input) {
         String out = "";
 
         switch (input) {
-            case "U":
-                cube.moveU();
-                break;
-            case "U'":
-                cube.moveUPrime();
-                break;
-            case "U2":
-                cube.moveU2();
-                break;
-
-            case "L":
-                cube.moveL();
-                break;
-            case "L'":
-                cube.moveLPrime();
-                break;
-            case "L2":
-                cube.moveL2();
-                break;
-
-            case "F":
-                cube.moveF();
-                break;
-            case "F'":
-                cube.moveFPrime();
-                break;
-            case "F2":
-                cube.moveF2();
-                break;
-
-            case "R":
-                cube.moveR();
-                break;
-            case "R'":
-                cube.moveRPrime();
-                break;
-            case "R2":
-                cube.moveR2();
-                break;
-
-            case "B":
-                cube.moveB();
-                break;
-            case "B'":
-                cube.moveBPrime();
-                break;
-            case "B2":
-                cube.moveB2();
-                break;
-
-            case "D":
-                cube.moveD();
-                break;
-            case "D'":
-                cube.moveDPrime();
-                break;
-            case "D2":
-                cube.moveD2();
-                break;
-
             case "SCRAMBLE":
-                Move[] scrambleMoves = cube.scramble(10);
+                // Default scramble is 10 moves
+                Move[] scrambleMoves = cube.moves.scramble(10);
                 out = "Moves made during scramble:\n";
                 for (int i = 0; i < scrambleMoves.length; i++) {
                     out += scrambleMoves[i] + "\n";
@@ -122,13 +92,16 @@ public class CubeTerminal {
                 break;
             
             case "RESET":
-                // cube = new Cube();
                 cube.resetCube();
                 break;
 
             case "EDIT":
-                editCube();
-                // continue;
+                if (!guiMode) {
+                    editCube();
+                }
+                else {
+                    out = "ERROR: Cannot edit cube in GUI mode.\n";
+                }
                 break;
 
             case "SOLVE":
@@ -140,7 +113,7 @@ public class CubeTerminal {
                     out = "Moves to solve the cube:\n";
                     for (int i = 0; i < moves.length; i++) {
                         out += moves[i] + "\n";
-                        cube.makeMove(moves[i]);
+                        cube.moves.makeMove(moves[i]);
                     }
                     out += "\n";
                     
@@ -152,47 +125,67 @@ public class CubeTerminal {
             
             case "HELP":
                 out = USAGE_MESSAGE;
+                break;
 
             case "QUIT":
                 break;
 
             default:
-                if (input.startsWith("SCRAMBLE") && input.split(" ").length == 2) {
-                    int n = Integer.parseInt(input.split(" ")[1]);
-                    Move[] scramble = cube.scramble(n);
+                // Check if input is a valid move
+                Matcher moveMatcher = movePattern.matcher(input);
+                if (moveMatcher.matches()) {
+                    String move = moveMatcher.group(1);
 
-                    out = "Moves made during scramble:\n";
-                    for (int i = 0; i < scramble.length; i++) {
-                        out += scramble[i] + "\n";
+                    cube.moves.makeMove(Move.fromString(move));
+                    break;
+                }
+
+                // Check if input is a SCRAMBLE command with a number
+                Matcher scrambleMatcher = scramblePattern.matcher(input);
+                if (scrambleMatcher.matches()) {
+                    int n = Integer.parseInt(scrambleMatcher.group(1));
+
+                    if (n > 0 && n <= 100) {
+                        Move[] scramble = cube.moves.scramble(n);
+                        out = "Moves made during scramble:\n";
+                        for (int i = 0; i < scramble.length; i++) {
+                            out += scramble[i] + "\n";
+                        }
                     }
+                    else {
+                        out = "ERROR: Number of moves must be between 1 and 100.\n";
+                    }
+                    break;
                 }
-                else {
-                    out = "ERROR: '" + input + "' is not a valid move.";
-                }
-                break;
+
+                out = "ERROR: '" + input + "' is not a valid move or command.";
         }
 
         return out;
     }
 
-
+    /**
+     * Enter EDIT mode to allow the user to change the colours of the cube.
+     */
     private void editCube() {
         Colour[] colours = cube.getColours();
         
         System.out.println("Cube is now in EDIT mode. Enter a colour (W, G, R, B, O, Y) to change the selected cell. " +
-        "Enter '-' or 'BACK' to go to the previous cell. Enter 'DONE' to exit EDIT mode.");    
+        "Enter '-' to go to the previous cell. Enter 'DONE' to exit EDIT mode.");    
         
         int index = 0;
         String input = "";
 
+        // Keep asking for input until the user types "DONE"
         while (!input.equals("DONE")) {
             Cube.printEditCubeState(colours, index);
             if (index == 48) {
-                System.out.println("Press ENTER to finish editing. Enter '-' or 'BACK' to go back and continue editing.");
+                System.out.println("Press ENTER to finish editing. Enter '-' to go back and continue editing.");
             }
 
             input = sc.nextLine().toUpperCase();
             
+            // Change the colour of the selected cell or move to next/previous cell based on the input
             if (index < 48) {
                 switch (input) {
                     case "W": colours[index] = Colour.W; index++; break;
@@ -203,14 +196,14 @@ public class CubeTerminal {
                     case "Y": colours[index] = Colour.Y; index++; break;
                     case "": index++; break;
                     case "-": index--; break;
-                    case "BACK": index--; break;
                     case "DONE": break;
                     default:
                         break;
                 }
             }
+            // If the user is at the last cell, allow them to finish editing by pressing ENTER
             else {
-                if (input.equals("-") || input.equals("BACK")) {
+                if (input.equals("-")) {
                     index--;
                 }
                 else if (input.equals("") || input.equals("DONE")) {

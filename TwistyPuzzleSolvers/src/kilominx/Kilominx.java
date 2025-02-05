@@ -2,10 +2,6 @@ package kilominx;
 
 /**
  * A Kilominx, represented as an array of "kubies" (Kilominx cubies).
- * @see #Kilominx()
- * @see #Kubie
- * @see #KilominxInteractive
- * @see #isSolved()
  */
 public class Kilominx {
 
@@ -62,8 +58,6 @@ public class Kilominx {
      * A cubie on the Kilominx (aka a Kubie).
      * A kubie has an index (which represents which colours are on the kubie's sides)
      * and an orientation (0, 1, or 2).
-     * @see #Kubie(byte, byte)
-     * @see #Kilominx
      */
     class Kubie {
         // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
@@ -86,7 +80,6 @@ public class Kilominx {
          * Constructor for a kubie.
          * @param index - The index of the kubie.
          * @param orientation - The orientation of the kubie.
-         * @see #Kubie
          */
         private Kubie(byte index, byte orientation) {
             this.index = index;
@@ -101,8 +94,6 @@ public class Kilominx {
     /**
      * Constructor for a Kilominx.
      * The Kilominx is initialised in the solved state, with the white face on top and the red face on front.
-     * @see #Kilominx
-     * @see #Kubie(byte, byte)
      */
     public Kilominx() {
         // Initialize kubies
@@ -129,7 +120,6 @@ public class Kilominx {
     /**
      * Get the indices of the kubies.
      * @return An array of the indices of the kubies.
-     * @see #getKubieOrientations()
      */
     public byte[] getKubieIndices() {
         byte[] indices = new byte[20];
@@ -144,7 +134,6 @@ public class Kilominx {
     /**
      * Get the orientations of the kubies.
      * @return An array of the orientations of the kubies.
-     * @see #getKubieIndices()
      */
     public byte[] getKubieOrientations() {
         byte[] orientations = new byte[20];

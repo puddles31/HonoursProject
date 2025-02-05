@@ -1,7 +1,10 @@
-package rubikscube;
+package rubikscube.patterndatabases;
+
+import rubikscube.Cube;
+import rubikscube.CubeMoves;
+import rubikscube.CubeMoves.Move;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import rubikscube.Cube.Move;
 
 /**
  * This class contains methods to populate the pattern databases for the Rubik's Cube.
@@ -136,10 +139,10 @@ public class PopulatePatternDatabases {
             // Iterate over all possible moves from the current node
             for (Move move : Move.values()) {
                 // If at the root node or the move shouldn't be skipped
-                if (movesList.size() == 0 || !Cube.skipMove(move, movesList.getLast())) {
+                if (movesList.size() == 0 || !CubeMoves.skipMove(move, movesList.getLast())) {
                     
                     // Make the move
-                    cube.makeMove(move);
+                    cube.moves.makeMove(move);
                 
                     // Try to update the number of moves in the database
                     // If successful, add the node to the queue; if not, the node was visited before with fewer moves
@@ -155,7 +158,7 @@ public class PopulatePatternDatabases {
                         }
                     }
                     // Undo the move
-                    cube.undoMove(move);
+                    cube.moves.undoMove(move);
                 }
             }
 
@@ -193,7 +196,7 @@ public class PopulatePatternDatabases {
         while (!movesStack.isEmpty()) {
             Move move = movesStack.removeFirst();
             movesList.add(move);
-            cube.makeMove(move);
+            cube.moves.makeMove(move);
         }
     }
 
@@ -206,7 +209,7 @@ public class PopulatePatternDatabases {
         BFSNode currentNode = target;
 
         while (currentNode.parent != null) {
-            cube.undoMove(currentNode.move);
+            cube.moves.undoMove(currentNode.move);
             currentNode = currentNode.parent;
         }
     }
@@ -272,14 +275,14 @@ public class PopulatePatternDatabases {
             // Iterate over all possible moves from the current node
             for (Move move : Move.values()) {
                 // If at the root node or the move shouldn't be skipped
-                if (currentNode.depth == 0 || !Cube.skipMove(move, currentNode.move)) {
+                if (currentNode.depth == 0 || !CubeMoves.skipMove(move, currentNode.move)) {
 
                     // Create a copy of the current cube state
                     Cube cubeCopy = new Cube(currentNode.cube);
                     byte cubeCopyDepth = (byte) (currentNode.depth + 1);
 
                     // Make the move on the copy
-                    cubeCopy.makeMove(move);
+                    cubeCopy.moves.makeMove(move);
 
                     int databaseIndex = database.getDatabaseIndex(cubeCopy);
                     

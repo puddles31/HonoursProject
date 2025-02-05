@@ -1,4 +1,6 @@
-package rubikscube;
+package rubikscube.patterndatabases;
+
+import rubikscube.Cube;
 
 /**
  * The pattern database for the corner cubies.
