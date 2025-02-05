@@ -1,6 +1,7 @@
 package rubikscube;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -232,7 +233,7 @@ public class CubeSolver {
         }
 
         System.out.println("IDA*: Solution found at depth " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
-        return moves;
+        return Arrays.copyOf(moves, bound);
     }
 
 }

@@ -20,136 +20,163 @@ public class CubeTerminal {
                                                 "Make moves on the cube with the syntax: <FACE>[MODIFIER]\n" +
                                                 "  where <FACE> is one of U, L, F, R, B, D\n" +
                                                 "  and [MODIFIER] (optional argument) is either ' (counter-clockwise turn), or 2 (double turn).\n" +
-                                                "  For example, D' is the counter-clockwise turn of the Down face.\n"; 
+                                                "  For example, D' is the counter-clockwise turn of the Down face.\n";
+
+    private Cube cube;
 
     public static void main(String[] args) {
-        Cube cube = new Cube();
+        CubeTerminal terminal = new CubeTerminal(new Cube());
 
-        sc = new Scanner(System.in);
         String input = "";
 
         // Keep asking for moves until the user types "QUIT"
         while (!input.equals("QUIT")) {
-            cube.printCubeState();
+            terminal.cube.printCubeState();
 
             System.out.println("Make a move, or enter a command:");
             input = sc.nextLine().toUpperCase();
-
-            switch (input) {
-                case "U":
-                    cube.moveU();
-                    break;
-                case "U'":
-                    cube.moveUPrime();
-                    break;
-                case "U2":
-                    cube.moveU2();
-                    break;
-
-                case "L":
-                    cube.moveL();
-                    break;
-                case "L'":
-                    cube.moveLPrime();
-                    break;
-                case "L2":
-                    cube.moveL2();
-                    break;
-
-                case "F":
-                    cube.moveF();
-                    break;
-                case "F'":
-                    cube.moveFPrime();
-                    break;
-                case "F2":
-                    cube.moveF2();
-                    break;
-
-                case "R":
-                    cube.moveR();
-                    break;
-                case "R'":
-                    cube.moveRPrime();
-                    break;
-                case "R2":
-                    cube.moveR2();
-                    break;
-
-                case "B":
-                    cube.moveB();
-                    break;
-                case "B'":
-                    cube.moveBPrime();
-                    break;
-                case "B2":
-                    cube.moveB2();
-                    break;
-
-                case "D":
-                    cube.moveD();
-                    break;
-                case "D'":
-                    cube.moveDPrime();
-                    break;
-                case "D2":
-                    cube.moveD2();
-                    break;
-
-                case "SCRAMBLE":
-                    cube.scramble(10);
-                    break;
-                
-                case "RESET":
-                    cube = new Cube();
-                    break;
-
-                case "EDIT":
-                    cube = editCube(cube);
-                    continue;
-
-                case "SOLVE":
-                    CubeSolver solver = new CubeSolver(cube);
-                    try {
-                        Move[] moves = solver.solveCube();
-                    
-                        // Print the moves to solve the cube
-                        System.out.println("Moves to solve the cube:");
-                        for (int i = 0; i < moves.length; i++) {
-                            System.out.print(moves[i].toString() + " ");
-                        }
-                        System.out.println("\n");
-
-                        // TODO: Perform moves to solve the cube? Or leave to user?
-                    }
-                    catch (IllegalStateException e) {
-                        System.out.println("ERROR: " + e.getMessage() + "\n");
-                    }
-                    break;
-                
-                case "HELP":
-                    System.out.println(USAGE_MESSAGE);
-
-                case "QUIT":
-                    break;
-
-                default:
-                    if (input.startsWith("SCRAMBLE") && input.split(" ").length == 2) {
-                        int n = Integer.parseInt(input.split(" ")[1]);
-                        cube.scramble(n);
-                    }
-                    else {
-                        System.out.println("ERROR: '" + input + "' is not a valid move.");
-                    }
-                    break;
-            }
+            
+            String out = terminal.handleInput(input);
+            System.out.println(out);
         }
 
         sc.close();
     }
 
+    public CubeTerminal(Cube cube) {
+        this.cube = cube;
+        sc = new Scanner(System.in);
+    }
 
-    private static Cube editCube(Cube cube) {
+
+    public String handleInput(String input) {
+        String out = "";
+
+        switch (input) {
+            case "U":
+                cube.moveU();
+                break;
+            case "U'":
+                cube.moveUPrime();
+                break;
+            case "U2":
+                cube.moveU2();
+                break;
+
+            case "L":
+                cube.moveL();
+                break;
+            case "L'":
+                cube.moveLPrime();
+                break;
+            case "L2":
+                cube.moveL2();
+                break;
+
+            case "F":
+                cube.moveF();
+                break;
+            case "F'":
+                cube.moveFPrime();
+                break;
+            case "F2":
+                cube.moveF2();
+                break;
+
+            case "R":
+                cube.moveR();
+                break;
+            case "R'":
+                cube.moveRPrime();
+                break;
+            case "R2":
+                cube.moveR2();
+                break;
+
+            case "B":
+                cube.moveB();
+                break;
+            case "B'":
+                cube.moveBPrime();
+                break;
+            case "B2":
+                cube.moveB2();
+                break;
+
+            case "D":
+                cube.moveD();
+                break;
+            case "D'":
+                cube.moveDPrime();
+                break;
+            case "D2":
+                cube.moveD2();
+                break;
+
+            case "SCRAMBLE":
+                Move[] scrambleMoves = cube.scramble(10);
+                out = "Moves made during scramble:\n";
+                for (int i = 0; i < scrambleMoves.length; i++) {
+                    out += scrambleMoves[i] + "\n";
+                }
+                break;
+            
+            case "RESET":
+                // cube = new Cube();
+                cube.resetCube();
+                break;
+
+            case "EDIT":
+                editCube();
+                // continue;
+                break;
+
+            case "SOLVE":
+                CubeSolver solver = new CubeSolver(cube);
+                try {
+                    Move[] moves = solver.solveCube();
+                
+                    // Output and perform the moves to solve the cube
+                    out = "Moves to solve the cube:\n";
+                    for (int i = 0; i < moves.length; i++) {
+                        out += moves[i] + "\n";
+                        cube.makeMove(moves[i]);
+                    }
+                    out += "\n";
+                    
+                }
+                catch (IllegalStateException e) {
+                    out = "ERROR: " + e.getMessage() + "\n";
+                }
+                break;
+            
+            case "HELP":
+                out = USAGE_MESSAGE;
+
+            case "QUIT":
+                break;
+
+            default:
+                if (input.startsWith("SCRAMBLE") && input.split(" ").length == 2) {
+                    int n = Integer.parseInt(input.split(" ")[1]);
+                    Move[] scramble = cube.scramble(n);
+
+                    out = "Moves made during scramble:\n";
+                    for (int i = 0; i < scramble.length; i++) {
+                        out += scramble[i] + "\n";
+                    }
+                }
+                else {
+                    out = "ERROR: '" + input + "' is not a valid move.";
+                }
+                break;
+        }
+
+        return out;
+    }
+
+
+    private void editCube() {
         Colour[] colours = cube.getColours();
         
         System.out.println("Cube is now in EDIT mode. Enter a colour (W, G, R, B, O, Y) to change the selected cell. " +
@@ -197,11 +224,10 @@ public class CubeTerminal {
 
         // Convert the colours array to a cube state
         try {
-            return new Cube(colours);
+            cube = new Cube(colours);
         }
         catch (IllegalArgumentException e) {
             System.out.println("ERROR: " + e.getMessage() + " Cube reset to previous state.\n");
-            return cube;
         }
     }
 

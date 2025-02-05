@@ -512,6 +512,18 @@ public class Cube {
         }
     }
 
+    public void resetCube() {
+        for (byte i = 0; i < 12; i++) {
+            edgeCubies[i].index = i;
+            edgeCubies[i].orientation = 0;
+        }
+
+        for (byte i = 0; i < 8; i++) {
+            cornerCubies[i].index = i;
+            cornerCubies[i].orientation = 0;
+        }
+    }
+
     /**
      * Get the indices of the edge cubies.
      * @return An array of the indices of the edge cubies.
@@ -981,13 +993,12 @@ public class Cube {
      * Scramble the cube by making {@code noMoves} random moves, excluding moves that cancel previous moves.
      * @param noMoves - The number of moves to make.
      */
-    public void scramble(int noMoves) {
+    public Move[] scramble(int noMoves) {
         Random rand = new Random();
         Move[] moves = Move.values();
+        Move[] scramble = new Move[noMoves];
 
         Move move, lastMove = null;
-
-        System.out.println("\nMoves made during scramble:");
         
         for (int i = 0; i < noMoves; i++) {
             do {
@@ -995,11 +1006,11 @@ public class Cube {
             } while (i > 0 && skipMove(move, lastMove));
             
             makeMove(move);
-            System.out.print(move.toString() + " ");
+            scramble[i] = move;
 
             lastMove = move;
         }
-        System.out.println();
+        return scramble;
     }
 
     /**
