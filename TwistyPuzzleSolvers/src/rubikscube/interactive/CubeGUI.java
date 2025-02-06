@@ -37,7 +37,7 @@ public class CubeGUI extends JFrame {
        
         // Setup the frame - use a border layout for correct positioning
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1250, 750);
+        setSize(1500, 750);
         setLayout(new BorderLayout());
         
         // Create and add the two panels to the frame
