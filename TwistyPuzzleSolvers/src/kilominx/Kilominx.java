@@ -61,7 +61,7 @@ public class Kilominx {
      */
     class Kubie {
         // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
-        
+
         // 0,      1,      2,      3,      4,      5,      6,      7,      8,      9,      
         // UFL,    UFR,    UBL,    UBR,    UBM,    MFL,    FMD,    MFR,    FRD,    MBR,    
         // WhDGRe, WhReDB, WhDGPu, WhDbYe, WhPuYe, DGReBe, ReBePi, ReDBPi, DBPiLG, DBYeLG, 
@@ -74,6 +74,13 @@ public class Kilominx {
         //  - 0 (oriented),
         //  - 1 (colours turned CW),
         //  - or 2 (colours turned CCW)
+
+        // The orientation of a kubie can be determined by comparing the orientation of the highest-priority colour (white/grey, then light/dark green, then red/orange) 
+        // on the kubie compared to the orientation of the highest-priority colour at that position on a solved Kilominx.
+        //  - For example, the MFR kubie initally has colours ReDBPi, with the highest-priority colour being red, which is on the the front face.
+        //    After performing the F move, the kubie at MFR has colours WhReDB, with the highest-priority colour being white, which is on the right face.
+        //    The white colour of the kubie has been turned clockwise from the solved state's red colour, so the orientation of the kubie is 1.
+
         private byte index, orientation;
 
         /**
@@ -192,15 +199,6 @@ public class Kilominx {
     private Colour[] getKubieColours(byte posIndex) {
         Kubie kubie = kubies[posIndex];
         Colour[] colours = new Colour[3];
-
-
-        // ORIENTATION NOTES:
-        // Performing 5 of the same move results in the same kubie indices/orientations that you started with
-        // Hence each kubie must increase in orientation by 3, 6, or 9 in total over the course of the 5 turns
-        //  - 3 is unlikely, as it means some turns don't increase a kubie's orientation (0 + 0 + 0 + 1 + 2 = 3)
-        //  - 9 means 4 of the 5 turns increase the kubie's orientation by 2 (2 + 2 + 2 + 2 + 1 = 9)
-        //  - 6 means 4 of the 5 turns increase the kubie's orientation by 1 (1 + 1 + 1 + 1 + 2 = 6)
-
 
         byte i0, i1, i2;
 
@@ -527,661 +525,526 @@ public class Kilominx {
 
 
     /**
+     * Rotate a set of kubies in the order specified by the position indices.
+     * @param posIndices - An array of position indices in the order to rotate the kubies. The array should be of length 5. 
+     *  (e.g. [KUBIE_UFL, KUBIE_UFR, KUBIE_UBR, KUBIE_UBM, KUBIE_UBL] would rotate these kubies in this order).
+     */
+    private void rotateKubies(byte[] posIndices) {
+        Kubie temp = kubies[posIndices[0]];
+
+        for (int i = 0; i < posIndices.length - 1; i++) {
+            kubies[posIndices[i]] = kubies[posIndices[(i + 1)]];
+        }
+        kubies[posIndices[posIndices.length - 1]] = temp;
+    }
+
+
+    /**
      * Perform a clockwise turn of the U face.
      */
     public void moveU() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_UFR, KUBIE_UBR, KUBIE_UBM, KUBIE_UBL});
     }
 
     /**
      * Perform a counter-clockwise turn of the U face.
      */
     public void moveUPrime() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_UBL, KUBIE_UBM, KUBIE_UBR, KUBIE_UFR});
     }
 
     /**
      * Perform two clockwise turns of the U face.
      */
     public void moveU2() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_UBR, KUBIE_UBL, KUBIE_UFR, KUBIE_UBM});
     }
 
     /**
      * Perform two counter-clockwise turns of the U face.
      */
     public void moveU2Prime() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_UBM, KUBIE_UFR, KUBIE_UBL, KUBIE_UBR});
     }
 
     /**
      * Perform a clockwise turn of the L face.
      */
     public void moveL() {
-        Kubie temp        = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = temp;
+        rotateKubies(new byte[] {KUBIE_UBL, KUBIE_MBL, KUBIE_FLD, KUBIE_MFL, KUBIE_UFL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UFL, (byte) 1);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the L face.
      */
     public void moveLPrime() {
-        Kubie temp        = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = temp;
+        rotateKubies(new byte[] {KUBIE_UBL, KUBIE_UFL, KUBIE_MFL, KUBIE_FLD, KUBIE_MBL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBL, (byte) 2);
+        increaseKubieOrientation(KUBIE_UFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_MBL, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the L face.
      */
     public void moveL2() {
-        Kubie temp        = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = temp;
+        rotateKubies(new byte[] {KUBIE_UBL, KUBIE_FLD, KUBIE_UFL, KUBIE_MBL, KUBIE_MFL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_FLD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the L face.
      */
     public void moveL2Prime() {
-        Kubie temp        = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = temp;
+        rotateKubies(new byte[] {KUBIE_UBL, KUBIE_MFL, KUBIE_MBL, KUBIE_UFL, KUBIE_FLD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_MBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_FLD, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the F face.
      */
     public void moveF() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_MFL, KUBIE_FMD, KUBIE_MFR, KUBIE_UFR});
 
-        // orientation changes??
         increaseKubieOrientation(KUBIE_UFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the F face.
      */
     public void moveFPrime() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_UFR, KUBIE_MFR, KUBIE_FMD, KUBIE_MFL});
 
-        // orientation changes??
         increaseKubieOrientation(KUBIE_UFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_UFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the F face.
      */
     public void moveF2() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = temp;
-
-        // orientation changes??
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_FMD, KUBIE_UFR, KUBIE_MFL, KUBIE_MFR});
+        
+        increaseKubieOrientation(KUBIE_UFL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 1);
+        increaseKubieOrientation(KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the F face.
      */
     public void moveF2Prime() {
-        Kubie temp        = kubies[KUBIE_UFL];
-        kubies[KUBIE_UFL] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = temp;
+        rotateKubies(new byte[] {KUBIE_UFL, KUBIE_MFR, KUBIE_MFL, KUBIE_UFR, KUBIE_FMD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UFL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the R face.
      */
     public void moveR() {
-        Kubie temp        = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = temp;
+        rotateKubies(new byte[] {KUBIE_UFR, KUBIE_MFR, KUBIE_FRD, KUBIE_MBR, KUBIE_UBR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_MBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the R face.
      */
     public void moveRPrime() {
-        Kubie temp        = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = temp;
+        rotateKubies(new byte[] {KUBIE_UFR, KUBIE_UBR, KUBIE_MBR, KUBIE_FRD, KUBIE_MFR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_UBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_MBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 1);
     }
 
     /**
      * Perform two clockwise turns of the R face.
      */
     public void moveR2() {
-        Kubie temp        = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = temp;
+        rotateKubies(new byte[] {KUBIE_UFR, KUBIE_FRD, KUBIE_UBR, KUBIE_MFR, KUBIE_MBR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_UBR, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the R face.
      */
     public void moveR2Prime() {
-        Kubie temp        = kubies[KUBIE_UFR];
-        kubies[KUBIE_UFR] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = temp;
+        rotateKubies(new byte[] {KUBIE_UFR, KUBIE_MBR, KUBIE_MFR, KUBIE_UBR, KUBIE_FRD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 1);
     }
 
     /**
      * Perform a clockwise turn of the BL face.
      */
     public void moveBL() {
-        Kubie temp        = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = temp;
+        rotateKubies(new byte[] {KUBIE_UBM, KUBIE_MBM, KUBIE_BLD, KUBIE_MBL, KUBIE_UBL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UBM, (byte) 2);
+        increaseKubieOrientation(KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 2);
     }
 
     /**
      * Perform a counter-clockwise turn of the BL face.
      */
     public void moveBLPrime() {
-        Kubie temp        = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = temp;
+        rotateKubies(new byte[] {KUBIE_UBM, KUBIE_UBL, KUBIE_MBL, KUBIE_BLD, KUBIE_MBM});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UBM, (byte) 2);
+        increaseKubieOrientation(KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the BL face.
      */
     public void moveBL2() {
-        Kubie temp        = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = temp;
+        rotateKubies(new byte[] {KUBIE_UBM, KUBIE_BLD, KUBIE_UBL, KUBIE_MBM, KUBIE_MBL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 2);
     }
 
     /**
      * Perform two counter-clockwise turns of the BL face.
      */
     public void moveBL2Prime() {
-        Kubie temp        = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_UBL];
-        kubies[KUBIE_UBL] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = temp;
+        rotateKubies(new byte[] {KUBIE_UBM, KUBIE_MBL, KUBIE_MBM, KUBIE_UBL, KUBIE_BLD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_UBM, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the BR face.
      */
     public void moveBR() {
-        Kubie temp        = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = temp;
+        rotateKubies(new byte[] {KUBIE_UBR, KUBIE_MBR, KUBIE_BRD, KUBIE_MBM, KUBIE_UBM});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_UBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_UBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_MBM, (byte) 2);
     }
 
     /**
      * Perform a counter-clockwise turn of the BR face.
      */
     public void moveBRPrime() {
-        Kubie temp        = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = temp;
+        rotateKubies(new byte[] {KUBIE_UBR, KUBIE_UBM, KUBIE_MBM, KUBIE_BRD, KUBIE_MBR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_UBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_UBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_BRD, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the BR face.
      */
     public void moveBR2() {
-        Kubie temp        = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = temp;
+        rotateKubies(new byte[] {KUBIE_UBR, KUBIE_BRD, KUBIE_UBM, KUBIE_MBR, KUBIE_MBM});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_BRD, (byte) 2);
     }
 
     /**
      * Perform two counter-clockwise turns of the BR face.
      */
     public void moveBR2Prime() {
-        Kubie temp        = kubies[KUBIE_UBR];
-        kubies[KUBIE_UBR] = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_UBM];
-        kubies[KUBIE_UBM] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = temp;
+        rotateKubies(new byte[] {KUBIE_UBR, KUBIE_MBM, KUBIE_MBR, KUBIE_UBM, KUBIE_BRD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_UBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_MBM, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the DL face.
      */
     public void moveDL() {
-        Kubie temp        = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = temp;
+        rotateKubies(new byte[] {KUBIE_MFL, KUBIE_FLD, KUBIE_DFL, KUBIE_DFM, KUBIE_FMD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFM, (byte) 2);
+        increaseKubieOrientation(KUBIE_DFL, (byte) 1);
+        increaseKubieOrientation(KUBIE_FLD, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the DL face.
      */
     public void moveDLPrime() {
-        Kubie temp        = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = temp;
+        rotateKubies(new byte[] {KUBIE_MFL, KUBIE_FMD, KUBIE_DFM, KUBIE_DFL, KUBIE_FLD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFM, (byte) 2);
+        increaseKubieOrientation(KUBIE_DFL, (byte) 1);
+        increaseKubieOrientation(KUBIE_FLD, (byte) 2);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 1);
     }
 
     /**
      * Perform two clockwise turns of the DL face.
      */
     public void moveDL2() {
-        Kubie temp        = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = temp;
+        rotateKubies(new byte[] {KUBIE_MFL, KUBIE_DFL, KUBIE_FMD, KUBIE_FLD, KUBIE_DFM});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFM, (byte) 2);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the DL face.
      */
     public void moveDL2Prime() {
-        Kubie temp        = kubies[KUBIE_MFL];
-        kubies[KUBIE_MFL] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = temp;
+        rotateKubies(new byte[] {KUBIE_MFL, KUBIE_DFM, KUBIE_FLD, KUBIE_FMD, KUBIE_DFL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_FLD, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFL, (byte) 1);
     }
 
     /**
      * Perform a clockwise turn of the DR face.
      */
     public void moveDR() {
-        Kubie temp        = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = temp;
+        rotateKubies(new byte[] {KUBIE_MFR, KUBIE_FMD, KUBIE_DFM, KUBIE_DFR, KUBIE_FRD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFM, (byte) 1);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 2);
     }
 
     /**
      * Perform a counter-clockwise turn of the DR face.
      */
     public void moveDRPrime() {
-        Kubie temp        = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = temp;
+        rotateKubies(new byte[] {KUBIE_MFR, KUBIE_FRD, KUBIE_DFR, KUBIE_DFM, KUBIE_FMD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFM, (byte) 1);
+        increaseKubieOrientation(KUBIE_FMD, (byte) 2);
+        increaseKubieOrientation(KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFR, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the DR face.
      */
     public void moveDR2() {
-        Kubie temp        = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = temp;
+        rotateKubies(new byte[] {KUBIE_MFR, KUBIE_DFM, KUBIE_FRD, KUBIE_FMD, KUBIE_DFR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFM, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFR, (byte) 2);
     }
 
     /**
      * Perform two counter-clockwise turns of the DR face.
      */
     public void moveDR2Prime() {
-        Kubie temp        = kubies[KUBIE_MFR];
-        kubies[KUBIE_MFR] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_FMD];
-        kubies[KUBIE_FMD] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = temp;
+        rotateKubies(new byte[] {KUBIE_MFR, KUBIE_DFR, KUBIE_FMD, KUBIE_FRD, KUBIE_DFM});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the DBL face.
      */
     public void moveDBL() {
-        Kubie temp        = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = temp;
+        rotateKubies(new byte[] {KUBIE_MBL, KUBIE_BLD, KUBIE_DBL, KUBIE_DFL, KUBIE_FLD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(KUBIE_FLD, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_DBL, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the DBL face.
      */
     public void moveDBLPrime() {
-        Kubie temp        = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = temp;
+        rotateKubies(new byte[] {KUBIE_MBL, KUBIE_FLD, KUBIE_DFL, KUBIE_DBL, KUBIE_BLD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(KUBIE_FLD, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 1);
     }
 
     /**
      * Perform two clockwise turns of the DBL face.
      */
     public void moveDBL2() {
-        Kubie temp        = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = temp;
+        rotateKubies(new byte[] {KUBIE_MBL, KUBIE_DBL, KUBIE_FLD, KUBIE_BLD, KUBIE_DFL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the DBL face.
      */
     public void moveDBL2Prime() {
-        Kubie temp        = kubies[KUBIE_MBL];
-        kubies[KUBIE_MBL] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_FLD];
-        kubies[KUBIE_FLD] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = temp;
+        rotateKubies(new byte[] {KUBIE_MBL, KUBIE_DFL, KUBIE_BLD, KUBIE_FLD, KUBIE_DBL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(KUBIE_DBL, (byte) 1);
     }
 
     /**
      * Perform a clockwise turn of the DBR face.
      */
     public void moveDBR() {
-        Kubie temp        = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = temp;
+        rotateKubies(new byte[] {KUBIE_MBR, KUBIE_FRD, KUBIE_DFR, KUBIE_DBR, KUBIE_BRD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFR, (byte) 1);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the DBR face.
      */
     public void moveDBRPrime() {
-        Kubie temp        = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = temp;
+        rotateKubies(new byte[] {KUBIE_MBR, KUBIE_BRD, KUBIE_DBR, KUBIE_DFR, KUBIE_FRD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_DFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_BRD, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the DBR face.
      */
     public void moveDBR2() {
-        Kubie temp        = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = temp;
+        rotateKubies(new byte[] {KUBIE_MBR, KUBIE_DFR, KUBIE_BRD, KUBIE_FRD, KUBIE_DBR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_FRD, (byte) 2);
+        increaseKubieOrientation(KUBIE_MBR, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the DBR face.
      */
     public void moveDBR2Prime() {
-        Kubie temp        = kubies[KUBIE_MBR];
-        kubies[KUBIE_MBR] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_FRD];
-        kubies[KUBIE_FRD] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = temp;
+        rotateKubies(new byte[] {KUBIE_MBR, KUBIE_DBR, KUBIE_FRD, KUBIE_BRD, KUBIE_DFR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_DBR, (byte) 1);
+        increaseKubieOrientation(KUBIE_DFR, (byte) 2);
+        increaseKubieOrientation(KUBIE_BRD, (byte) 1);
+        increaseKubieOrientation(KUBIE_MBR, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the DB face.
      */
     public void moveDB() {
-        Kubie temp        = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = temp;
+        rotateKubies(new byte[] {KUBIE_MBM, KUBIE_BRD, KUBIE_DBR, KUBIE_DBL, KUBIE_BLD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_DBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_DBR, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the DB face.
      */
     public void moveDBPrime() {
-        Kubie temp        = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = temp;
+        rotateKubies(new byte[] {KUBIE_MBM, KUBIE_BLD, KUBIE_DBL, KUBIE_DBR, KUBIE_BRD});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_BRD, (byte) 2);
+        increaseKubieOrientation(KUBIE_DBL, (byte) 2);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the DB face.
      */
     public void moveDB2() {
-        Kubie temp        = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = temp;
+        rotateKubies(new byte[] {KUBIE_MBM, KUBIE_DBR, KUBIE_BLD, KUBIE_BRD, KUBIE_DBL});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 1);
+        increaseKubieOrientation(KUBIE_DBL, (byte) 1);
+        increaseKubieOrientation(KUBIE_DBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_BRD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the DB face.
      */
     public void moveDB2Prime() {
-        Kubie temp        = kubies[KUBIE_MBM];
-        kubies[KUBIE_MBM] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_BRD];
-        kubies[KUBIE_BRD] = kubies[KUBIE_BLD];
-        kubies[KUBIE_BLD] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = temp;
+        rotateKubies(new byte[] {KUBIE_MBM, KUBIE_DBL, KUBIE_BRD, KUBIE_BLD, KUBIE_DBR});
 
-        // orientation changes??
+        increaseKubieOrientation(KUBIE_MBM, (byte) 2);
+        increaseKubieOrientation(KUBIE_BLD, (byte) 1);
+        increaseKubieOrientation(KUBIE_DBL, (byte) 2);
+        increaseKubieOrientation(KUBIE_DBR, (byte) 2);
+        increaseKubieOrientation(KUBIE_BRD, (byte) 2);
     }
 
     /**
      * Perform a clockwise turn of the D face.
      */
     public void moveD() {
-        Kubie temp        = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = temp;
+        rotateKubies(new byte[] {KUBIE_DFM, KUBIE_DFL, KUBIE_DBL, KUBIE_DBR, KUBIE_DFR});
     }
 
     /**
      * Perform a counter-clockwise turn of the D face.
      */
     public void moveDPrime() {
-        Kubie temp        = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = temp;
+        rotateKubies(new byte[] {KUBIE_DFM, KUBIE_DFR, KUBIE_DBR, KUBIE_DBL, KUBIE_DFL});
     }
 
     /**
      * Perform two clockwise turns of the D face.
      */
     public void moveD2() {
-        Kubie temp        = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = temp;
+        rotateKubies(new byte[] {KUBIE_DFM, KUBIE_DBL, KUBIE_DFR, KUBIE_DFL, KUBIE_DBR});
     }
 
     /**
      * Perform two counter-clockwise turns of the D face.
      */
     public void moveD2Prime() {
-        Kubie temp        = kubies[KUBIE_DFM];
-        kubies[KUBIE_DFM] = kubies[KUBIE_DBR];
-        kubies[KUBIE_DBR] = kubies[KUBIE_DFL];
-        kubies[KUBIE_DFL] = kubies[KUBIE_DFR];
-        kubies[KUBIE_DFR] = kubies[KUBIE_DBL];
-        kubies[KUBIE_DBL] = temp;
+        rotateKubies(new byte[] {KUBIE_DFM, KUBIE_DBR, KUBIE_DFL, KUBIE_DFR, KUBIE_DBL});
     }
 
 
