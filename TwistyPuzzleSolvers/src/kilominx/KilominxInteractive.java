@@ -56,67 +56,67 @@ public class KilominxInteractive {
                     kilominx.moveR2Prime(); break;
 
                 case "BL":
-                    kilominx.moveBLPrime(); break;
-                case "BL'":
                     kilominx.moveBL(); break;
+                case "BL'":
+                    kilominx.moveBLPrime(); break;
                 case "BL2":
-                    kilominx.moveBL2Prime(); break;
-                case "BL2'":
                     kilominx.moveBL2(); break;
-    
+                case "BL2'":
+                    kilominx.moveBL2Prime(); break;
+
                 case "BR":
-                    kilominx.moveBRPrime(); break;
-                case "BR'":
                     kilominx.moveBR(); break;
+                case "BR'":
+                    kilominx.moveBRPrime(); break;
                 case "BR2":
-                    kilominx.moveBR2Prime(); break;
-                case "BR2'":
                     kilominx.moveBR2(); break;
-    
+                case "BR2'":
+                    kilominx.moveBR2Prime(); break;
+
                 case "DL":
-                    kilominx.moveDLPrime(); break;
-                case "DL'":
                     kilominx.moveDL(); break;
+                case "DL'":
+                    kilominx.moveDLPrime(); break;
                 case "DL2":
-                    kilominx.moveDL2Prime(); break;
-                case "DL2'":
                     kilominx.moveDL2(); break;
-    
+                case "DL2'":
+                    kilominx.moveDL2Prime(); break;
+
                 case "DR":
-                    kilominx.moveDRPrime(); break;
-                case "DR'":
                     kilominx.moveDR(); break;
+                case "DR'":
+                    kilominx.moveDRPrime(); break;
                 case "DR2":
-                    kilominx.moveDR2Prime(); break;
-                case "DR2'":
                     kilominx.moveDR2(); break;
-    
+                case "DR2'":
+                    kilominx.moveDR2Prime(); break;
+
                 case "DBL":
-                    kilominx.moveDBLPrime(); break;
-                case "DBL'":
                     kilominx.moveDBL(); break;
+                case "DBL'":
+                    kilominx.moveDBLPrime(); break;
                 case "DBL2":
-                    kilominx.moveDBL2Prime(); break;
-                case "DBL2'":
                     kilominx.moveDBL2(); break;
-    
+                case "DBL2'":
+                    kilominx.moveDBL2Prime(); break;
+
                 case "DBR":
-                    kilominx.moveDBRPrime(); break;
-                case "DBR'":
                     kilominx.moveDBR(); break;
+                case "DBR'":
+                    kilominx.moveDBRPrime(); break;
                 case "DBR2":
-                    kilominx.moveDBR2Prime(); break;
-                case "DBR2'":
                     kilominx.moveDBR2(); break;
-    
+                case "DBR2'":
+                    kilominx.moveDBR2Prime(); break;
+                    
                 case "DB":
-                    kilominx.moveDBPrime(); break;
-                case "DB'":
                     kilominx.moveDB(); break;
+                case "DB'":
+                    kilominx.moveDBPrime(); break;
                 case "DB2":
-                    kilominx.moveDB2Prime(); break;
-                case "DB2'":
                     kilominx.moveDB2(); break;
+                case "DB2'":
+                    kilominx.moveDB2Prime(); break;
 
                 case "D":
                     kilominx.moveD(); break;

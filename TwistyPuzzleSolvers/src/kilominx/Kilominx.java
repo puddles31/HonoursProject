@@ -31,26 +31,26 @@ public class Kilominx {
         D,   D_PRIME,   D_2,   D_2PRIME
     }
 
-    // Kubies are indexed from 0 to 19 in the following order:
+    // Kubies are indexed from 0 to 19 in the following order. The order itself is irrelevant, but the even/odd parity of the indices is important:
     final byte KUBIE_UFL = 0,   // even
                KUBIE_UFR = 2,   // even
                KUBIE_UBL = 1,   // odd
                KUBIE_UBR = 4,   // even
                KUBIE_UBM = 6,   // even
-               KUBIE_MFL = 5,
-               KUBIE_FMD = 3,   //
-               KUBIE_MFR = 7,
-               KUBIE_FRD = 8,
-               KUBIE_MBR = 9,
-               KUBIE_BRD = 10,
-               KUBIE_MBM = 11,
-               KUBIE_BLD = 12,
-               KUBIE_MBL = 16,  //
-               KUBIE_FLD = 14,
+               KUBIE_MFL = 3,   // odd
+               KUBIE_FMD = 8,   // even
+               KUBIE_MFR = 5,   // odd
+               KUBIE_FRD = 10,  // even
+               KUBIE_MBR = 7,   // odd
+               KUBIE_BRD = 12,  // even
+               KUBIE_MBM = 9,   // odd
+               KUBIE_BLD = 14,  // even
+               KUBIE_MBL = 11,  // odd
+               KUBIE_FLD = 16,  // even
                KUBIE_DFM = 13,  // odd
                KUBIE_DFL = 15,  // odd
                KUBIE_DFR = 18,  // even
-               KUBIE_DBL = 17,  // odd
+               KUBIE_DBL = 17,  // odd 
                KUBIE_DBR = 19;  // odd
 
 
@@ -61,12 +61,11 @@ public class Kilominx {
      */
     class Kubie {
         // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
-
-        // 0,      1,      2,      3,      4,      5,      6,      7,      8,      9,      
+        // 0,      2,      1,      4,      6,      3,      8,      5,      10,     7,      
         // UFL,    UFR,    UBL,    UBR,    UBM,    MFL,    FMD,    MFR,    FRD,    MBR,    
         // WhDGRe, WhReDB, WhDGPu, WhDbYe, WhPuYe, DGReBe, ReBePi, ReDBPi, DBPiLG, DBYeLG, 
 
-        // 10,     11,     12,     13,     14,     15,     16,     17,     18,     19
+        // 12,     9,      14,     11,     16,     13,     15,     18,     17,     19
         // BRD,    MBM,    BLD,    MBL,    FLD,    DFM,    DFL,    DFR,    DBL,    DBR
         // YeLGOr, YePuOr, PuOrLB, PuDGLB, DGLBBe, BePiGy, LBBeGy, PiLGGy, OrLBGy, LGOrGy
 
@@ -76,7 +75,7 @@ public class Kilominx {
         //  - or 2 (colours turned CCW)
 
         // The orientation of a kubie can be determined by comparing the orientation of the highest-priority colour (white/grey, then light/dark green, then red/orange) 
-        // on the kubie compared to the orientation of the highest-priority colour at that position on a solved Kilominx.
+        // on the kubie compared to the orientation of the highest-priority face (the highest-priority-colour at that position on a solved Kilominx).
         //  - For example, the MFR kubie initally has colours ReDBPi, with the highest-priority colour being red, which is on the the front face.
         //    After performing the F move, the kubie at MFR has colours WhReDB, with the highest-priority colour being white, which is on the right face.
         //    The white colour of the kubie has been turned clockwise from the solved state's red colour, so the orientation of the kubie is 1.
@@ -200,6 +199,37 @@ public class Kilominx {
         Kubie kubie = kubies[posIndex];
         Colour[] colours = new Colour[3];
 
+        /* 
+        Colour priorities: White/Grey, Light/Dark Green,     Red/Orange,          Light/Dark Blue,      Beige/Yellow,         Pink/Purple
+        Face priorities:   Top/bottom, Left/Down-back-right, Front/Down-back-mid, Right/Down-back-left, Down-left/Back-right, Down-right/Back-left
+
+
+        Orientation 0 means:
+            The highest priority colour (i0) is on the highest priority face (i0 = 0).
+
+            EVEN kubie, EVEN pos / ODD kubie, ODD pos:   i0 = 0, i1 = 1, i2 = 2
+            EVEN kubie, ODD pos  / ODD kubie, EVEN pos:  i0 = 0, i1 = 2, i2 = 1
+
+
+        Orientation 1 means:
+            The highest priority colour (i0) is rotated CLOCKWISE from the highest priority face.
+            
+            EVEN kubie, EVEN pos:   i0 = 2, i1 = 0, i2 = 1
+            EVEN kubie, ODD pos:    i0 = 1, i1 = 0, i2 = 2
+            ODD kubie, EVEN pos:    i0 = 2, i1 = 1, i2 = 0
+            ODD kubie, ODD pos:     i0 = 1, i1 = 2, i2 = 0
+            
+
+        Orientation 2 means:
+            The highest priority colour (i0) is rotated ANTI-CLOCKWISE from the highest priority face.
+
+            EVEN kubie, EVEN pos:   i0 = 1, i1 = 2, i2 = 0
+            EVEN kubie, ODD pos:    i0 = 2, i1 = 1, i2 = 0
+            ODD kubie, EVEN pos:    i0 = 1, i1 = 0, i2 = 2
+            ODD kubie, ODD pos:     i0 = 2, i1 = 0, i2 = 1
+
+        */
+
         byte i0, i1, i2;
 
         // correct orientation
@@ -218,14 +248,14 @@ public class Kilominx {
         // colours turned CW
         else if (kubie.orientation == 1) {
             if ((posIndex % 2) == 0) {
-                i0 = 1;
-                i1 = 2;
-                i2 = 0;
-            }
-            else {
                 i0 = 2;
                 i1 = 0;
                 i2 = 1;
+            }
+            else {
+                i0 = 1;
+                i1 = 2;
+                i2 = 0;
             }
 
             // corner is an odd number of indices away, so the other two colours are flipped
@@ -238,18 +268,18 @@ public class Kilominx {
         // colours turned CCW
         else {
             if ((posIndex % 2) == 0) {
-                i0 = 2;
-                i1 = 1;
+                i0 = 1;
+                i1 = 2;
                 i2 = 0;
             }
             else {
-                i0 = 1;
+                i0 = 2;
                 i1 = 0;
-                i2 = 2;
+                i2 = 1;
             }
 
-            // corner is an EVEN number of indices away, so the other two colours are flipped
-            if ((kubie.index + posIndex) % 2 == 0) {
+            // corner is an ODD number of indices away, so the other two colours are flipped
+            if ((kubie.index + posIndex) % 2 == 1) {
                 byte temp = i1;
                 i1 = i2;
                 i2 = temp;
@@ -527,7 +557,8 @@ public class Kilominx {
     /**
      * Rotate a set of kubies in the order specified by the position indices.
      * @param posIndices - An array of position indices in the order to rotate the kubies. The array should be of length 5. 
-     *  (e.g. [KUBIE_UFL, KUBIE_UFR, KUBIE_UBR, KUBIE_UBM, KUBIE_UBL] would rotate these kubies in this order).
+     *  (e.g. [KUBIE_UFL, KUBIE_UFR, KUBIE_UBR, KUBIE_UBM, KUBIE_UBL] would rotate these kubies in this order, 
+     *  such that UFL is replaced by UFR, which is replaced by UBM, etc.).
      */
     private void rotateKubies(byte[] posIndices) {
         Kubie temp = kubies[posIndices[0]];
@@ -1133,6 +1164,6 @@ public class Kilominx {
         System.out.println(getKubieColours(KUBIE_DFR)[0]);
         System.out.print("                         ");
         System.out.print(getKubieColours(KUBIE_DBL)[0] + "  ");
-        System.out.println(getKubieColours(KUBIE_DBR)[0] + "\n");        
+        System.out.println(getKubieColours(KUBIE_DBR)[0] + "\n"); 
     }
 }
