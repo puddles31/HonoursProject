@@ -1,8 +1,10 @@
-package rubikscube.interactive;
+package interactive;
 
-import rubikscube.Cube;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import models.Cube;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -151,68 +153,68 @@ public class CubeGUI extends JFrame {
             // Check if the key pressed is a valid move - if so, make the move
             if (e.getKeyCode() == KeyEvent.VK_U) {
                 if (e.isShiftDown()) {
-                    cube.moves.moveU2();
+                    cube.getMovesObj().moveU2();
                 }
                 else if (e.isControlDown()) {
-                    cube.moves.moveUPrime();
+                    cube.getMovesObj().moveUPrime();
                 }
                 else {
-                    cube.moves.moveU();
+                    cube.getMovesObj().moveU();
                 }
             }
             else if (e.getKeyCode() == KeyEvent.VK_L) {
                 if (e.isShiftDown()) {
-                    cube.moves.moveL2();
+                    cube.getMovesObj().moveL2();
                 }
                 else if (e.isControlDown()) {
-                    cube.moves.moveLPrime();
+                    cube.getMovesObj().moveLPrime();
                 }
                 else {
-                    cube.moves.moveL();
+                    cube.getMovesObj().moveL();
                 }
             }
             else if (e.getKeyCode() == KeyEvent.VK_F) {
                 if (e.isShiftDown()) {
-                    cube.moves.moveF2();
+                    cube.getMovesObj().moveF2();
                 }
                 else if (e.isControlDown()) {
-                    cube.moves.moveFPrime();
+                    cube.getMovesObj().moveFPrime();
                 }
                 else {
-                    cube.moves.moveF();
+                    cube.getMovesObj().moveF();
                 }
             }
             else if (e.getKeyCode() == KeyEvent.VK_R) {
                 if (e.isShiftDown()) {
-                    cube.moves.moveR2();
+                    cube.getMovesObj().moveR2();
                 }
                 else if (e.isControlDown()) {
-                    cube.moves.moveRPrime();
+                    cube.getMovesObj().moveRPrime();
                 }
                 else {
-                    cube.moves.moveR();
+                    cube.getMovesObj().moveR();
                 }
             }
             else if (e.getKeyCode() == KeyEvent.VK_B) {
                 if (e.isShiftDown()) {
-                    cube.moves.moveB2();
+                    cube.getMovesObj().moveB2();
                 }
                 else if (e.isControlDown()) {
-                    cube.moves.moveBPrime();
+                    cube.getMovesObj().moveBPrime();
                 }
                 else {
-                    cube.moves.moveB();
+                    cube.getMovesObj().moveB();
                 }
             }
             else if (e.getKeyCode() == KeyEvent.VK_D) {
                 if (e.isShiftDown()) {
-                    cube.moves.moveD2();
+                    cube.getMovesObj().moveD2();
                 }
                 else if (e.isControlDown()) {
-                    cube.moves.moveDPrime();
+                    cube.getMovesObj().moveDPrime();
                 }
                 else {
-                    cube.moves.moveD();
+                    cube.getMovesObj().moveD();
                 }
             }
             else {

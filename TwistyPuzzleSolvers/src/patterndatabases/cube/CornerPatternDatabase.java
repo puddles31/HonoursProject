@@ -1,6 +1,8 @@
-package rubikscube.patterndatabases;
+package patterndatabases.cube;
 
-import rubikscube.Cube;
+import patterndatabases.PatternDatabase;
+import models.Cube;
+import models.ITwistyPuzzle;
 
 /**
  * The pattern database for the corner cubies.
@@ -22,7 +24,12 @@ public class CornerPatternDatabase extends PatternDatabase {
         super(DATABASE_SIZE, N, K);
     }
 
-    protected int getDatabaseIndex(Cube cube) {
+    protected int getDatabaseIndex(ITwistyPuzzle puzzle) throws IllegalArgumentException {
+        if (!(puzzle instanceof Cube)) {
+            throw new IllegalArgumentException("The puzzle must be a Cube.");
+        }
+        Cube cube = (Cube) puzzle;
+        
         // Get the corner indices and orientations from the cube
         byte[] cornerIndices = cube.getCornerIndices();
         byte[] cornerOrientations = cube.getCornerOrientations();

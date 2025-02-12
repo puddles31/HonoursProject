@@ -1,16 +1,16 @@
-package rubikscube;
+package models;
 
 import java.util.stream.Stream;
 
 /**
  * A Rubik's Cube, represented as an array of edge cubies and an array corner cubies.
  */
-public class Cube {
+public class Cube implements ITwistyPuzzle {
 
     /**
      * Colours on the Rubik's Cube (W, G, R, B, O, Y).
      */
-    public static enum Colour {
+    public static enum Colour implements IColour {
         W(1), G(2), R(4), B(8), O(16), Y(32);
 
         private final int value;
@@ -53,58 +53,25 @@ public class Cube {
                       CORNER_DRB = 6,
                       CORNER_DRF = 7;
 
+    // Edge cubies are indexed from 0 to 11 in the following order, with the following initial colours:
+    // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11
+    // UB, UR, UF, UL, FR, FL, BL, BR, DF, DL, DB, DR
+    // WO, WB, WR, WG, RB, RG, OG, OB, YR, YG, YO, YB
 
-    /**
-     * A cubie on the Rubik's Cube.
-     * The cubie has an index (which represents which colours are on the cubie's sides)
-     * and an orientation ({0, 1} for edge cubies, {0, 1, 2} for corner cubies).
-     */
-    class Cubie {
-        // Edge cubies are indexed from 0 to 11 in the following order, with the following initial colours:
-        // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11
-        // UB, UR, UF, UL, FR, FL, BL, BR, DF, DL, DB, DR
-        // WO, WB, WR, WG, RB, RG, OG, OB, YR, YG, YO, YB
+    // Edge cubies have an orientation of 0 (oriented) or 1 (flipped)
+    // (an edge is "oriented" if it can be solved using only R, L, U, D moves)
+    // (edges are flipped after quarter turns on the F and B faces)
 
-        // Edge cubies have an orientation of 0 (oriented) or 1 (flipped)
-        // (an edge is "oriented" if it can be solved using only R, L, U, D moves)
-        // (edges are flipped after quarter turns on the F and B faces)
+    // Corner cubies are indexed from 0 to 7 in the following order, with the following initial colours:
+    // 0,   1,   2,   3,   4,   5,   6,   7
+    // ULB, URB, URF, ULF, DLF, DLB, DRB, DRF
+    // WGO, WBO, WBR, WGR, YGR, YGO, YBO, YBR
 
-        // Corner cubies are indexed from 0 to 7 in the following order, with the following initial colours:
-        // 0,   1,   2,   3,   4,   5,   6,   7
-        // ULB, URB, URF, ULF, DLF, DLB, DRB, DRF
-        // WGO, WBO, WBR, WGR, YGR, YGO, YBO, YBR
+    // (note: corners that are an odd number of quarter turns away are also an odd number of indices apart
+    //  e.g. ULB can turn to corners URB, ULF and DLB in 1 turn, and to DRF in 3 turns;
+    //  ULB is index 0 (even), so URB (1), ULF (3), DLB (5) and DRF (7) are all an odd number of indices away)
 
-        // (note: corners that are an odd number of quarter turns away are also an odd number of indices apart
-        //  e.g. ULB can turn to corners URB, ULF and DLB in 1 turn, and to DRF in 3 turns;
-        //  ULB is index 0 (even), so URB (1), ULF (3), DLB (5) and DRF (7) are all an odd number of indices away)
-
-        // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
-        byte index, orientation;
-
-        /**
-         * Constructor for a cubie.
-         * @param index - The index of the cubie.
-         * @param orientation - The orientation of the cubie.
-         */
-        private Cubie(byte index, byte orientation) {
-            this.index = index;
-            this.orientation = orientation;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-
-            if (obj == null || obj.getClass() != this.getClass()) {
-                return false;
-            }
-
-            Cubie other = (Cubie) obj;
-            return index == other.index && orientation == other.orientation;
-        }
-    }
+    // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
 
 
     // Cube state is stored as an array of 12 edge cubies and an array of 8 corner cubies
@@ -112,7 +79,7 @@ public class Cube {
     Cubie[] cornerCubies = new Cubie[8];
 
     // CubeMoves handles logic for making moves on the cube
-    public CubeMoves moves;
+    private CubeMoves moves;
 
 
     /**
@@ -162,7 +129,7 @@ public class Cube {
      * @param colours - The array of cubie colours.
      * @throws IllegalArgumentException if the cube state is invalid (invalid cube stickering, duplicate cubie(s), or parity errors).
      */
-    public Cube(Colour[] colours) {
+    public Cube(Colour[] colours) throws IllegalArgumentException {
 
         for (int i = 0; i < 8; i++) {
             cornerCubies[i] = cornerCubieFromColours(colours, i);
@@ -402,10 +369,26 @@ public class Cube {
 
 
     /**
+     * Get the moves object for the cube.
+     * @return The moves object.
+     */
+    public CubeMoves getMovesObj() {
+        return moves;
+    }
+
+    /**
+     * Create a copy of the cube.
+     * @return A copy of the cube.
+     */
+    public Cube copy() {
+        return new Cube(this);
+    }
+
+    /**
      * Reset the cube to the solved state.
      * This should be used instead of creating a new Cube object to ensure the current cube is modified, rather than creating a new cube.
      */
-    public void resetCube() {
+    public void reset() {
         for (byte i = 0; i < 12; i++) {
             edgeCubies[i].index = i;
             edgeCubies[i].orientation = 0;
@@ -814,7 +797,7 @@ public class Cube {
     /**
      * Print the cube state in a human-readable format.
      */
-    public void printCubeState() {
+    public void printState() {
         
         // Print top face
         System.out.print("       ");
@@ -906,7 +889,7 @@ public class Cube {
      * @param colours - The array of cubie face colours. Represents a cube state that is being edited.
      * @param index - The index of the cubie face to highlight for editing. Set to -1 to not highlight any face.
      */
-    public static void printEditCubeState(Colour[] colours, int index) {
+    public static void printEditState(Colour[] colours, int index) {
         
         // Print top face
         System.out.print("       ");

@@ -1,8 +1,8 @@
-package rubikscube.patterndatabases;
+package patterndatabases;
 
-import rubikscube.Cube;
 import java.util.Arrays;
 import java.util.BitSet;
+import models.ITwistyPuzzle;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
@@ -74,7 +74,7 @@ public abstract class PatternDatabase {
 
 
     /**
-     * Set the number of moves required to solve a cube state in the database.
+     * Set the number of moves required to solve a puzzle state in the database.
      * Only succeeds if the number of moves is less than the current number of moves stored.
      * Also increases a counter for the number of set entries if the number of moves was not already set.
      * @param index - The database index to set the number of moves for.
@@ -98,28 +98,28 @@ public abstract class PatternDatabase {
     }
 
     /**
-     * Set the number of moves required to solve a cube state in the database.
+     * Set the number of moves required to solve a puzzle state in the database.
      * Only succeeds if the number of moves is less than the current number of moves stored.
      * Also increases a counter for the number of set entries if the number of moves was not already set.
-     * @param cube - The cube to set the number of moves for.
+     * @param puzzle - The puzzle to set the number of moves for.
      * @param noMoves - The number of moves required to solve the subset of cubies.
      * @return {@code true} if the number of moves was set successfully, {@code false} if the number of moves was already set.
      */
-    public boolean setNumberOfMoves(Cube cube, byte noMoves) {
-        return setNumberOfMoves(getDatabaseIndex(cube), noMoves);
+    public boolean setNumberOfMoves(ITwistyPuzzle puzzle, byte noMoves) {
+        return setNumberOfMoves(getDatabaseIndex(puzzle), noMoves);
     }
     
     /**
-     * Get the number of moves required to solve a cube state from the database.
-     * @param cube - The cube to get the number of moves for.
+     * Get the number of moves required to solve a puzzle state from the database.
+     * @param puzzle - The puzzle to get the number of moves for.
      * @return The number of moves required to solve the subset of cubies.
      */
-    public byte getNumberOfMoves(Cube cube) {
-        return database[getDatabaseIndex(cube)];
+    public byte getNumberOfMoves(ITwistyPuzzle puzzle) {
+        return database[getDatabaseIndex(puzzle)];
     }
 
     /**
-     * Get the number of moves required to solve a cube state from the database.
+     * Get the number of moves required to solve a puzzle state from the database.
      * @param index - The database index to get the number of moves for.
      * @return The number of moves required to solve the subset of cubies.
      */
@@ -153,17 +153,18 @@ public abstract class PatternDatabase {
 
 
     /**
-     * Calculate the database index for a cube (by using the indices and orientations of a subset of cubies).
+     * Calculate the database index for a puzzle (by using the indices and orientations of a subset of cubies).
      * Subsets are indexed based on a lexicographical ordering, calculated using Lehmer codes (see {@link #calculateLehmerRank}).
      * This is a perfect hash function, which maps subsets of cubies to unique integers without collisions.
      * Note that this function has different implementations for corner and edge databases.
-     * @param cube - The cube to calculate the database index for.
-     * @return The database index for the given cube.
+     * @param puzzle - The puzzle to calculate the database index for.
+     * @return The database index for the given puzzle.
+     * @throws IllegalArgumentException if the given puzzle is not a valid puzzle for this database.
      * @see CornerPatternDatabase#getDatabaseIndex(Cube)
      * @see FirstEdgePatternDatabase#getDatabaseIndex(Cube)
      * @see SecondEdgePatternDatabase#getDatabaseIndex(Cube)
      */
-    protected abstract int getDatabaseIndex(Cube cube);
+    protected abstract int getDatabaseIndex(ITwistyPuzzle puzzle) throws IllegalArgumentException;
 
     
     /**

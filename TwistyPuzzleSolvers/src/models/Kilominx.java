@@ -1,17 +1,21 @@
-package kilominx;
+package models;
 
 /**
  * A Kilominx, represented as an array of "kubies" (Kilominx cubies).
  */
-public class Kilominx {
+public class Kilominx implements ITwistyPuzzle {
 
     /**
      * Colours on the Kilominx.
      * White, Dark Green, Red, Dark Blue, Yellow, Purple, Light Blue, Beige, Pink, Light Green, Orange, Grey
      */
-    public static enum Colour {
-        Wh, DG, Re, DB, Ye, Pu, LB, Be, Pi, LG, Or, Gy
+    public static enum Colour implements IColour {
+        Wh, DG, Re, DB, Ye, Pu, LB, Be, Pi, LG, Or, Gy;
+        
         // TODO: if adding EDIT feature, then need to add colour values
+        public int value() {
+            return -1;
+        }
     };
 
     // Kubies are indexed from 0 to 19 in the following order. The order itself is irrelevant, but the even/odd parity of the indices is important:
@@ -36,66 +40,32 @@ public class Kilominx {
                       KUBIE_DBL = 17,  // odd 
                       KUBIE_DBR = 19;  // odd
 
+    // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
+    // 0,      2,      1,      4,      6,      3,      8,      5,      10,     7,      
+    // UFL,    UFR,    UBL,    UBR,    UBM,    MFL,    FMD,    MFR,    FRD,    MBR,    
+    // WhDGRe, WhReDB, WhDGPu, WhDbYe, WhPuYe, DGReBe, ReBePi, ReDBPi, DBPiLG, DBYeLG, 
 
-    /**
-     * A cubie on the Kilominx (aka a Kubie).
-     * A kubie has an index (which represents which colours are on the kubie's sides)
-     * and an orientation (0, 1, or 2).
-     */
-    class Kubie {
-        // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
-        // 0,      2,      1,      4,      6,      3,      8,      5,      10,     7,      
-        // UFL,    UFR,    UBL,    UBR,    UBM,    MFL,    FMD,    MFR,    FRD,    MBR,    
-        // WhDGRe, WhReDB, WhDGPu, WhDbYe, WhPuYe, DGReBe, ReBePi, ReDBPi, DBPiLG, DBYeLG, 
+    // 12,     9,      14,     11,     16,     13,     15,     18,     17,     19
+    // BRD,    MBM,    BLD,    MBL,    FLD,    DFM,    DFL,    DFR,    DBL,    DBR
+    // YeLGOr, YePuOr, PuOrLB, PuDGLB, DGLBBe, BePiGy, LBBeGy, PiLGGy, OrLBGy, LGOrGy
 
-        // 12,     9,      14,     11,     16,     13,     15,     18,     17,     19
-        // BRD,    MBM,    BLD,    MBL,    FLD,    DFM,    DFL,    DFR,    DBL,    DBR
-        // YeLGOr, YePuOr, PuOrLB, PuDGLB, DGLBBe, BePiGy, LBBeGy, PiLGGy, OrLBGy, LGOrGy
+    // Kubies have an orientation of:
+    //  - 0 (oriented),
+    //  - 1 (colours turned CW),
+    //  - or 2 (colours turned CCW)
 
-        // Kubies have an orientation of:
-        //  - 0 (oriented),
-        //  - 1 (colours turned CW),
-        //  - or 2 (colours turned CCW)
-
-        // The orientation of a kubie can be determined by comparing the orientation of the highest-priority colour (white/grey, then light/dark green, then red/orange) 
-        // on the kubie compared to the orientation of the highest-priority face (the highest-priority-colour at that position on a solved Kilominx).
-        //  - For example, the MFR kubie initally has colours ReDBPi, with the highest-priority colour being red, which is on the the front face.
-        //    After performing the F move, the kubie at MFR has colours WhReDB, with the highest-priority colour being white, which is on the right face.
-        //    The white colour of the kubie has been turned clockwise from the solved state's red colour, so the orientation of the kubie is 1.
-
-        byte index, orientation;
-
-        /**
-         * Constructor for a kubie.
-         * @param index - The index of the kubie.
-         * @param orientation - The orientation of the kubie.
-         */
-        private Kubie(byte index, byte orientation) {
-            this.index = index;
-            this.orientation = orientation;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-
-            if (obj == null || obj.getClass() != this.getClass()) {
-                return false;
-            }
-
-            Kubie other = (Kubie) obj;
-            return index == other.index && orientation == other.orientation;
-        }
-    }
+    // The orientation of a kubie can be determined by comparing the orientation of the highest-priority colour (white/grey, then light/dark green, then red/orange) 
+    // on the kubie compared to the orientation of the highest-priority face (the highest-priority-colour at that position on a solved Kilominx).
+    //  - For example, the MFR kubie initally has colours ReDBPi, with the highest-priority colour being red, which is on the the front face.
+    //    After performing the F move, the kubie at MFR has colours WhReDB, with the highest-priority colour being white, which is on the right face.
+    //    The white colour of the kubie has been turned clockwise from the solved state's red colour, so the orientation of the kubie is 1.
 
 
     // Kilominx state is stored as an array of 20 kubies
-    Kubie[] kubies = new Kubie[20];
+    Cubie[] kubies = new Cubie[20];
 
     // KilominxMoves handles logic for making moves on the kilominx
-    public KilominxMoves moves;
+    private KilominxMoves moves;
 
 
     /**
@@ -105,7 +75,7 @@ public class Kilominx {
     public Kilominx() {
         // Initialize kubies
         for (byte i = 0; i < 20; i++) {
-            kubies[i] = new Kubie(i, (byte) 0);
+            kubies[i] = new Cubie(i, (byte) 0);
         }
 
         moves = new KilominxMoves(this);
@@ -121,7 +91,7 @@ public class Kilominx {
         byte[] otherOrientations = other.getKubieOrientations();
 
         for (byte i = 0; i < 20; i++) {
-            kubies[i] = new Kubie(otherIndices[i], otherOrientations[i]);
+            kubies[i] = new Cubie(otherIndices[i], otherOrientations[i]);
         }
 
         moves = new KilominxMoves(this);
@@ -132,11 +102,28 @@ public class Kilominx {
     //  - private int countSwaps() method (if needed still)
     //  - private Kubie kubieFromColours() method
 
+
+    /**
+     * Get the moves object for the kilominx.
+     * @return The moves object.
+     */
+    public KilominxMoves getMovesObj() {
+        return moves;
+    }
+
+    /**
+     * Create a copy of the kilominx.
+     * @return A copy of the kilominx.
+     */
+    public Kilominx copy() {
+        return new Kilominx(this);
+    }
+
     /**
      * Reset the kilominx to the solved state.
      * This should be used instead of creating a new Kilominx object to ensure the current kilominx is modified, rather than creating a new kilominx.
      */
-    public void resetKilominx() {
+    public void reset() {
         for (byte i = 0; i < 20; i++) {
             kubies[i].index = i;
             kubies[i].orientation = 0;
@@ -196,7 +183,7 @@ public class Kilominx {
      * up-front-right/down-back-left, down-front-left/up-back-right, down-front-right/up-back-left.
      */
     private Colour[] getKubieColours(byte posIndex) {
-        Kubie kubie = kubies[posIndex];
+        Cubie kubie = kubies[posIndex];
         Colour[] colours = new Colour[3];
 
         /* 
@@ -415,9 +402,9 @@ public class Kilominx {
     // TODO: if adding EDIT feature, then need to add public Colour[] getColours() method
 
     /**
-     * Print the Kilominx state in a human-readable format.
+     * Print the Kilominx state to stdout in a human-readable format.
      */
-    public void printKilominxState() {
+    public void printState() {
         
         // Print top face
         System.out.print("                           ");
@@ -502,5 +489,5 @@ public class Kilominx {
         System.out.println(getKubieColours(KUBIE_DBR)[0] + "\n"); 
     }
 
-    // TODO: if adding EDIT feature, then need to add public static void printEditCubeState() method
+    // TODO: if adding EDIT feature, then need to add public static void printEditState() method
 }

@@ -1,19 +1,20 @@
-package rubikscube;
+package models;
 
-import rubikscube.Cube.Cubie;
 import java.util.Random;
+
+import models.ITwistyPuzzle.Cubie;
 
 /**
  * This class contains methods which handle logic for making moves on a Rubik's Cube.
  */
-public class CubeMoves {
+public class CubeMoves implements ITwistyMoves {
     
     private Cube cube;
 
     /**
      * Moves that can be made on the Rubik's Cube.
      */
-    public static enum Move {
+    public static enum Move implements IMove {
         U, UPRIME, U2,
         L, LPRIME, L2,
         F, FPRIME, F2,
@@ -45,42 +46,67 @@ public class CubeMoves {
         }
 
         /**
+         * Get the base move of the move (e.g. U is the base move of UPRIME).
+         * @return The base move of the move.
+         */
+        public Move getBaseMove() {
+            switch (toString().substring(0, 1)) {
+                case "U":  return Move.U;
+                case "L":  return Move.L;
+                case "F":  return Move.F;
+                case "R":  return Move.R;
+                case "B":  return Move.B;
+                case "D":  return Move.D;
+                default:   return null;
+            }
+        }
+
+        /**
          * Return the String representation of the move.
          * (replaces PRIME with ')
         */
         public String toString() {
             return name().replace("PRIME", "'");
         }
+    }
 
-        /**
-         * Get a Move object from a name of the move.
-         * @param moveName - The name of the move.
-         * @return The Move object corresponding to the move name.
-         */
-        public static Move fromString(String moveName) {
-            switch (moveName) {
-                case "U":  return U;
-                case "U'": return UPRIME;
-                case "U2": return U2;
-                case "L":  return L;
-                case "L'": return LPRIME;
-                case "L2": return L2;
-                case "F":  return F;
-                case "F'": return FPRIME;
-                case "F2": return F2;
-                case "R":  return R;
-                case "R'": return RPRIME;
-                case "R2": return R2;
-                case "B":  return B;
-                case "B'": return BPRIME;
-                case "B2": return B2;
-                case "D":  return D;
-                case "D'": return DPRIME;
-                case "D2": return D2;
-                default:   return null;
-            }
+    /**
+     * Get the array of valid moves for the Rubik's Cube.
+     * @return The array of valid moves.
+     */
+    public Move[] getMoves() {
+        return Move.values();
+    }
+
+    /**
+     * Get a Move object from a name of the move.
+     * @param moveName - The name of the move.
+     * @return The Move object corresponding to the move name.
+     */
+    public Move fromString(String moveName) {
+        switch (moveName) {
+            case "U":  return Move.U;
+            case "U'": return Move.UPRIME;
+            case "U2": return Move.U2;
+            case "L":  return Move.L;
+            case "L'": return Move.LPRIME;
+            case "L2": return Move.L2;
+            case "F":  return Move.F;
+            case "F'": return Move.FPRIME;
+            case "F2": return Move.F2;
+            case "R":  return Move.R;
+            case "R'": return Move.RPRIME;
+            case "R2": return Move.R2;
+            case "B":  return Move.B;
+            case "B'": return Move.BPRIME;
+            case "B2": return Move.B2;
+            case "D":  return Move.D;
+            case "D'": return Move.DPRIME;
+            case "D2": return Move.D2;
+            default:   return null;
         }
     }
+    
 
     /**
      * Constructor for a CubeMoves object.
@@ -93,9 +119,15 @@ public class CubeMoves {
     /**
      * Make a move on the Rubik's Cube.
      * @param move - The move to make.
+     * @throws IllegalArgumentException if the move is not a valid Rubik's Cube move.
      */
-    public void makeMove(Move move) {
-        switch (move) {
+    public void makeMove(IMove move) throws IllegalArgumentException {
+        if (!(move instanceof Move)) {
+            throw new IllegalArgumentException("The move must be a Cube move.");
+        }
+        Move cubeMove = (Move) move;
+
+        switch (cubeMove) {
             case U:
                 moveU(); break;
             case UPRIME:
@@ -146,9 +178,15 @@ public class CubeMoves {
     /**
      * Undo a move on the Rubik's Cube by performing the inverse move (e.g. L' is the inverse of L).
      * @param move - The move to undo.
+     * @throws IllegalArgumentException if the move is not a valid Rubik's Cube move.
      */
-    public void undoMove(Move move) {
-        makeMove(move.getInverse());
+    public void undoMove(IMove move) throws IllegalArgumentException {
+        if (!(move instanceof Move)) {
+            throw new IllegalArgumentException("The move must be a Cube move.");
+        }
+        Move cubeMove = (Move) move;
+
+        makeMove(cubeMove.getInverse());
     }
 
     /**
@@ -157,52 +195,28 @@ public class CubeMoves {
      * @param move - The move to check.
      * @param lastMove - The last move made.
      * @return {@code true} if the move should be skipped, {@code false} otherwise.
+     * @throws IllegalArgumentException if the move or last move is not a valid Rubik's Cube move.
      */
-    public static boolean skipMove(Move move, Move lastMove) {
+    public boolean skipMove(IMove move, IMove lastMove) throws IllegalArgumentException {
+        if (!(move instanceof Move) || !(lastMove instanceof Move)) {
+            throw new IllegalArgumentException("The move must be a Cube move.");
+        }
+        Move baseMove = (Move) move.getBaseMove();
+        Move lastBaseMove = (Move) lastMove.getBaseMove();
+
         // Skip moves that are on the same face as the last move (e.g. L, L2 = L')
-        if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
-            (lastMove == Move.L || lastMove == Move.LPRIME || lastMove == Move.L2)) {
-            return true;
-        }
-
-        if ((move == Move.R || move == Move.RPRIME || move == Move.R2) &&
-            (lastMove == Move.R || lastMove == Move.RPRIME || lastMove == Move.R2)) {
-            return true;
-        }
-
-        if ((move == Move.U || move == Move.UPRIME || move == Move.U2) &&
-            (lastMove == Move.U || lastMove == Move.UPRIME || lastMove == Move.U2)) {
-            return true;
-        }
-
-        if ((move == Move.D || move == Move.DPRIME || move == Move.D2) &&
-            (lastMove == Move.D || lastMove == Move.DPRIME || lastMove == Move.D2)) {
-            return true;
-        }
-
-        if ((move == Move.F || move == Move.FPRIME || move == Move.F2) &&
-            (lastMove == Move.F || lastMove == Move.FPRIME || lastMove == Move.F2)) {
-            return true;
-        }
-
-        if ((move == Move.B || move == Move.BPRIME || move == Move.B2) &&
-            (lastMove == Move.B || lastMove == Move.BPRIME || lastMove == Move.B2)) {
+        if (baseMove == lastBaseMove) {
             return true;
         }
 
         // Skip moves on opposite faces in specific orders (e.g. L, R = R, L; so prevent R, L)
-        if ((move == Move.L || move == Move.LPRIME || move == Move.L2) &&
-            (lastMove == Move.R || lastMove == Move.RPRIME || lastMove == Move.R2)) {
+        if (baseMove == Move.L && lastBaseMove == Move.R) {
             return true;
         }
-
-        if ((move == Move.U || move == Move.UPRIME || move == Move.U2) &&
-            (lastMove == Move.D || lastMove == Move.DPRIME || lastMove == Move.D2)) {
+        else if (baseMove == Move.U && lastBaseMove == Move.D) {
             return true;
         }
-
-        if ((move == Move.F || move == Move.FPRIME || move == Move.F2) &&
-            (lastMove == Move.B || lastMove == Move.BPRIME || lastMove == Move.B2)) {
+        else if (baseMove == Move.F && lastBaseMove == Move.B) {
             return true;
         }
 

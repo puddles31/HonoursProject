@@ -1,20 +1,21 @@
-package kilominx;
+package models;
 
-import kilominx.Kilominx.Kubie;
 import java.util.Arrays;
 import java.util.Random;
+
+import models.ITwistyPuzzle.Cubie;
 
 /**
  * This class contains methods which handle logic for making moves on a Kilominx.
  */
-public class KilominxMoves {
+public class KilominxMoves implements ITwistyMoves {
     
     private Kilominx kilominx;
 
     /**
      * Moves that can be made on the Kilominx.
      */
-    public static enum Move {
+    public static enum Move implements IMove {
         U,   U_PRIME,   U_2,   U_2PRIME,
         L,   L_PRIME,   L_2,   L_2PRIME,
         F,   F_PRIME,   F_2,   F_2PRIME,
@@ -62,7 +63,21 @@ public class KilominxMoves {
          * @return The base move of the move.
          */
         public Move getBaseMove() {
-            return fromString(toString().replace("'", "").replace("2", ""));
+            switch (toString().replace("'", "").replace("2", "")) {
+                case "U":    return Move.U;
+                case "L":    return Move.L;
+                case "F":    return Move.F;
+                case "R":    return Move.R;
+                case "BL":   return Move.BL;
+                case "BR":   return Move.BR;
+                case "DL":   return Move.DL;
+                case "DR":   return Move.DR;
+                case "DBL":  return Move.DBL;
+                case "DBR":  return Move.DBR;
+                case "DB":   return Move.DB;
+                case "D":    return Move.D;
+                default:     return null;
+            }
         }
 
         /**
@@ -72,42 +87,51 @@ public class KilominxMoves {
         public String toString() {
             return name().replace("PRIME", "'").replace("_", "");
         }
+    }
 
-        /**
-         * Get a Move object from a name of the move.
-         * @param moveName - The name of the move.
-         * @return The Move object corresponding to the move name.
-         */
-        public static Move fromString(String moveName) {
-            switch (moveName) {
-                case "U":    return U;       case "U'":    return U_PRIME;
-                case "U2":   return U_2;     case "U2'":   return U_2PRIME;
-                case "L":    return L;       case "L'":    return L_PRIME;
-                case "L2":   return L_2;     case "L2'":   return L_2PRIME;
-                case "F":    return F;       case "F'":    return F_PRIME;
-                case "F2":   return F_2;     case "F2'":   return F_2PRIME;
-                case "R":    return R;       case "R'":    return R_PRIME;
-                case "R2":   return R_2;     case "R2'":   return R_2PRIME;
-                case "BL":   return BL;      case "BL'":   return BL_PRIME;
-                case "BL2":  return BL_2;    case "BL2'":  return BL_2PRIME;
-                case "BR":   return BR;      case "BR'":   return BR_PRIME;
-                case "BR2":  return BR_2;    case "BR2'":  return BR_2PRIME;
-                case "DL":   return DL;      case "DL'":   return DL_PRIME;
-                case "DL2":  return DL_2;    case "DL2'":  return DL_2PRIME;
-                case "DR":   return DR;      case "DR'":   return DR_PRIME;
-                case "DR2":  return DR_2;    case "DR2'":  return DR_2PRIME;
-                case "DBL":  return DBL;     case "DBL'":  return DBL_PRIME;
-                case "DBL2": return DBL_2;   case "DBL2'": return DBL_2PRIME;
-                case "DBR":  return DBR;     case "DBR'":  return DBR_PRIME;
-                case "DBR2": return DBR_2;   case "DBR2'": return DBR_2PRIME;
-                case "DB":   return DB;      case "DB'":   return DB_PRIME;
-                case "DB2":  return DB_2;    case "DB2'":  return DB_2PRIME;
-                case "D":    return D;       case "D'":    return D_PRIME;
-                case "D2":   return D_2;     case "D2'":   return D_2PRIME;
-                default:     return null;
-            }
+    /**
+     * Get the array of valid moves for the kilominx.
+     * @return The array of valid moves.
+     */
+    public Move[] getMoves() {
+        return Move.values();
+    }
+
+    /**
+     * Get a Move object from a name of the move.
+     * @param moveName - The name of the move.
+     * @return The Move object corresponding to the move name.
+     */
+    public Move fromString(String moveName) {
+        switch (moveName) {
+            case "U":    return Move.U;       case "U'":    return Move.U_PRIME;
+            case "U2":   return Move.U_2;     case "U2'":   return Move.U_2PRIME;
+            case "L":    return Move.L;       case "L'":    return Move.L_PRIME;
+            case "L2":   return Move.L_2;     case "L2'":   return Move.L_2PRIME;
+            case "F":    return Move.F;       case "F'":    return Move.F_PRIME;
+            case "F2":   return Move.F_2;     case "F2'":   return Move.F_2PRIME;
+            case "R":    return Move.R;       case "R'":    return Move.R_PRIME;
+            case "R2":   return Move.R_2;     case "R2'":   return Move.R_2PRIME;
+            case "BL":   return Move.BL;      case "BL'":   return Move.BL_PRIME;
+            case "BL2":  return Move.BL_2;    case "BL2'":  return Move.BL_2PRIME;
+            case "BR":   return Move.BR;      case "BR'":   return Move.BR_PRIME;
+            case "BR2":  return Move.BR_2;    case "BR2'":  return Move.BR_2PRIME;
+            case "DL":   return Move.DL;      case "DL'":   return Move.DL_PRIME;
+            case "DL2":  return Move.DL_2;    case "DL2'":  return Move.DL_2PRIME;
+            case "DR":   return Move.DR;      case "DR'":   return Move.DR_PRIME;
+            case "DR2":  return Move.DR_2;    case "DR2'":  return Move.DR_2PRIME;
+            case "DBL":  return Move.DBL;     case "DBL'":  return Move.DBL_PRIME;
+            case "DBL2": return Move.DBL_2;   case "DBL2'": return Move.DBL_2PRIME;
+            case "DBR":  return Move.DBR;     case "DBR'":  return Move.DBR_PRIME;
+            case "DBR2": return Move.DBR_2;   case "DBR2'": return Move.DBR_2PRIME;
+            case "DB":   return Move.DB;      case "DB'":   return Move.DB_PRIME;
+            case "DB2":  return Move.DB_2;    case "DB2'":  return Move.DB_2PRIME;
+            case "D":    return Move.D;       case "D'":    return Move.D_PRIME;
+            case "D2":   return Move.D_2;     case "D2'":   return Move.D_2PRIME;
+            default:     return null;
         }
     }
+
 
     /**
      * Constructor for a KilominxMoves object.
@@ -120,9 +144,15 @@ public class KilominxMoves {
     /**
      * Make a move on the Kilominx.
      * @param move - The move to make.
+     * @throws IllegalArgumentException if the move is not a valid kilominx move.
      */
-    public void makeMove(Move move) {
-        switch (move) {
+    public void makeMove(IMove move) throws IllegalArgumentException {
+        if (!(move instanceof Move)) {
+            throw new IllegalArgumentException("The move must be a Kilominx move.");
+        }
+        Move kilominxMove = (Move) move;
+
+        switch (kilominxMove) {
             case U:        moveU();       break;
             case U_PRIME:  moveUPrime();  break;
             case U_2:      moveU2();      break;
@@ -190,9 +220,15 @@ public class KilominxMoves {
     /**
      * Undo a move on the Kilominx by performing the inverse move (e.g. DR2' is the inverse of DR2).
      * @param move - The move to undo.
+     * @throws IllegalArgumentException if the move is not a valid kilominx move.
      */
-    public void undoMove(Move move) {
-        makeMove(move.getInverse());
+    public void undoMove(IMove move) throws IllegalArgumentException {
+        if (!(move instanceof Move)) {
+            throw new IllegalArgumentException("The move must be a Kilominx move.");
+        }
+        Move kilominxMove = (Move) move;
+
+        makeMove(kilominxMove.getInverse());
     }
 
     /**
@@ -201,10 +237,14 @@ public class KilominxMoves {
      * @param move - The move to check.
      * @param lastMove - The previous move made.
      * @return {@code true} if the move should be skipped, {@code false} otherwise.
+     * @throws IllegalArgumentException if the move or last move is not a valid kilominx move.
      */
-    public static boolean skipMove(Move move, Move lastMove) {        
-        Move baseMove = move.getBaseMove();
-        Move lastBaseMove = lastMove.getBaseMove();
+    public boolean skipMove(IMove move, IMove lastMove) throws IllegalArgumentException {
+        if (!(move instanceof Move) || !(lastMove instanceof Move)) {
+            throw new IllegalArgumentException("The move must be a Kilominx move.");
+        }     
+        Move baseMove = (Move) move.getBaseMove();
+        Move lastBaseMove = (Move) lastMove.getBaseMove();
 
         // Skip moves that are on the same face as the last move
         if (baseMove == lastBaseMove) {
@@ -253,7 +293,7 @@ public class KilominxMoves {
     }
 
     /**
-     * Scramble the cube by making {@code noMoves} random moves, excluding moves that should be skipped.
+     * Scramble the kilomix by making {@code noMoves} random moves, excluding moves that should be skipped.
      * @param noMoves - The number of random moves to make.
      * @return An array of the moves made.
      */
@@ -284,7 +324,7 @@ public class KilominxMoves {
      * @param incr - The amount to increase the orientation by.
      */
     private void increaseKubieOrientation(byte posIndex, byte incr) {
-        Kubie kubie = kilominx.kubies[posIndex];
+        Cubie kubie = kilominx.kubies[posIndex];
 
         kubie.orientation += incr;
 
@@ -304,7 +344,7 @@ public class KilominxMoves {
      *  such that UFL is replaced by UFR, which is replaced by UBM, etc.).
      */
     private void rotateKubies(byte[] posIndices) {
-        Kubie temp = kilominx.kubies[posIndices[0]];
+        Cubie temp = kilominx.kubies[posIndices[0]];
 
         for (int i = 0; i < posIndices.length - 1; i++) {
             kilominx.kubies[posIndices[i]] = kilominx.kubies[posIndices[(i + 1)]];

@@ -1,8 +1,7 @@
-package kilominx.interactive;
+package interactive;
 
-import kilominx.Kilominx;
-import kilominx.Kilominx.Colour;
-import kilominx.KilominxMoves.Move;
+import models.Kilominx;
+import models.KilominxMoves.Move;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -45,7 +44,7 @@ public class KilominxTerminal {
         while (!input.equals("QUIT")) {
 
             if (!input.equals("")) {
-                terminal.kilominx.printKilominxState();
+                terminal.kilominx.printState();
                 System.out.println("Make a move, or enter a command:");
             }
 
@@ -92,7 +91,7 @@ public class KilominxTerminal {
         switch (input) {
             case "SCRAMBLE":
                 // Default scramble is 10 moves
-                Move[] scrambleMoves = kilominx.moves.scramble(10);
+                Move[] scrambleMoves = kilominx.getMovesObj().scramble(10);
                 out = "Move made during scramble:\n";
                 for (int i = 0; i < scrambleMoves.length; i++) {
                     out += scrambleMoves[i] + "\n";
@@ -101,7 +100,7 @@ public class KilominxTerminal {
                 break;
             
             case "RESET":
-                kilominx.resetKilominx();
+                kilominx.reset();
                 break;
             
             case "EDIT":
@@ -157,7 +156,7 @@ public class KilominxTerminal {
                 if (moveMatcher.matches()) {
                     String move = moveMatcher.group(1) + moveMatcher.group(2);
 
-                    kilominx.moves.makeMove(Move.fromString(move));
+                    kilominx.getMovesObj().makeMove(kilominx.getMovesObj().fromString(move));
                     break;
                 }
 
@@ -167,7 +166,7 @@ public class KilominxTerminal {
                     int n = Integer.parseInt(scrambleMatcher.group(1));
 
                     if (n > 0 && n <= 100) {
-                        Move[] scramble = kilominx.moves.scramble(n);
+                        Move[] scramble = kilominx.getMovesObj().scramble(n);
                         out = "Moves made during scramble:\n";
                         for (int i = 0; i < scramble.length; i++) {
                             out += scramble[i] + "\n";

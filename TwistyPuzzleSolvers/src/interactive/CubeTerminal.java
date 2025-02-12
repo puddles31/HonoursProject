@@ -1,12 +1,14 @@
-package rubikscube.interactive;
+package interactive;
 
-import rubikscube.Cube;
-import rubikscube.CubeSolver;
-import rubikscube.Cube.Colour;
-import rubikscube.CubeMoves.Move;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import models.Cube;
+import models.Cube.Colour;
+import models.CubeMoves.Move;
+import models.ITwistyMoves.IMove;
+import solvers.CubeSolver;
 
 /**
  * This class contains methods which allow the user to interact with a Rubik's Cube.
@@ -45,7 +47,7 @@ public class CubeTerminal {
         while (!input.equals("QUIT")) {
 
             if (!input.equals("")) {
-                terminal.cube.printCubeState();
+                terminal.cube.printState();
                 System.out.println("Make a move, or enter a command:");
             }
             
@@ -88,7 +90,7 @@ public class CubeTerminal {
         switch (input) {
             case "SCRAMBLE":
                 // Default scramble is 10 moves
-                Move[] scrambleMoves = cube.moves.scramble(10);
+                Move[] scrambleMoves = cube.getMovesObj().scramble(10);
                 out = "Moves made during scramble:\n";
                 for (int i = 0; i < scrambleMoves.length; i++) {
                     out += scrambleMoves[i] + "\n";
@@ -96,7 +98,7 @@ public class CubeTerminal {
                 break;
             
             case "RESET":
-                cube.resetCube();
+                cube.reset();
                 break;
 
             case "EDIT":
@@ -111,13 +113,13 @@ public class CubeTerminal {
             case "SOLVE":
                 CubeSolver solver = new CubeSolver(cube);
                 try {
-                    Move[] moves = solver.solveCube();
+                    IMove[] moves = solver.solve();
                 
                     // Output and perform the moves to solve the cube
                     out = "Moves to solve the cube:\n";
                     for (int i = 0; i < moves.length; i++) {
                         out += moves[i] + "\n";
-                        cube.moves.makeMove(moves[i]);
+                        cube.getMovesObj().makeMove(moves[i]);
                     }
                     out += "\n";
                     
@@ -144,7 +146,7 @@ public class CubeTerminal {
                 if (moveMatcher.matches()) {
                     String move = moveMatcher.group(1);
 
-                    cube.moves.makeMove(Move.fromString(move));
+                    cube.getMovesObj().makeMove(cube.getMovesObj().fromString(move));
                     break;
                 }
 
@@ -154,7 +156,7 @@ public class CubeTerminal {
                     int n = Integer.parseInt(scrambleMatcher.group(1));
 
                     if (n > 0 && n <= 100) {
-                        Move[] scramble = cube.moves.scramble(n);
+                        Move[] scramble = cube.getMovesObj().scramble(n);
                         out = "Moves made during scramble:\n";
                         for (int i = 0; i < scramble.length; i++) {
                             out += scramble[i] + "\n";
@@ -186,7 +188,7 @@ public class CubeTerminal {
 
         // Keep asking for input until the user types "DONE"
         while (!input.equals("DONE")) {
-            Cube.printEditCubeState(colours, index);
+            Cube.printEditState(colours, index);
             if (index == 48) {
                 System.out.println("Press ENTER to finish editing. Enter '-' to go back and continue editing.");
             }
