@@ -91,15 +91,12 @@ public class KilominxTerminal {
         
         switch (input) {
             case "SCRAMBLE":
-                // TODO: update after implementing scramble
-                out = "ERROR: Scramble not implemented yet.\n";
-                
-                // // Default scramble is 10 moves
-                // Move[] scrambleMoves = kilominx.moves.scramble(10);
-                // out = "Move made during scramble:\n";
-                // for (int i = 0; i < scrambleMoves.length; i++) {
-                //     out += scrambleMoves[i] + "\n";
-                // }
+                // Default scramble is 10 moves
+                Move[] scrambleMoves = kilominx.moves.scramble(10);
+                out = "Move made during scramble:\n";
+                for (int i = 0; i < scrambleMoves.length; i++) {
+                    out += scrambleMoves[i] + "\n";
+                }
 
                 break;
             
@@ -167,21 +164,19 @@ public class KilominxTerminal {
                 // Check if input is a SCRAMBLE command with a number
                 Matcher scrambleMatcher = scramblePattern.matcher(input);
                 if (scrambleMatcher.matches()) {
-                    // TODO: update after implementing scramble
-                    out = "ERROR: Scramble not implemented yet.\n";
-                    // int n = Integer.parseInt(scrambleMatcher.group(1));
+                    int n = Integer.parseInt(scrambleMatcher.group(1));
 
-                    // if (n > 0 && n <= 100) {
-                    //     Move[] scramble = kilominx.moves.scramble(n);
-                    //     out = "Moves made during scramble:\n";
-                    //     for (int i = 0; i < scramble.length; i++) {
-                    //         out += scramble[i] + "\n";
-                    //     }
-                    // }
-                    // else {
-                    //     out = "ERROR: Number of moves must be between 1 and 100.\n";
-                    // }
-                    // break;
+                    if (n > 0 && n <= 100) {
+                        Move[] scramble = kilominx.moves.scramble(n);
+                        out = "Moves made during scramble:\n";
+                        for (int i = 0; i < scramble.length; i++) {
+                            out += scramble[i] + "\n";
+                        }
+                    }
+                    else {
+                        out = "ERROR: Number of moves must be between 1 and 100.\n";
+                    }
+                    break;
                 }
 
                 out = "ERROR: '" + input + "' is not a valid move or command.";

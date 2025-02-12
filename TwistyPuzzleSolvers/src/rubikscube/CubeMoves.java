@@ -212,6 +212,7 @@ public class CubeMoves {
     /**
      * Scramble the cube by making {@code noMoves} random moves, excluding moves that cancel previous moves.
      * @param noMoves - The number of moves to make.
+     * @return An array of the moves made.
      */
     public Move[] scramble(int noMoves) {
         Random rand = new Random();

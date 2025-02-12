@@ -1,6 +1,8 @@
 package kilominx;
 
 import kilominx.Kilominx.Kubie;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * This class contains methods which handle logic for making moves on a Kilominx.
@@ -53,6 +55,14 @@ public class KilominxMoves {
          */
         public Move getInverse() {
             return inverse;
+        }
+
+        /**
+         * Get the base move of the move (e.g. U is the base move of U_2PRIME).
+         * @return The base move of the move.
+         */
+        public Move getBaseMove() {
+            return fromString(toString().replace("'", "").replace("2", ""));
         }
 
         /**
@@ -186,24 +196,86 @@ public class KilominxMoves {
     }
 
     /**
-     * 
-     * @param move
-     * @param lastMove
-     * @return
+     * Determine if a move should be skipped based on the previous move.
+     * Moves are skipped if they are on the same face as the last move, or if they are on non-adjacent faces and are not in the correct order.
+     * @param move - The move to check.
+     * @param lastMove - The previous move made.
+     * @return {@code true} if the move should be skipped, {@code false} otherwise.
      */
-    public static boolean skipMove(Move move, Move lastMove) {
-        // TODO: implement this method, add javadoc comment
+    public static boolean skipMove(Move move, Move lastMove) {        
+        Move baseMove = move.getBaseMove();
+        Move lastBaseMove = lastMove.getBaseMove();
+
+        // Skip moves that are on the same face as the last move
+        if (baseMove == lastBaseMove) {
+            return true;
+        }
+
+        // Skip moves that are on non-adjacent faces to the last move, and are not in the correct order
+        if (lastBaseMove == Move.R && 
+            Arrays.stream(new Move[] {Move.L}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.BL && 
+            Arrays.stream(new Move[] {Move.F, Move.R}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.BR && 
+            Arrays.stream(new Move[] {Move.L, Move.F}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.DL && 
+            Arrays.stream(new Move[] {Move.U, Move.R, Move.BL, Move.BR}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.DR && 
+            Arrays.stream(new Move[] {Move.U, Move.L, Move.BL, Move.BR}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.DBL && 
+            Arrays.stream(new Move[] {Move.U, Move.F, Move.R, Move.BR, Move.DR}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.DBR && 
+            Arrays.stream(new Move[] {Move.U, Move.L, Move.F, Move.BL, Move.DL, Move.DBL}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.DB && 
+            Arrays.stream(new Move[] {Move.U, Move.L, Move.F, Move.R, Move.DL, Move.DR}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+        else if (lastBaseMove == Move.D && 
+            Arrays.stream(new Move[] {Move.U, Move.L, Move.F, Move.R, Move.BL, Move.BR}).anyMatch(baseMove::equals)) {
+            return true;
+        }
+
         return false;
     }
 
     /**
-     * 
-     * @param noMoves
-     * @return
+     * Scramble the cube by making {@code noMoves} random moves, excluding moves that should be skipped.
+     * @param noMoves - The number of random moves to make.
+     * @return An array of the moves made.
      */
     public Move[] scramble(int noMoves) {
-        // TODO: implement this method, add javadoc comment
-        return null;
+        Random rand = new Random();
+        Move[] moves = Move.values();
+        Move[] scramble = new Move[noMoves];
+
+        Move move, lastMove = null;
+        
+        for (int i = 0; i < noMoves; i++) {
+            // Pick a random move, and check that it shouldn't be skipped
+            do {
+                move = moves[rand.nextInt(moves.length)];
+            } while (i > 0 && skipMove(move, lastMove));
+            
+            makeMove(move);
+            scramble[i] = move;
+
+            lastMove = move;
+        }
+        return scramble;
     }
 
     /**
