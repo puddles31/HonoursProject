@@ -154,13 +154,13 @@ public abstract class PuzzleSolver {
                 PriorityQueue<PrioritizedMove> children = new PriorityQueue<PrioritizedMove>(prioritizedMoveComparator);
 
                 // Iterate over all possible moves from the current node
-                for (IMove move : puzzle.getMovesObj().getMoves()) {
+                for (IMove move : puzzle.getMoveController().getMoves()) {
                     // If at the root node or the move shouldn't be skipped
-                    if (currentNode.depth == 0 || !puzzle.getMovesObj().skipMove(move, currentNode.move)) {
+                    if (currentNode.depth == 0 || !puzzle.getMoveController().skipMove(move, currentNode.move)) {
                         
                         // Create a copy of the current puzzle state and make the move on the copy
                         ITwistyPuzzle puzzleCopy = currentNode.puzzle.copy();
-                        puzzleCopy.getMovesObj().makeMove(move);
+                        puzzleCopy.getMoveController().makeMove(move);
 
                         // Calculate an estimate for the number of moves required to solve the child node
                         byte estimatedChildMoves = (byte)(currentNode.depth + (byte) 1 + getMaxNumberOfMoves(puzzleCopy, bound, (byte)(currentNode.depth + 1)));

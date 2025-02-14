@@ -91,7 +91,7 @@ public class KilominxTerminal {
         switch (input) {
             case "SCRAMBLE":
                 // Default scramble is 10 moves
-                Move[] scrambleMoves = kilominx.getMovesObj().scramble(10);
+                Move[] scrambleMoves = kilominx.getMoveController().scramble(10);
                 out = "Move made during scramble:\n";
                 for (int i = 0; i < scrambleMoves.length; i++) {
                     out += scrambleMoves[i] + "\n";
@@ -156,7 +156,7 @@ public class KilominxTerminal {
                 if (moveMatcher.matches()) {
                     String move = moveMatcher.group(1) + moveMatcher.group(2);
 
-                    kilominx.getMovesObj().makeMove(kilominx.getMovesObj().fromString(move));
+                    kilominx.getMoveController().makeMove(kilominx.getMoveController().fromString(move));
                     break;
                 }
 
@@ -166,7 +166,7 @@ public class KilominxTerminal {
                     int n = Integer.parseInt(scrambleMatcher.group(1));
 
                     if (n > 0 && n <= 100) {
-                        Move[] scramble = kilominx.getMovesObj().scramble(n);
+                        Move[] scramble = kilominx.getMoveController().scramble(n);
                         out = "Moves made during scramble:\n";
                         for (int i = 0; i < scramble.length; i++) {
                             out += scramble[i] + "\n";

@@ -3,12 +3,12 @@ package models;
 import java.util.stream.Stream;
 
 /**
- * A Rubik's Cube, represented as an array of edge cubies and an array corner cubies.
+ * A Rubik's Cube, represented as an array of edge cubies and an array of corner cubies.
  */
 public class Cube implements ITwistyPuzzle {
 
     /**
-     * Colours on the Rubik's Cube (W, G, R, B, O, Y).
+     * Colours of cubies on the Rubik's Cube (White, Green, Red, Blue, Orange, Yellow).
      */
     public static enum Colour implements IColour {
         W(1), G(2), R(4), B(8), O(16), Y(32);
@@ -71,15 +71,16 @@ public class Cube implements ITwistyPuzzle {
     //  e.g. ULB can turn to corners URB, ULF and DLB in 1 turn, and to DRF in 3 turns;
     //  ULB is index 0 (even), so URB (1), ULF (3), DLB (5) and DRF (7) are all an odd number of indices away)
 
-    // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
+    // Corner cubies have an orientation of 0 (oriented - white/yellow on top/bottom), 
+    // 1 (white/yellow turned CW from nearest up/down face), or 2 (white/yellow turned CCW from nearest up/down face)
 
 
     // Cube state is stored as an array of 12 edge cubies and an array of 8 corner cubies
     Cubie[] edgeCubies = new Cubie[12];
     Cubie[] cornerCubies = new Cubie[8];
 
-    // CubeMoves handles logic for making moves on the cube
-    private CubeMoves moves;
+    // moveController handles logic for making moves on the cube
+    private CubeMoves moveController;
 
 
     /**
@@ -97,7 +98,7 @@ public class Cube implements ITwistyPuzzle {
             cornerCubies[i] = new Cubie(i, (byte) 0);
         }
 
-        moves = new CubeMoves(this);
+        moveController = new CubeMoves(this);
     }
 
     /**
@@ -120,7 +121,7 @@ public class Cube implements ITwistyPuzzle {
             cornerCubies[i] = new Cubie(otherCornerIndices[i], otherCornerOrientations[i]);
         }
 
-        moves = new CubeMoves(this);
+        moveController = new CubeMoves(this);
     }
 
     /**
@@ -164,7 +165,7 @@ public class Cube implements ITwistyPuzzle {
             throw new IllegalArgumentException("Permutation parity error.");
         }
 
-        moves = new CubeMoves(this);
+        moveController = new CubeMoves(this);
     }
 
     /**
@@ -369,11 +370,11 @@ public class Cube implements ITwistyPuzzle {
 
 
     /**
-     * Get the moves object for the cube.
-     * @return The moves object.
+     * Get the move controller for the cube.
+     * @return The move controller for the cube.
      */
-    public CubeMoves getMovesObj() {
-        return moves;
+    public CubeMoves getMoveController() {
+        return moveController;
     }
 
     /**
@@ -485,7 +486,7 @@ public class Cube implements ITwistyPuzzle {
      * @param posIndex - The position index of the edge cubie.
      * @return An array of the colours of the edge cubie.
      */
-    public Colour[] getEdgeColours(byte posIndex) {
+    private Colour[] getEdgeColours(byte posIndex) {
         Cubie edge = edgeCubies[posIndex];
         Colour[] colours = new Colour[2];
 
@@ -565,9 +566,9 @@ public class Cube implements ITwistyPuzzle {
     /**
      * Get the colours of a corner cubie.
      * @param posIndex - The position index of the corner cubie.
-     * @return An array of the colours of the corner cubie. The colours are in the order top/bottom, left/right, front/back. 
+     * @return An array of the colours of the corner cubie. The colours are returned in the order top/bottom, left/right, front/back. 
      */
-    public Colour[] getCornerColours(byte posIndex) {
+    private Colour[] getCornerColours(byte posIndex) {
         Cubie corner = cornerCubies[posIndex];
         Colour[] colours = new Colour[3];
 

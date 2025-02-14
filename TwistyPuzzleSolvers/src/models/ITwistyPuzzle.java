@@ -1,20 +1,35 @@
 package models;
 
+/**
+ * Interface for a twisty puzzle (e.g. a Rubik's Cube, or a Kilominx).
+ */
 public interface ITwistyPuzzle {
 
-    public interface IColour {
-        public int value();
+    /**
+     * Interface for a colour enum for cubies on a twisty puzzle.
+     */
+    interface IColour {
+        /**
+         * Return the "value" of the colour.
+         * This is used for converting between different puzzle model types.
+         * @return The value of the colour.
+         */
+        int value();
     }
 
+    /**
+     * Class for a cubie on a twisty puzzle.
+     */
     class Cubie {
-        public byte index, orientation;
+        // Cubies have an index (determines initial position and colours of cubie) and an orientation.
+        byte index, orientation;
 
         /**
          * Constructor for a cubie.
          * @param index - The index of the cubie.
          * @param orientation - The orientation of the cubie.
          */
-        public Cubie(byte index, byte orientation) {
+        Cubie(byte index, byte orientation) {
             this.index = index;
             this.orientation = orientation;
         }
@@ -35,31 +50,31 @@ public interface ITwistyPuzzle {
     }
 
     /**
-     * Get the moves object (which holds logic for making moves) for the puzzle.
-     * @return The moves object.
+     * Get the move controller (which holds logic for making moves) for the puzzle.
+     * @return The move controller for the puzzle.
      */
-    public ITwistyMoves getMovesObj();
+    ITwistyMoves getMoveController();
 
     /**
      * Create a copy of the puzzle.
      * @return A copy of the puzzle.
      */
-    public ITwistyPuzzle copy();
+    ITwistyPuzzle copy();
 
     /**
      * Reset the puzzle to the solved state.
      * This should be used instead of creating a new object to ensure the current puzzle state is modified.
      */
-    public void reset();
+    void reset();
 
     /**
      * Check if the puzzle is solved.
      * @return {@code true} if the puzzle is solved, {@code false} otherwise.
      */
-    public boolean isSolved();
+    boolean isSolved();
 
     /**
      * Print the puzzle state to stdout in a human readable format.
      */
-    public void printState();
+    void printState();
 }

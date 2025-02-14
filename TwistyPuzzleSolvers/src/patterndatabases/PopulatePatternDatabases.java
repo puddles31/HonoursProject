@@ -141,12 +141,12 @@ public class PopulatePatternDatabases {
             }
 
             // Iterate over all possible moves from the current node
-            for (IMove move : puzzle.getMovesObj().getMoves()) {
+            for (IMove move : puzzle.getMoveController().getMoves()) {
                 // If at the root node or the move shouldn't be skipped
-                if (movesList.size() == 0 || !puzzle.getMovesObj().skipMove(move, movesList.getLast())) {
+                if (movesList.size() == 0 || !puzzle.getMoveController().skipMove(move, movesList.getLast())) {
                     
                     // Make the move
-                    puzzle.getMovesObj().makeMove(move);
+                    puzzle.getMoveController().makeMove(move);
                 
                     // Try to update the number of moves in the database
                     // If successful, add the node to the queue; if not, the node was visited before with fewer moves
@@ -162,7 +162,7 @@ public class PopulatePatternDatabases {
                         }
                     }
                     // Undo the move
-                    puzzle.getMovesObj().undoMove(move);
+                    puzzle.getMoveController().undoMove(move);
                 }
             }
 
@@ -200,7 +200,7 @@ public class PopulatePatternDatabases {
         while (!movesStack.isEmpty()) {
             IMove move = movesStack.removeFirst();
             movesList.add(move);
-            puzzle.getMovesObj().makeMove(move);
+            puzzle.getMoveController().makeMove(move);
         }
     }
 
@@ -213,7 +213,7 @@ public class PopulatePatternDatabases {
         BFSNode currentNode = target;
 
         while (currentNode.parent != null) {
-            puzzle.getMovesObj().undoMove(currentNode.move);
+            puzzle.getMoveController().undoMove(currentNode.move);
             currentNode = currentNode.parent;
         }
     }
@@ -277,16 +277,16 @@ public class PopulatePatternDatabases {
             currentNode = nodeStack.removeFirst();
 
             // Iterate over all possible moves from the current node
-            for (IMove move : puzzle.getMovesObj().getMoves()) {
+            for (IMove move : puzzle.getMoveController().getMoves()) {
                 // If at the root node or the move shouldn't be skipped
-                if (currentNode.depth == 0 || !puzzle.getMovesObj().skipMove(move, currentNode.move)) {
+                if (currentNode.depth == 0 || !puzzle.getMoveController().skipMove(move, currentNode.move)) {
 
                     // Create a copy of the current puzzle state
                     ITwistyPuzzle puzzleCopy = currentNode.puzzle.copy();
                     byte puzzleCopyDepth = (byte) (currentNode.depth + 1);
 
                     // Make the move on the copy
-                    puzzleCopy.getMovesObj().makeMove(move);
+                    puzzleCopy.getMoveController().makeMove(move);
 
                     int databaseIndex = database.getDatabaseIndex(puzzleCopy);
                     

@@ -90,7 +90,7 @@ public class CubeTerminal {
         switch (input) {
             case "SCRAMBLE":
                 // Default scramble is 10 moves
-                Move[] scrambleMoves = cube.getMovesObj().scramble(10);
+                Move[] scrambleMoves = cube.getMoveController().scramble(10);
                 out = "Moves made during scramble:\n";
                 for (int i = 0; i < scrambleMoves.length; i++) {
                     out += scrambleMoves[i] + "\n";
@@ -119,7 +119,7 @@ public class CubeTerminal {
                     out = "Moves to solve the cube:\n";
                     for (int i = 0; i < moves.length; i++) {
                         out += moves[i] + "\n";
-                        cube.getMovesObj().makeMove(moves[i]);
+                        cube.getMoveController().makeMove(moves[i]);
                     }
                     out += "\n";
                     
@@ -146,7 +146,7 @@ public class CubeTerminal {
                 if (moveMatcher.matches()) {
                     String move = moveMatcher.group(1);
 
-                    cube.getMovesObj().makeMove(cube.getMovesObj().fromString(move));
+                    cube.getMoveController().makeMove(cube.getMoveController().fromString(move));
                     break;
                 }
 
@@ -156,7 +156,7 @@ public class CubeTerminal {
                     int n = Integer.parseInt(scrambleMatcher.group(1));
 
                     if (n > 0 && n <= 100) {
-                        Move[] scramble = cube.getMovesObj().scramble(n);
+                        Move[] scramble = cube.getMoveController().scramble(n);
                         out = "Moves made during scramble:\n";
                         for (int i = 0; i < scramble.length; i++) {
                             out += scramble[i] + "\n";
