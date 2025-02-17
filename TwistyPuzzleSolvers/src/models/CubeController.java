@@ -1,13 +1,12 @@
 package models;
 
-import java.util.Random;
-
 import models.ITwistyPuzzle.Cubie;
+import java.util.Random;
 
 /**
  * This class contains methods which handle logic for making moves on a Rubik's Cube.
  */
-public class CubeMoves implements ITwistyMoves {
+public class CubeController implements IMoveController {
     
     private Cube cube;
 
@@ -22,6 +21,7 @@ public class CubeMoves implements ITwistyMoves {
         B, BPRIME, B2,
         D, DPRIME, D2;
 
+        // Set the inverse of each move
         static {
             U.setInverse(UPRIME); UPRIME.setInverse(U); U2.setInverse(U2);
             L.setInverse(LPRIME); LPRIME.setInverse(L); L2.setInverse(L2);
@@ -33,6 +33,10 @@ public class CubeMoves implements ITwistyMoves {
 
         private Move inverse;
 
+        /**
+         * Set the inverse of the move.
+         * @param inverse - The inverse of the move.
+         */
         private void setInverse(Move inverse) {
             this.inverse = inverse;
         }
@@ -62,8 +66,8 @@ public class CubeMoves implements ITwistyMoves {
         }
 
         /**
-         * Return the String representation of the move.
-         * (replaces PRIME with ')
+         * Return the String representation of the move (replaces PRIME with ').
+         * @returns The String representation of the move.
         */
         public String toString() {
             return name().replace("PRIME", "'");
@@ -83,7 +87,7 @@ public class CubeMoves implements ITwistyMoves {
      * @param moveName - The name of the move.
      * @return The Move object corresponding to the move name.
      */
-    public Move fromString(String moveName) {
+    public Move parseMove(String moveName) {
         switch (moveName) {
             case "U":  return Move.U;
             case "U'": return Move.UPRIME;
@@ -109,10 +113,10 @@ public class CubeMoves implements ITwistyMoves {
     
 
     /**
-     * Constructor for a CubeMoves object.
-     * @param cube - Reference to the Rubik's Cube.
+     * Constructor for a CubeController object.
+     * @param cube - The Rubik's Cube instance to control.
      */
-    public CubeMoves(Cube cube) {
+    public CubeController(Cube cube) {
         this.cube = cube;
     }
 
@@ -199,7 +203,7 @@ public class CubeMoves implements ITwistyMoves {
      */
     public boolean skipMove(IMove move, IMove lastMove) throws IllegalArgumentException {
         if (!(move instanceof Move) || !(lastMove instanceof Move)) {
-            throw new IllegalArgumentException("The move must be a Cube move.");
+            throw new IllegalArgumentException("Both moves must be Cube moves.");
         }
         Move baseMove = (Move) move.getBaseMove();
         Move lastBaseMove = (Move) lastMove.getBaseMove();
@@ -249,6 +253,23 @@ public class CubeMoves implements ITwistyMoves {
         return scramble;
     }
 
+
+    /**
+     * Rotate a set of cubies in the order specified by the position indices.
+     * @param cubies - The array of cubies to edit (either {@code cornerCubies} or {@code edgeCubies}).
+     * @param posIndices - An array of position indices in the order to rotate the cubies 
+     * (e.g. [EDGE_UL, EDGE_UF, EDGE_UR, EDGE_UB] would rotate these cubies in this order, 
+     * such that UL is replaced by UF, which is replaced by UR, etc.).
+     */
+    private void rotateCubies(Cubie[] cubies, byte[] posIndices) {
+        Cubie temp = cubies[posIndices[0]];
+
+        for (int i = 0; i < posIndices.length - 1; i++) {
+            cubies[posIndices[i]] = cubies[posIndices[(i + 1)]];
+        }
+        cubies[posIndices[posIndices.length - 1]] = temp;
+    }
+
     /**
      * Flip the orientation of an edge cubie.
      * @param posIndex - The position index of the edge cubie.
@@ -275,20 +296,6 @@ public class CubeMoves implements ITwistyMoves {
         else if (corner.orientation == 4) {
             corner.orientation = 1;
         }
-    }
-
-    /**
-     * Rotate a set of cubies in the order specified by the position indices.
-     * @param cubies - The array of cubies to edit (either {@code cornerCubies} or {@code edgeCubies}).
-     * @param posIndices - An array of position indices in the order to rotate the cubies (e.g. [EDGE_UL, EDGE_UF, EDGE_UR, EDGE_UB] would rotate these cubies in this order).
-     */
-    private void rotateCubies(Cubie[] cubies, byte[] posIndices) {
-        Cubie temp = cubies[posIndices[0]];
-
-        for (int i = 0; i < posIndices.length - 1; i++) {
-            cubies[posIndices[i]] = cubies[posIndices[(i + 1)]];
-        }
-        cubies[posIndices[posIndices.length - 1]] = temp;
     }
 
 
@@ -507,5 +514,4 @@ public class CubeMoves implements ITwistyMoves {
         rotateCubies(cube.edgeCubies, new byte[] {Cube.EDGE_DF, Cube.EDGE_DB});
         rotateCubies(cube.edgeCubies, new byte[] {Cube.EDGE_DL, Cube.EDGE_DR});
     }
-
 }

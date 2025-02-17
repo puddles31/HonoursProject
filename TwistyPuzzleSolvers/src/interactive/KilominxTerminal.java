@@ -1,7 +1,7 @@
 package interactive;
 
 import models.Kilominx;
-import models.KilominxMoves.Move;
+import models.KilominxController.Move;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -156,7 +156,7 @@ public class KilominxTerminal {
                 if (moveMatcher.matches()) {
                     String move = moveMatcher.group(1) + moveMatcher.group(2);
 
-                    kilominx.getMoveController().makeMove(kilominx.getMoveController().fromString(move));
+                    kilominx.getMoveController().makeMove(kilominx.getMoveController().parseMove(move));
                     break;
                 }
 

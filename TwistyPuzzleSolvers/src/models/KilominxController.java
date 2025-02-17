@@ -1,14 +1,13 @@
 package models;
 
+import models.ITwistyPuzzle.Cubie;
 import java.util.Arrays;
 import java.util.Random;
-
-import models.ITwistyPuzzle.Cubie;
 
 /**
  * This class contains methods which handle logic for making moves on a Kilominx.
  */
-public class KilominxMoves implements ITwistyMoves {
+public class KilominxController implements IMoveController {
     
     private Kilominx kilominx;
 
@@ -29,6 +28,7 @@ public class KilominxMoves implements ITwistyMoves {
         DB,  DB_PRIME,  DB_2,  DB_2PRIME,
         D,   D_PRIME,   D_2,   D_2PRIME;
 
+        // Set the inverse of each move
         static {
             U.setInverse(U_PRIME);     U_PRIME.setInverse(U);     U_2.setInverse(U_2PRIME);     U_2PRIME.setInverse(U_2);
             L.setInverse(L_PRIME);     L_PRIME.setInverse(L);     L_2.setInverse(L_2PRIME);     L_2PRIME.setInverse(L_2);
@@ -46,6 +46,10 @@ public class KilominxMoves implements ITwistyMoves {
 
         private Move inverse;
 
+        /**
+         * Set the inverse of the move.
+         * @param inverse - The inverse of the move.
+         */
         private void setInverse(Move inverse) {
             this.inverse = inverse;
         }
@@ -81,8 +85,8 @@ public class KilominxMoves implements ITwistyMoves {
         }
 
         /**
-         * Return the String representation of the move.
-         * (replaces PRIME with ', and removes underscores)
+         * Return the String representation of the move (replaces PRIME with ', and removes underscores).
+         * @return The String representation of the move.
          */
         public String toString() {
             return name().replace("PRIME", "'").replace("_", "");
@@ -102,7 +106,7 @@ public class KilominxMoves implements ITwistyMoves {
      * @param moveName - The name of the move.
      * @return The Move object corresponding to the move name.
      */
-    public Move fromString(String moveName) {
+    public Move parseMove(String moveName) {
         switch (moveName) {
             case "U":    return Move.U;       case "U'":    return Move.U_PRIME;
             case "U2":   return Move.U_2;     case "U2'":   return Move.U_2PRIME;
@@ -134,10 +138,10 @@ public class KilominxMoves implements ITwistyMoves {
 
 
     /**
-     * Constructor for a KilominxMoves object.
-     * @param kilominx - Reference to the Kilominx.
+     * Constructor for a KilominxController object.
+     * @param kilominx - The Kilominx instance to control.
      */
-    public KilominxMoves(Kilominx kilominx) {
+    public KilominxController(Kilominx kilominx) {
         this.kilominx = kilominx;
     }
 
@@ -241,7 +245,7 @@ public class KilominxMoves implements ITwistyMoves {
      */
     public boolean skipMove(IMove move, IMove lastMove) throws IllegalArgumentException {
         if (!(move instanceof Move) || !(lastMove instanceof Move)) {
-            throw new IllegalArgumentException("The move must be a Kilominx move.");
+            throw new IllegalArgumentException("Both moves must be Kilominx moves.");
         }     
         Move baseMove = (Move) move.getBaseMove();
         Move lastBaseMove = (Move) lastMove.getBaseMove();
@@ -318,6 +322,22 @@ public class KilominxMoves implements ITwistyMoves {
         return scramble;
     }
 
+
+    /**
+     * Rotate a set of kubies in the order specified by the position indices.
+     * @param posIndices - An array of position indices in the order to rotate the kubies. The array should be of length 5. 
+     *  (e.g. [KUBIE_UFL, KUBIE_UFR, KUBIE_UBR, KUBIE_UBM, KUBIE_UBL] would rotate these kubies in this order, 
+     *  such that UFL is replaced by UFR, which is replaced by UBM, etc.).
+     */
+    private void rotateKubies(byte[] posIndices) {
+        Cubie temp = kilominx.kubies[posIndices[0]];
+
+        for (int i = 0; i < posIndices.length - 1; i++) {
+            kilominx.kubies[posIndices[i]] = kilominx.kubies[posIndices[(i + 1)]];
+        }
+        kilominx.kubies[posIndices[posIndices.length - 1]] = temp;
+    }
+
     /**
      * Increase the orientation of a kubie (modulo 3).
      * @param posIndex - The position index of the kubie.
@@ -335,21 +355,6 @@ public class KilominxMoves implements ITwistyMoves {
         else if (kubie.orientation == 4) {
             kubie.orientation = 1;
         }
-    }
-
-    /**
-     * Rotate a set of kubies in the order specified by the position indices.
-     * @param posIndices - An array of position indices in the order to rotate the kubies. The array should be of length 5. 
-     *  (e.g. [KUBIE_UFL, KUBIE_UFR, KUBIE_UBR, KUBIE_UBM, KUBIE_UBL] would rotate these kubies in this order, 
-     *  such that UFL is replaced by UFR, which is replaced by UBM, etc.).
-     */
-    private void rotateKubies(byte[] posIndices) {
-        Cubie temp = kilominx.kubies[posIndices[0]];
-
-        for (int i = 0; i < posIndices.length - 1; i++) {
-            kilominx.kubies[posIndices[i]] = kilominx.kubies[posIndices[(i + 1)]];
-        }
-        kilominx.kubies[posIndices[posIndices.length - 1]] = temp;
     }
 
 

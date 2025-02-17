@@ -80,7 +80,7 @@ public class Cube implements ITwistyPuzzle {
     Cubie[] cornerCubies = new Cubie[8];
 
     // moveController handles logic for making moves on the cube
-    private CubeMoves moveController;
+    private CubeController moveController;
 
 
     /**
@@ -98,7 +98,7 @@ public class Cube implements ITwistyPuzzle {
             cornerCubies[i] = new Cubie(i, (byte) 0);
         }
 
-        moveController = new CubeMoves(this);
+        moveController = new CubeController(this);
     }
 
     /**
@@ -121,7 +121,7 @@ public class Cube implements ITwistyPuzzle {
             cornerCubies[i] = new Cubie(otherCornerIndices[i], otherCornerOrientations[i]);
         }
 
-        moveController = new CubeMoves(this);
+        moveController = new CubeController(this);
     }
 
     /**
@@ -165,7 +165,7 @@ public class Cube implements ITwistyPuzzle {
             throw new IllegalArgumentException("Permutation parity error.");
         }
 
-        moveController = new CubeMoves(this);
+        moveController = new CubeController(this);
     }
 
     /**
@@ -373,7 +373,7 @@ public class Cube implements ITwistyPuzzle {
      * Get the move controller for the cube.
      * @return The move controller for the cube.
      */
-    public CubeMoves getMoveController() {
+    public CubeController getMoveController() {
         return moveController;
     }
 

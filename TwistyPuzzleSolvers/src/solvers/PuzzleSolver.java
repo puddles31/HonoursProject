@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import models.ITwistyPuzzle;
-import models.ITwistyMoves.IMove;
+import models.IMoveController.IMove;
 
 /**
  * This class contains methods used to solve a twisty puzzle using an IDA* search method, guaranteeing an optimal solution.

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import models.Cube;
 import models.ITwistyPuzzle;
-import models.ITwistyMoves.IMove;
+import models.IMoveController.IMove;
 import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;

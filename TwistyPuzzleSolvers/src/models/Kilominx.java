@@ -65,7 +65,7 @@ public class Kilominx implements ITwistyPuzzle {
     Cubie[] kubies = new Cubie[20];
 
     // moveController handles logic for making moves on the kilominx
-    private KilominxMoves moveController;
+    private KilominxController moveController;
 
 
     /**
@@ -78,7 +78,7 @@ public class Kilominx implements ITwistyPuzzle {
             kubies[i] = new Cubie(i, (byte) 0);
         }
 
-        moveController = new KilominxMoves(this);
+        moveController = new KilominxController(this);
     }
     
     /**
@@ -94,7 +94,7 @@ public class Kilominx implements ITwistyPuzzle {
             kubies[i] = new Cubie(otherIndices[i], otherOrientations[i]);
         }
 
-        moveController = new KilominxMoves(this);
+        moveController = new KilominxController(this);
     }
 
     // TODO: if adding EDIT feature, then need to add:
@@ -107,7 +107,7 @@ public class Kilominx implements ITwistyPuzzle {
      * Get the move controller for the kilominx.
      * @return The move controller for the kilominx.
      */
-    public KilominxMoves getMoveController() {
+    public KilominxController getMoveController() {
         return moveController;
     }
 

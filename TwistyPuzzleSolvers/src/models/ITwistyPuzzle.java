@@ -53,7 +53,7 @@ public interface ITwistyPuzzle {
      * Get the move controller (which holds logic for making moves) for the puzzle.
      * @return The move controller for the puzzle.
      */
-    ITwistyMoves getMoveController();
+    IMoveController getMoveController();
 
     /**
      * Create a copy of the puzzle.

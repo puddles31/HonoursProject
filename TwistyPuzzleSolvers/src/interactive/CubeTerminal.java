@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 import models.Cube;
 import models.Cube.Colour;
-import models.CubeMoves.Move;
-import models.ITwistyMoves.IMove;
+import models.CubeController.Move;
+import models.IMoveController.IMove;
 import solvers.CubeSolver;
 
 /**
@@ -146,7 +146,7 @@ public class CubeTerminal {
                 if (moveMatcher.matches()) {
                     String move = moveMatcher.group(1);
 
-                    cube.getMoveController().makeMove(cube.getMoveController().fromString(move));
+                    cube.getMoveController().makeMove(cube.getMoveController().parseMove(move));
                     break;
                 }
 
