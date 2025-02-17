@@ -1,16 +1,14 @@
 package solvers;
 
+import models.ITwistyPuzzle;
+import models.IMoveController.IMove;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-import models.ITwistyPuzzle;
-import models.IMoveController.IMove;
-
 /**
- * This class contains methods used to solve a twisty puzzle using an IDA* search method, guaranteeing an optimal solution.
- * @see patterndatabases.PatternDatabase
+ * This abstract class contains methods used to solve a twisty puzzle using an IDA* search method, guaranteeing an optimal solution.
  */
 public abstract class PuzzleSolver {
 
@@ -30,7 +28,7 @@ public abstract class PuzzleSolver {
      * @return The maximum number of moves required to solve one of the subsets of cubies.
      * @throws IllegalArgumentException if the puzzle does not match the puzzle type of the solver.
      */
-    public abstract byte getMaxNumberOfMoves(ITwistyPuzzle puzzle) throws IllegalArgumentException;
+    protected abstract byte getMaxNumberOfMoves(ITwistyPuzzle puzzle) throws IllegalArgumentException;
 
     /**
      * Get the maximum number of moves required to solve a puzzle state across all databases.
@@ -42,7 +40,7 @@ public abstract class PuzzleSolver {
      * @return The maximum number of moves required to solve one of the subsets of cubies.
      * @throws IllegalArgumentException if the puzzle does not match the puzzle type of the solver.
      */
-    public abstract byte getMaxNumberOfMoves(ITwistyPuzzle puzzle, byte boundHint, byte depthHint) throws IllegalArgumentException;
+    protected abstract byte getMaxNumberOfMoves(ITwistyPuzzle puzzle, byte boundHint, byte depthHint) throws IllegalArgumentException;
 
 
     /**
@@ -60,7 +58,7 @@ public abstract class PuzzleSolver {
          * @param move - The move used to get to the node.
          * @param depth - The depth of the node.
          */
-        public IDAStarNode(ITwistyPuzzle puzzle, IMove move, byte depth) {
+        private IDAStarNode(ITwistyPuzzle puzzle, IMove move, byte depth) {
             this.puzzle = puzzle;
             this.move = move;
             this.depth = depth;
@@ -76,7 +74,13 @@ public abstract class PuzzleSolver {
         IMove move;
         byte estimatedMoves;
 
-        public PrioritizedMove(ITwistyPuzzle puzzle, IMove move, byte estimatedMoves) {
+        /**
+         * Constructor for a PrioritizedMove.
+         * @param puzzle - The puzzle state after the move.
+         * @param move - The move used to get to the puzzle state.
+         * @param estimatedMoves - The estimated number of moves to solve the puzzle state.
+         */
+        private PrioritizedMove(ITwistyPuzzle puzzle, IMove move, byte estimatedMoves) {
             this.puzzle = puzzle;
             this.move = move;
             this.estimatedMoves = estimatedMoves;
@@ -129,7 +133,7 @@ public abstract class PuzzleSolver {
                 nextBound = Byte.MAX_VALUE;
             }
 
-            // Pop node off of top of stac
+            // Pop node off of top of stack
             currentNode = nodeStack.removeFirst();
 
             // Update the moves array
@@ -188,5 +192,4 @@ public abstract class PuzzleSolver {
         System.out.println("IDA*: Solution found at depth " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
         return Arrays.copyOf(moves, bound);
     }
-
 }

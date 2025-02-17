@@ -1,8 +1,8 @@
 package patterndatabases;
 
+import models.ITwistyPuzzle;
 import java.util.Arrays;
 import java.util.BitSet;
-import models.ITwistyPuzzle;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
@@ -81,7 +81,7 @@ public abstract class PatternDatabase {
      * @param noMoves - The number of moves required to solve the subset of cubies.
      * @return {@code true} if the number of moves was set successfully, {@code false} if the number of moves was already set.
      */
-    public boolean setNumberOfMoves(int index, byte noMoves) {
+    private boolean setNumberOfMoves(int index, byte noMoves) {
         // If database entry is not set (MAX_VALUE is the initial val), increment the number of set entries
         if (database[index] == Byte.MAX_VALUE) {
             entriesSet++;
@@ -105,7 +105,7 @@ public abstract class PatternDatabase {
      * @param noMoves - The number of moves required to solve the subset of cubies.
      * @return {@code true} if the number of moves was set successfully, {@code false} if the number of moves was already set.
      */
-    public boolean setNumberOfMoves(ITwistyPuzzle puzzle, byte noMoves) {
+    boolean setNumberOfMoves(ITwistyPuzzle puzzle, byte noMoves) {
         return setNumberOfMoves(getDatabaseIndex(puzzle), noMoves);
     }
     
@@ -123,31 +123,15 @@ public abstract class PatternDatabase {
      * @param index - The database index to get the number of moves for.
      * @return The number of moves required to solve the subset of cubies.
      */
-    public byte getNumberOfMoves(int index) {
+    byte getNumberOfMoves(int index) {
         return database[index];
-    }
-
-    /**
-     * Get the size of the database.
-     * @return The size of the database.
-     */
-    public int getDatabaseSize() {
-        return database.length;
-    }
-
-    /**
-     * Get the number of entries set in the database.
-     * @return The number of entries set in the database.
-     */
-    public int getEntriesSet() {
-        return entriesSet;
     }
 
     /**
      * Check if the database is full (all entries have been set).
      * @return {@code true} if the database is full, {@code false} if there are still unset entries.
      */
-    public boolean isFull() {
+    boolean isFull() {
         return entriesSet == database.length;
     }
 
@@ -209,7 +193,7 @@ public abstract class PatternDatabase {
      * Write the pattern database to a file.
      * @param path - The name of the file to write the database to (should end in .pdb).
      */
-    public void writeDatabaseToFile(String filename) {
+    protected void writeDatabaseToFile(String filename) {
         try {
             final String DATABASES_PATH = "TwistyPuzzleSolvers/databases/";
 

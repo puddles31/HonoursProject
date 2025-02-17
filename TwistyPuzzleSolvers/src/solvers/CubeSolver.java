@@ -6,10 +6,11 @@ import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;
 
-
+/**
+ * An optimal solver for a Rubik's Cube.
+ */
 public class CubeSolver extends PuzzleSolver {
     
-    // Cube cube;
     CornerPatternDatabase cornerPDB;
     FirstEdgePatternDatabase firstEdgePDB;
     SecondEdgePatternDatabase secondEdgePDB;
@@ -17,9 +18,9 @@ public class CubeSolver extends PuzzleSolver {
     /**
      * Constructor for a CubeSolver object. Initialises the pattern databases for the cube.
      * @param cube - The cube to solve.
+     * @throws IllegalStateException if any of the pattern databases fail to load.
      */
-    public CubeSolver(Cube cube) {
-        // this.cube = cube;
+    public CubeSolver(Cube cube) throws IllegalStateException {
         super(cube);
 
         cornerPDB = new CornerPatternDatabase();
@@ -27,12 +28,18 @@ public class CubeSolver extends PuzzleSolver {
         secondEdgePDB = new SecondEdgePatternDatabase();
 
         System.out.println("Loading pattern databases...");
+        boolean readSuccess;
 
-        cornerPDB.readDatabaseFromFile("corners.pdb");
-        firstEdgePDB.readDatabaseFromFile("first_edges.pdb");
-        secondEdgePDB.readDatabaseFromFile("second_edges.pdb");
+        readSuccess = cornerPDB.readDatabaseFromFile("cube/corners.pdb");
+        readSuccess = firstEdgePDB.readDatabaseFromFile("cube/first_edges.pdb");
+        readSuccess = secondEdgePDB.readDatabaseFromFile("cube/second_edges.pdb");
 
-        System.out.println("Pattern databases loaded.");
+        if (readSuccess) {
+            System.out.println("Pattern databases loaded successfully.");
+        }
+        else {
+            throw new IllegalStateException("Failed to load pattern databases.");   
+        }
     }
 
 
@@ -42,7 +49,7 @@ public class CubeSolver extends PuzzleSolver {
      * @return The maximum number of moves required to solve one of the subsets of cubies.
      * @throws IllegalArgumentException if the puzzle is not a Cube.
      */
-    public byte getMaxNumberOfMoves(ITwistyPuzzle puzzle) throws IllegalArgumentException{
+    protected byte getMaxNumberOfMoves(ITwistyPuzzle puzzle) throws IllegalArgumentException {
         if (!(puzzle instanceof Cube)) {
             throw new IllegalArgumentException("The puzzle must be a Cube.");
         }
@@ -61,7 +68,7 @@ public class CubeSolver extends PuzzleSolver {
      * @return The maximum number of moves required to solve one of the subsets of cubies.
      * @throws IllegalArgumentException if the puzzle is not a Cube.
      */
-    public byte getMaxNumberOfMoves(ITwistyPuzzle puzzle, byte boundHint, byte depthHint) throws IllegalArgumentException {
+    protected byte getMaxNumberOfMoves(ITwistyPuzzle puzzle, byte boundHint, byte depthHint) throws IllegalArgumentException {
         if (!(puzzle instanceof Cube)) {
             throw new IllegalArgumentException("The puzzle must be a Cube.");
         }
@@ -105,5 +112,4 @@ public class CubeSolver extends PuzzleSolver {
         // No estimate exceeded the bound, return the maximum estimate
         return max;
     }
-
 }

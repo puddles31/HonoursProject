@@ -1,44 +1,43 @@
 package patterndatabases;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-
 import models.Cube;
 import models.ITwistyPuzzle;
 import models.IMoveController.IMove;
 import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 /**
- * This class contains methods to populate the pattern databases for the Rubik's Cube.
- * Usage: java PopulatePatternDatabases [--corners | --first-edges | --second-edges]
+ * This class contains methods to populate the pattern databases for the Rubik's Cube and Kilominx.
+ * Usage: java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges]
  */
 public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("java PopulatePatternDatabases [--corners | --first-edges | --second-edges]");
+            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges]");
             System.exit(1);
         }
-        else if (args[0].equals("--corners")) {
+        else if (args[0].equals("--cube-corners")) {
             populateCornerDatabase();
         }
-        else if (args[0].equals("--first-edges")) {
+        else if (args[0].equals("--cube-first-edges")) {
             populateFirstEdgeDatabase();
         }
-        else if (args[0].equals("--second-edges")) {
+        else if (args[0].equals("--cube-second-edges")) {
             populateSecondEdgeDatabase();
         }
         else {
-            System.err.println("java PopulatePatternDatabases [--corners | --first-edges | --second-edges]");
+            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges]");
             System.exit(1);
         }
     }
 
 
     /**
-     * Populate the corner pattern database.
+     * Populate the corner pattern database for the Rubik's Cube.
      */
     private static void populateCornerDatabase() {
         Cube cube = new Cube();
@@ -46,12 +45,12 @@ public class PopulatePatternDatabases {
         System.out.println("Populating corner database...");
 
         breadthFirstSearch(cube, cornerPDB);
-        cornerPDB.writeDatabaseToFile("corners.pdb");
+        cornerPDB.writeDatabaseToFile("cube/corners.pdb");
         System.out.println("Corner database populated.");
     }
 
     /**
-     * Populate the first edge pattern database.
+     * Populate the first edge pattern database for the Rubik's Cube.
      */
     private static void populateFirstEdgeDatabase() {
         Cube cube = new Cube();
@@ -59,7 +58,7 @@ public class PopulatePatternDatabases {
         System.out.println("Populating first edge database...");
 
         iterativeDeepeningDepthFirstSearch(cube, firstEdgePDB);
-        firstEdgePDB.writeDatabaseToFile("first_edges.pdb");
+        firstEdgePDB.writeDatabaseToFile("cube/first_edges.pdb");
         System.out.println("First edge database populated.\n");
     }
 
@@ -72,7 +71,7 @@ public class PopulatePatternDatabases {
         System.out.println("Populating second edge database...");
 
         iterativeDeepeningDepthFirstSearch(cube, secondEdgePDB);
-        secondEdgePDB.writeDatabaseToFile("second_edges.pdb");
+        secondEdgePDB.writeDatabaseToFile("cube/second_edges.pdb");
         System.out.println("Second edge database populated.\n");
     }
 
@@ -98,7 +97,7 @@ public class PopulatePatternDatabases {
 
     /**
      * Perform a breadth-first search to populate a pattern database.
-     * This method should only be used for the Rubik's Cube corner pattern database, as it is not efficient enough for the other pattern databases.
+     * This method should only be used for the Rubik's Cube corner pattern database, as it is not memory-efficient enough for the other pattern databases.
      * @param puzzle - The initial (solved) puzzle state to search from.
      * @param database - The pattern database to populate.
      */
