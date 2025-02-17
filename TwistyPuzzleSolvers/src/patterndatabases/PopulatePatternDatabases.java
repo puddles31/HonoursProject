@@ -1,23 +1,25 @@
 package patterndatabases;
 
 import models.Cube;
+import models.Kilominx;
 import models.ITwistyPuzzle;
 import models.IMoveController.IMove;
 import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;
+import patterndatabases.kilominx.TopFacePatternDatabase;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 /**
  * This class contains methods to populate the pattern databases for the Rubik's Cube and Kilominx.
- * Usage: java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges]
+ * Usage: java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top]
  */
 public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges]");
+            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top]");
             System.exit(1);
         }
         else if (args[0].equals("--cube-corners")) {
@@ -29,8 +31,11 @@ public class PopulatePatternDatabases {
         else if (args[0].equals("--cube-second-edges")) {
             populateSecondEdgeDatabase();
         }
+        else if (args[0].equals("--kilominx-top")) {
+            populateTopFaceDatabase();
+        }
         else {
-            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges]");
+            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top]");
             System.exit(1);
         }
     }
@@ -73,6 +78,20 @@ public class PopulatePatternDatabases {
         iterativeDeepeningDepthFirstSearch(cube, secondEdgePDB);
         secondEdgePDB.writeDatabaseToFile("cube/second_edges.pdb");
         System.out.println("Second edge database populated.\n");
+    }
+
+
+    /**
+     * Populate the top face pattern dataabase for the Kilominx.
+     */
+    private static void populateTopFaceDatabase() {
+        Kilominx kilominx = new Kilominx();
+        TopFacePatternDatabase topFacePDB = new TopFacePatternDatabase();
+        System.out.println("Populating top face database...");
+
+        iterativeDeepeningDepthFirstSearch(kilominx, topFacePDB);
+        topFacePDB.writeDatabaseToFile("kilominx/top_face.pdb");
+        System.out.println("Top face database populated.\n");
     }
 
 

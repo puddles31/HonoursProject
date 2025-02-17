@@ -5,7 +5,7 @@ import models.Cube;
 import models.ITwistyPuzzle;
 
 /**
- * The pattern database for the last 7 edge cubies.
+ * The pattern database for the last 7 edge cubies of a Rubik's Cube.
  * @see PatternDatabase
  */
 public class SecondEdgePatternDatabase extends PatternDatabase {

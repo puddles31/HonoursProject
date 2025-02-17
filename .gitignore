@@ -12,3 +12,6 @@
 
 # Java class files
 *.class
+
+# VSCode settings
+.vscode/

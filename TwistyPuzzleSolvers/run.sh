@@ -2,7 +2,7 @@
 
 srcdir="TwistyPuzzleSolvers/src"
 
-javac -d TwistyPuzzleSolvers/classes $srcdir/models/*.java $srcdir/patterndatabases/*.java $srcdir/patterndatabases/cube/*.java $srcdir/solvers/*.java $srcdir/interactive/*.java
+javac -d TwistyPuzzleSolvers/classes $srcdir/models/*.java $srcdir/patterndatabases/*.java $srcdir/patterndatabases/cube/*.java $srcdir/patterndatabases/kilominx/*.java $srcdir/solvers/*.java $srcdir/interactive/*.java
 
 if [[ $1 == "cube" && $2 == "terminal" ]]; then
     java -cp TwistyPuzzleSolvers/classes interactive.CubeTerminal

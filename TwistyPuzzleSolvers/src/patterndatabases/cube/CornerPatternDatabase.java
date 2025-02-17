@@ -5,7 +5,7 @@ import models.Cube;
 import models.ITwistyPuzzle;
 
 /**
- * The pattern database for the corner cubies.
+ * The pattern database for the corner cubies of a Rubik's Cube.
  * @see PatternDatabase
  */
 public class CornerPatternDatabase extends PatternDatabase {
