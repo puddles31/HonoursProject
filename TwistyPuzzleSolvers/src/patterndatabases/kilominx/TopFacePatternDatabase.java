@@ -43,11 +43,22 @@ public class TopFacePatternDatabase extends PatternDatabase {
         for (byte i = 0; i < 20; i++) {
             int kubieIndex = allKubieIndices[i];
 
-            if (kubieIndex < 5) {
+            if (kubieIndex < 3) {
                 kubieIndices[kubieIndex] = i;
                 kubieOrientations[kubieIndex] = allKubieOrientations[i];
                 counter++;
             }
+            else if (kubieIndex == 4) {
+                kubieIndices[3] = i;
+                kubieOrientations[3] = allKubieOrientations[i];
+                counter++;
+            }
+            else if (kubieIndex == 6) {
+                kubieIndices[4] = i;
+                kubieOrientations[4] = allKubieOrientations[i];
+                counter++;
+            }
+
             if (counter == 5) {
                 break;
             }
