@@ -11,7 +11,7 @@ import models.ITwistyPuzzle;
 public class TopFacePatternDatabase extends PatternDatabase {
     
     // For this database, we are looking at the 5 out of 20 kubies, so n=20 and k=5
-    // There are 20(P)5 * 3^5 (5 of 20 kubies; each of 5 edges can be in one of 3 orientations) = 452096640 possible states
+    // There are 20(P)5 * 3^5 (5 of 20 kubies; each of 5 kubies can be in one of 3 orientations) = 452096640 possible states
     // Also note that roughly 431MB storage needed (452096640 bytes / 1024^2 = ~431MB)
     final static int DATABASE_SIZE = 452096640;
     final static byte N = 20, K = 5;
@@ -34,11 +34,11 @@ public class TopFacePatternDatabase extends PatternDatabase {
         byte[] allKubieIndices = kilominx.getKubieIndices();
         byte[] allKubieOrientations = kilominx.getKubieOrientations();
 
-        // Get the first 5 kubie indices and orientations from the cube
+        // Get the top face kubie indices and orientations from the kilominx
         byte[] kubieIndices = new byte[5];
         byte[] kubieOrientations = new byte[5];
 
-        // Iterate over kubies until the first 5 are found
+        // Iterate over kubies until the 5 on the top face are found
         int counter = 0;
         for (byte i = 0; i < 20; i++) {
             int kubieIndex = allKubieIndices[i];
