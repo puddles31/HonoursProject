@@ -21,7 +21,8 @@ public abstract class PatternDatabase {
     private int entriesSet;
 
     private byte n, k;
-    private int[] binaryOnesTable, factorialsTable;
+    private int[] binaryOnesTable;
+    private long[] factorialsTable;
 
 
     /**
@@ -51,7 +52,7 @@ public abstract class PatternDatabase {
         }
 
         // Precomputed table for factorials
-        factorialsTable = new int[k];
+        factorialsTable = new long[k];
 
         for (int i = 0; i < k; i++) {
             factorialsTable[i] = factorial(n - 1 - i) / factorial((n - 1 - i) - (k - 1 - i));
@@ -63,12 +64,12 @@ public abstract class PatternDatabase {
      * @param n - The number to calculate the factorial of.
      * @return The factorial of the given number.
      */
-    private static int factorial(int n) {
+    private static long factorial(int n) {
         if (n <= 1) {
-            return 1;
+            return (long) 1;
         }
         else {
-            return n * factorial(n - 1);
+            return (long) n * factorial(n - 1);
         }
     }
 
