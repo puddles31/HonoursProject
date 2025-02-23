@@ -8,6 +8,8 @@ import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;
 import patterndatabases.kilominx.TopFacePatternDatabase;
+
+import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -274,6 +276,7 @@ public class PopulatePatternDatabases {
         int currentDepth = 0;
         int statesIndexed = 0;
         long startTime = System.currentTimeMillis();
+        Duration dur;
         
         // Set the number of moves in the database to solve the initial state to 0
         database.setNumberOfMoves(puzzle, (byte) 0);
@@ -284,7 +287,9 @@ public class PopulatePatternDatabases {
 
             // If depth level is complete
             if (nodeStack.isEmpty()) {
-                System.out.println("IDDFS: finished depth " + currentDepth + " after " + ((System.currentTimeMillis() - startTime) / 1000.0) + "s. Indexed " + statesIndexed + " states.");
+                dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
+                System.out.println("IDDFS: finished depth " + currentDepth + " after " + 
+                                   String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()) + ". Indexed " + statesIndexed + " states.");
                 currentDepth++;
 
                 // Push the root node onto the stack
@@ -317,7 +322,9 @@ public class PopulatePatternDatabases {
                     if (puzzleCopyDepth == currentDepth) {
                         if (database.setNumberOfMoves(puzzleCopy, puzzleCopyDepth)) {
                             statesIndexed++;
-                            System.out.print("states indexed: " + statesIndexed + "\r");
+                            dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
+                            System.out.print("states indexed: " + statesIndexed + 
+                                             ", time elapsed: " + String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()) + "\r");
                         }
                     }
                     else {
@@ -326,9 +333,10 @@ public class PopulatePatternDatabases {
                 }
             }
         }
+        dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
         System.out.println("Iterative-deepening depth-first search complete. " +
                            "Indexed " + statesIndexed + " states. " +
-                           "Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000.0) + "s");
+                           "Elapsed time: " + String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()));
     }
     
 }
