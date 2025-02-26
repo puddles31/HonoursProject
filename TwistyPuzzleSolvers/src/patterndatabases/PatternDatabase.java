@@ -194,13 +194,13 @@ public abstract class PatternDatabase {
      * Write the pattern database to a file.
      * @param path - The name of the file to write the database to (should end in .pdb).
      */
-    protected void writeDatabaseToFile(String filename) {
+    protected void writeDatabaseToFile(String dirname, String filename) {
         try {
             final String DATABASES_PATH = "TwistyPuzzleSolvers/databases/";
 
             // Create the file and directories if they don't exist
-            new File(DATABASES_PATH).mkdirs();
-            File databaseFile = new File(DATABASES_PATH + filename);
+            new File(DATABASES_PATH + dirname).mkdirs();
+            File databaseFile = new File(DATABASES_PATH + dirname + filename);
             databaseFile.createNewFile();
 
             // Write the database to the file

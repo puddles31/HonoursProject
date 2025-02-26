@@ -52,7 +52,7 @@ public class PopulatePatternDatabases {
         System.out.println("Populating corner database...");
 
         breadthFirstSearch(cube, cornerPDB);
-        cornerPDB.writeDatabaseToFile("cube/corners.pdb");
+        cornerPDB.writeDatabaseToFile("cube/", "corners.pdb");
         System.out.println("Corner database populated.");
     }
 
@@ -65,7 +65,7 @@ public class PopulatePatternDatabases {
         System.out.println("Populating first edge database...");
 
         iterativeDeepeningDepthFirstSearch(cube, firstEdgePDB);
-        firstEdgePDB.writeDatabaseToFile("cube/first_edges.pdb");
+        firstEdgePDB.writeDatabaseToFile("cube/", "first_edges.pdb");
         System.out.println("First edge database populated.\n");
     }
 
@@ -78,7 +78,7 @@ public class PopulatePatternDatabases {
         System.out.println("Populating second edge database...");
 
         iterativeDeepeningDepthFirstSearch(cube, secondEdgePDB);
-        secondEdgePDB.writeDatabaseToFile("cube/second_edges.pdb");
+        secondEdgePDB.writeDatabaseToFile("cube/", "second_edges.pdb");
         System.out.println("Second edge database populated.\n");
     }
 
@@ -92,7 +92,7 @@ public class PopulatePatternDatabases {
         System.out.println("Populating top face database...");
 
         iterativeDeepeningDepthFirstSearch(kilominx, topFacePDB);
-        topFacePDB.writeDatabaseToFile("kilominx/top_face.pdb");
+        topFacePDB.writeDatabaseToFile("kilominx/", "top_face.pdb");
         System.out.println("Top face database populated.\n");
     }
 
