@@ -10,7 +10,7 @@ import models.ITwistyPuzzle;
  */
 public class TopFacePatternDatabase extends PatternDatabase {
     
-    // For this database, we are looking at the 5 out of 20 kubies, so n=20 and k=5
+    // For this database, we are looking at 5 out of 20 kubies, so n=20 and k=5
     // There are 20(P)5 * 3^5 (5 of 20 kubies; each of 5 kubies can be in one of 3 orientations) = 452096640 possible states
     // Also note that roughly 431MB storage needed (452096640 bytes / 1024^2 = ~431MB)
     final static int DATABASE_SIZE = 452096640;
