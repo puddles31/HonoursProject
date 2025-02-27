@@ -8,7 +8,7 @@ import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;
 import patterndatabases.kilominx.TopFacePatternDatabase;
-
+import patterndatabases.kilominx.SparseKubiesPatternDatabase;
 import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top]");
+            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top | --kilominx-sparse]");
             System.exit(1);
         }
         else if (args[0].equals("--cube-corners")) {
@@ -36,8 +36,11 @@ public class PopulatePatternDatabases {
         else if (args[0].equals("--kilominx-top")) {
             populateTopFaceDatabase();
         }
+        else if (args[0].equals("--kilominx-sparse")) {
+            populateSparseKubiesDatabase();
+        }
         else {
-            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top]");
+            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top | --kilominx-sparse]");
             System.exit(1);
         }
     }
@@ -94,6 +97,19 @@ public class PopulatePatternDatabases {
         iterativeDeepeningDepthFirstSearch(kilominx, topFacePDB);
         topFacePDB.writeDatabaseToFile("kilominx/", "top_face.pdb");
         System.out.println("Top face database populated.\n");
+    }
+
+    /**
+     * Populate the sparse kubies pattern dataabase for the Kilominx.
+     */
+    private static void populateSparseKubiesDatabase() {
+        Kilominx kilominx = new Kilominx();
+        SparseKubiesPatternDatabase sparseKubiesPDB = new SparseKubiesPatternDatabase();
+        System.out.println("Populating sparse kubies database...");
+
+        iterativeDeepeningDepthFirstSearch(kilominx, sparseKubiesPDB);
+        sparseKubiesPDB.writeDatabaseToFile("kilominx/", "sparse_kubies.pdb");
+        System.out.println("Sparse kubies database populated.\n");
     }
 
 

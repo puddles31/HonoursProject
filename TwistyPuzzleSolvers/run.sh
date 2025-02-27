@@ -13,8 +13,8 @@ elif [[ $1 == "kilominx" && $2 == "terminal" ]]; then
 elif [[ $1 == "kilominx" && $2 == "gui" ]]; then
     # java -cp TwistyPuzzleSolvers/classes interactive.KilominxGUI
     echo "GUI not implemented yet!"
-elif [[ $1 == "patterndatabase" ]]; then
+elif [[ $1 == "pdb" ]]; then
     java -cp TwistyPuzzleSolvers/classes patterndatabases.PopulatePatternDatabases $2
 else 
-    echo "Usage: run.sh [cube|kilominx|patterndatabase] [terminal|gui|pdb-flag]"
+    echo "Usage: run.sh [cube|kilominx|pdb] [terminal|gui|pdb-flag]"
 fi
