@@ -6,7 +6,13 @@ import models.ITwistyPuzzle;
 
 /**
  * The pattern database for a sparse selection of kubies of a Kilominx. 
- * More specifically, it looks at kubie indices 0 (UFL), 7 (MBR), 13 (DFM), 14 (BLD).
+ * Depending on the selected set number, it looks at kubie indices:
+ *   0 (UFL), 7 (MBR), 13 (DFM), 14 (BLD)   (set 1)
+ *   2 (UFR), 9 (MBM), 16 (FLD), 18 (DFR)   (set 2)
+ *   4 (UBR), 8 (FMD), 11 (MBL), 19 (DBR)   (set 3)
+ *   6 (UBM), 3 (MFL), 10 (FRD), 17 (DBL)   (set 4)
+ *   1 (UBL), 5 (MFR), 12 (BRD), 15 (DFL)   (set 5)
+ * 
  * @see PatternDatabase
  */
 public class SparseKubiesPatternDatabase extends PatternDatabase {
@@ -17,12 +23,44 @@ public class SparseKubiesPatternDatabase extends PatternDatabase {
     final static int DATABASE_SIZE = 9418680;
     final static byte N = 20, K = 4;
 
+    // Kubie sets
+    static final byte[] SET_1 = {0, 7, 13, 14};
+    static final byte[] SET_2 = {2, 9, 16, 18};
+    static final byte[] SET_3 = {4, 8, 11, 19};
+    static final byte[] SET_4 = {3, 6, 10, 17};
+    static final byte[] SET_5 = {1, 5, 12, 15};
+
+    // The set of kubies to look at (see above)
+    byte[] set;
+
     /**
      * Constructor for the sparse kubies pattern database.
      * Sets the database size to 9418680, n to 20, and k to 4.
+     * @param setNo The set number of the kubies to look at (1-5)
+     * @throws IllegalArgumentException If the set number is not between 1 and 5
      */
-    public SparseKubiesPatternDatabase() {
+    public SparseKubiesPatternDatabase(int setNo) throws IllegalArgumentException {
         super(DATABASE_SIZE, N, K);
+
+        switch (setNo) {
+            case 1:
+                set = SET_1;
+                break;
+            case 2:
+                set = SET_2;
+                break;
+            case 3:
+                set = SET_3;
+                break;
+            case 4:
+                set = SET_4;
+                break;
+            case 5:
+                set = SET_5;
+                break;
+            default:
+                throw new IllegalArgumentException("The set number must be between 1 and 5.");
+        }
     }
 
     protected int getDatabaseIndex(ITwistyPuzzle puzzle) throws IllegalArgumentException {
@@ -44,22 +82,22 @@ public class SparseKubiesPatternDatabase extends PatternDatabase {
         for (byte i = 0; i < 20; i++) {
             int kubieIndex = allKubieIndices[i];
 
-            if (kubieIndex == 0) {
+            if (kubieIndex == set[0]) {
                 kubieIndices[0] = i;
                 kubieOrientations[0] = allKubieOrientations[i];
                 counter++;
             }
-            else if (kubieIndex == 7) {
+            else if (kubieIndex == set[1]) {
                 kubieIndices[1] = i;
                 kubieOrientations[1] = allKubieOrientations[i];
                 counter++;
             }
-            else if (kubieIndex == 13) {
+            else if (kubieIndex == set[2]) {
                 kubieIndices[2] = i;
                 kubieOrientations[2] = allKubieOrientations[i];
                 counter++;
             }
-            else if (kubieIndex == 14) {
+            else if (kubieIndex == set[3]) {
                 kubieIndices[3] = i;
                 kubieOrientations[3] = allKubieOrientations[i];
                 counter++;
