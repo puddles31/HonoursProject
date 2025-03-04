@@ -19,26 +19,26 @@ public class Kilominx implements ITwistyPuzzle {
     };
 
     // Kubies are indexed from 0 to 19 in the following order. The order itself is irrelevant, but the even/odd parity of the indices is important:
-    final static byte KUBIE_UFL = 0,   // even
-                      KUBIE_UFR = 2,   // even
-                      KUBIE_UBL = 1,   // odd
-                      KUBIE_UBR = 4,   // even
-                      KUBIE_UBM = 6,   // even
-                      KUBIE_MFL = 3,   // odd
-                      KUBIE_FMD = 8,   // even
-                      KUBIE_MFR = 5,   // odd
-                      KUBIE_FRD = 10,  // even
-                      KUBIE_MBR = 7,   // odd
-                      KUBIE_BRD = 12,  // even
-                      KUBIE_MBM = 9,   // odd
-                      KUBIE_BLD = 14,  // even
-                      KUBIE_MBL = 11,  // odd
-                      KUBIE_FLD = 16,  // even
-                      KUBIE_DFM = 13,  // odd
-                      KUBIE_DFL = 15,  // odd
-                      KUBIE_DFR = 18,  // even
-                      KUBIE_DBL = 17,  // odd 
-                      KUBIE_DBR = 19;  // odd
+    public final static byte KUBIE_UFL = 0,   // even
+                             KUBIE_UFR = 2,   // even
+                             KUBIE_UBL = 1,   // odd
+                             KUBIE_UBR = 4,   // even
+                             KUBIE_UBM = 6,   // even
+                             KUBIE_MFL = 3,   // odd
+                             KUBIE_FMD = 8,   // even
+                             KUBIE_MFR = 5,   // odd
+                             KUBIE_FRD = 10,  // even
+                             KUBIE_MBR = 7,   // odd
+                             KUBIE_BRD = 12,  // even
+                             KUBIE_MBM = 9,   // odd
+                             KUBIE_BLD = 14,  // even
+                             KUBIE_MBL = 11,  // odd
+                             KUBIE_FLD = 16,  // even
+                             KUBIE_DFM = 13,  // odd
+                             KUBIE_DFL = 15,  // odd
+                             KUBIE_DFR = 18,  // even
+                             KUBIE_DBL = 17,  // odd 
+                             KUBIE_DBR = 19;  // odd
 
     // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
     // 0,      2,      1,      4,      6,      3,      8,      5,      10,     7,      

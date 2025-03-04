@@ -7,40 +7,47 @@ import models.IMoveController.IMove;
 import patterndatabases.cube.CornerPatternDatabase;
 import patterndatabases.cube.FirstEdgePatternDatabase;
 import patterndatabases.cube.SecondEdgePatternDatabase;
-import patterndatabases.kilominx.TopFacePatternDatabase;
+import patterndatabases.kilominx.FaceKubiesPatternDatabase;
 import patterndatabases.kilominx.SparseKubiesPatternDatabase;
 import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class contains methods to populate the pattern databases for the Rubik's Cube and Kilominx.
- * Usage: java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top | --kilominx-sparse]
+ * Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse]
  */
 public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top | --kilominx-sparse]");
+            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse]");
             System.exit(1);
         }
-        else if (args[0].equals("--cube-corners")) {
+
+        Pattern facePdbPattern = Pattern.compile("^kilominx-face-([1-9]|1[0-2])$");
+        Matcher facePdbMatcher = facePdbPattern.matcher(args[0]);
+
+        if (args[0].equals("cube-corners")) {
             populateCornerDatabase();
         }
-        else if (args[0].equals("--cube-first-edges")) {
+        else if (args[0].equals("cube-first-edges")) {
             populateFirstEdgeDatabase();
         }
-        else if (args[0].equals("--cube-second-edges")) {
+        else if (args[0].equals("cube-second-edges")) {
             populateSecondEdgeDatabase();
         }
-        else if (args[0].equals("--kilominx-top")) {
-            populateTopFaceDatabase();
+        else if (facePdbMatcher.matches()) {
+            int setNo = Integer.valueOf(facePdbMatcher.group(1));
+            populateFaceKubiesDatabase(setNo);
         }
-        else if (args[0].equals("--kilominx-sparse")) {
+        else if (args[0].equals("kilominx-sparse")) {
             populateSparseKubiesDatabases();
         }
         else {
-            System.err.println("java PopulatePatternDatabases [--cube-corners | --cube-first-edges | --cube-second-edges | --kilominx-top | --kilominx-sparse]");
+            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse]");
             System.exit(1);
         }
     }
@@ -87,16 +94,49 @@ public class PopulatePatternDatabases {
 
 
     /**
-     * Populate the top face pattern dataabase for the Kilominx.
+     * Populate a face kubies pattern dataabase for the Kilominx.
+     * @param setNo - The set number for the face patttern database to populate (1-12).
+     * @throws IllegalArgumentException If the set number is not between 1 and 12
+     * @see FaceKubiesPatternDatabase
      */
-    private static void populateTopFaceDatabase() {
-        Kilominx kilominx = new Kilominx();
-        TopFacePatternDatabase topFacePDB = new TopFacePatternDatabase();
-        System.out.println("Populating top face database...");
+    private static void populateFaceKubiesDatabase(int setNo) throws IllegalArgumentException {
+        String face = "";
+        switch (setNo) {
+            case 1:
+                face = "top"; break;
+            case 2:
+                face = "left"; break;
+            case 3:
+                face = "front"; break;
+            case 4:
+                face = "right"; break;
+            case 5:
+                face = "back_left"; break;
+            case 6:
+                face = "back_right"; break;
+            case 7:
+                face = "down_left"; break;
+            case 8:
+                face = "down_right"; break;
+            case 9:
+                face = "down_back_left"; break;
+            case 10:
+                face = "down_back_right"; break;
+            case 11:
+                face = "down_back"; break;
+            case 12:
+                face = "down"; break;
+            default:
+                throw new IllegalArgumentException("The set number must be between 1 and 12.");
+        }
 
-        iterativeDeepeningDepthFirstSearch(kilominx, topFacePDB);
-        topFacePDB.writeDatabaseToFile("kilominx/", "top_face.pdb");
-        System.out.println("Top face database populated.\n");
+        Kilominx kilominx = new Kilominx();
+        FaceKubiesPatternDatabase facePDB = new FaceKubiesPatternDatabase(setNo);
+        System.out.println("Populating " + face.replaceAll("_", " ") + " face database...");
+
+        iterativeDeepeningDepthFirstSearch(kilominx, facePDB);
+        facePDB.writeDatabaseToFile("kilominx/", face + "_face.pdb");
+        System.out.println(face.replaceAll("_", " ") + " face database populated.\n");
     }
 
     /**

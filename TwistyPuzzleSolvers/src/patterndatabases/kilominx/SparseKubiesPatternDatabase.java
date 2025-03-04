@@ -24,11 +24,11 @@ public class SparseKubiesPatternDatabase extends PatternDatabase {
     final static byte N = 20, K = 4;
 
     // Kubie sets
-    static final byte[] SET_1 = {0, 7, 13, 14};
-    static final byte[] SET_2 = {2, 9, 16, 18};
-    static final byte[] SET_3 = {4, 8, 11, 19};
-    static final byte[] SET_4 = {3, 6, 10, 17};
-    static final byte[] SET_5 = {1, 5, 12, 15};
+    static final byte[] SET_1 = {Kilominx.KUBIE_UFL, Kilominx.KUBIE_MBR, Kilominx.KUBIE_DFM, Kilominx.KUBIE_BLD};
+    static final byte[] SET_2 = {Kilominx.KUBIE_UFR, Kilominx.KUBIE_MBM, Kilominx.KUBIE_FLD, Kilominx.KUBIE_DFR};
+    static final byte[] SET_3 = {Kilominx.KUBIE_UBR, Kilominx.KUBIE_FMD, Kilominx.KUBIE_MBL, Kilominx.KUBIE_DBR};
+    static final byte[] SET_4 = {Kilominx.KUBIE_UBM, Kilominx.KUBIE_MFL, Kilominx.KUBIE_FRD, Kilominx.KUBIE_DBL};
+    static final byte[] SET_5 = {Kilominx.KUBIE_UBL, Kilominx.KUBIE_MFR, Kilominx.KUBIE_BRD, Kilominx.KUBIE_DFL};
 
     // The set of kubies to look at (see above)
     byte[] set;
@@ -73,7 +73,6 @@ public class SparseKubiesPatternDatabase extends PatternDatabase {
         byte[] allKubieIndices = kilominx.getKubieIndices();
         byte[] allKubieOrientations = kilominx.getKubieOrientations();
 
-        // Get the kubie indices and orientations from the kilominx
         byte[] kubieIndices = new byte[4];
         byte[] kubieOrientations = new byte[4];
 
