@@ -2,14 +2,14 @@ package solvers;
 
 import models.Kilominx;
 import models.ITwistyPuzzle;
-import patterndatabases.kilominx.TopFacePatternDatabase;
+import patterndatabases.kilominx.FaceKubiesPatternDatabase;
 
 /**
  * An optimal solver for a Kilominx.
  */
 public class KilominxSolver extends PuzzleSolver {
     
-    TopFacePatternDatabase topfacePDB;
+    FaceKubiesPatternDatabase topFacePDB;
 
     /**
      * Constructor for a KilominxSolver object. Initialises the pattern databases for the kilominx.
@@ -19,12 +19,12 @@ public class KilominxSolver extends PuzzleSolver {
     public KilominxSolver(Kilominx kilominx) throws IllegalStateException {
         super(kilominx);
 
-        topfacePDB = new TopFacePatternDatabase();
+        topFacePDB = new FaceKubiesPatternDatabase(1);
 
         System.out.println("Loading pattern databases...");
         boolean readSuccess;
 
-        readSuccess = topfacePDB.readDatabaseFromFile("kilominx/top_face.pdb");
+        readSuccess = topFacePDB.readDatabaseFromFile("kilominx/top_face.pdb");
 
         if (readSuccess) {
             System.out.println("Pattern databases loaded successfully.");
@@ -47,7 +47,7 @@ public class KilominxSolver extends PuzzleSolver {
         }
         Kilominx kilominx = (Kilominx) puzzle;
         
-        return (byte) Math.max(topfacePDB.getNumberOfMoves(kilominx), 0);   // after adding more databases, math.max with each of them (remove 0)
+        return (byte) Math.max(topFacePDB.getNumberOfMoves(kilominx), 0);   // after adding more databases, math.max with each of them (remove 0)
     }
 
     /**
@@ -69,7 +69,7 @@ public class KilominxSolver extends PuzzleSolver {
         byte max, estimatedMoves;
 
         // Check estimated number of moves from top face PDB
-        estimatedMoves = topfacePDB.getNumberOfMoves(kilominx);
+        estimatedMoves = topFacePDB.getNumberOfMoves(kilominx);
         max = estimatedMoves;
 
         // If estimate exceeds the bound, return
