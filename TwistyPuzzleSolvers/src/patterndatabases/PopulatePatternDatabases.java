@@ -100,43 +100,17 @@ public class PopulatePatternDatabases {
      * @see FaceKubiesPatternDatabase
      */
     private static void populateFaceKubiesDatabase(int setNo) throws IllegalArgumentException {
-        String face = "";
-        switch (setNo) {
-            case 1:
-                face = "top"; break;
-            case 2:
-                face = "left"; break;
-            case 3:
-                face = "front"; break;
-            case 4:
-                face = "right"; break;
-            case 5:
-                face = "back_left"; break;
-            case 6:
-                face = "back_right"; break;
-            case 7:
-                face = "down_left"; break;
-            case 8:
-                face = "down_right"; break;
-            case 9:
-                face = "down_back_left"; break;
-            case 10:
-                face = "down_back_right"; break;
-            case 11:
-                face = "down_back"; break;
-            case 12:
-                face = "down"; break;
-            default:
-                throw new IllegalArgumentException("The set number must be between 1 and 12.");
+        if (setNo < 1 || setNo > 12) {
+            throw new IllegalArgumentException("The set number must be between 1 and 12.");
         }
 
         Kilominx kilominx = new Kilominx();
         FaceKubiesPatternDatabase facePDB = new FaceKubiesPatternDatabase(setNo);
-        System.out.println("Populating " + face.replaceAll("_", " ") + " face database...");
+        System.out.println("Populating face " + setNo + " database...");
 
         iterativeDeepeningDepthFirstSearch(kilominx, facePDB);
-        facePDB.writeDatabaseToFile("kilominx/", face + "_face.pdb");
-        System.out.println(face.replaceAll("_", " ") + " face database populated.\n");
+        facePDB.writeDatabaseToFile("kilominx/", "face_kubies_" + setNo + ".pdb");
+        System.out.println("Face " + setNo + " database populated.\n");
     }
 
     /**
