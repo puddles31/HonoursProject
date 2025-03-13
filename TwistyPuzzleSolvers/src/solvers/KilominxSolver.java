@@ -30,11 +30,14 @@ public class KilominxSolver extends PuzzleSolver {
             readSuccess = facePDBs[i].readDatabaseFromFile("kilominx/face_kubies_" + (i + 1) + ".pdb");
         }
 
-        sparsePDBs = new SparseKubiesPatternDatabase[5];
-        for (int i = 0; i < 5; i++) {
+        // TODO: Currently ignoring sparse PDB 4 as it is wrong
+        sparsePDBs = new SparseKubiesPatternDatabase[4];
+        for (int i = 0; i < 3; i++) {
             sparsePDBs[i] = new SparseKubiesPatternDatabase(i + 1);
             readSuccess = sparsePDBs[i].readDatabaseFromFile("kilominx/sparse_kubies_" + (i + 1) + ".pdb");
         }
+        sparsePDBs[3] = new SparseKubiesPatternDatabase(5);
+        readSuccess = sparsePDBs[3].readDatabaseFromFile("kilominx/sparse_kubies_" + (5) + ".pdb");
 
         if (readSuccess) {
             System.out.println("Pattern databases loaded successfully.");
@@ -61,13 +64,13 @@ public class KilominxSolver extends PuzzleSolver {
 
         for (FaceKubiesPatternDatabase facePDB : facePDBs) {
             byte estimatedMoves = facePDB.getNumberOfMoves(kilominx);
-            if (estimatedMoves < maxMoves) {
+            if (estimatedMoves > maxMoves) {
                 maxMoves = estimatedMoves;
             }
         }
         for (SparseKubiesPatternDatabase sparsePDB : sparsePDBs) {
             byte estimatedMoves = sparsePDB.getNumberOfMoves(kilominx);
-            if (estimatedMoves < maxMoves) {
+            if (estimatedMoves > maxMoves) {
                 maxMoves = estimatedMoves;
             }
         }
@@ -90,36 +93,56 @@ public class KilominxSolver extends PuzzleSolver {
             throw new IllegalArgumentException("The puzzle must be a Kilominx.");
         }
         Kilominx kilominx = (Kilominx) puzzle;
-        
+
         byte estimatedMoves, max = 0;
 
-        for (FaceKubiesPatternDatabase facePDB : facePDBs) {
+        FaceKubiesPatternDatabase facePDB;
+        for (int i = 0; i < facePDBs.length; i++) {
+            facePDB = facePDBs[i];
+
             // Check estimated number of moves from a face PDB
             estimatedMoves = facePDB.getNumberOfMoves(kilominx);
+            // System.out.print("\t Face PDB " + i + " has estimate " + estimatedMoves);
 
             // If estimate exceeds the bound, return
             if (estimatedMoves + depthHint > boundHint) {
+                // System.out.println(" (exceeded bound)");
                 return estimatedMoves;
             }
             // If estimate is greater than the current max, update max
             if (estimatedMoves > max) {
+                // System.out.println(" (new max)");
                 max = estimatedMoves;
             }
+            // else {
+            //     System.out.println();
+            // }
         }
-        for (SparseKubiesPatternDatabase sparsePDB : sparsePDBs) {
+
+        SparseKubiesPatternDatabase sparsePDB;
+        for (int i = 0; i < sparsePDBs.length; i++) {
+            sparsePDB = sparsePDBs[i];
+
             // Check estimated number of moves from a sparse PDB
             estimatedMoves = sparsePDB.getNumberOfMoves(kilominx);
+            // System.out.print("\t Sparse PDB " + i + " has estimate " + estimatedMoves);
 
             // If estimate exceeds the bound, return
             if (estimatedMoves + depthHint > boundHint) {
+                // System.out.println(" (exceeded bound)");
                 return estimatedMoves;
             }
             // If estimate is greater than the current max, update max
             if (estimatedMoves > max) {
+                // System.out.println(" (new max)");
                 max = estimatedMoves;
             }
+            // else {
+            //     System.out.println();
+            // }
         }
 
+        // System.out.println("\t No estimate exceeded the bound, returning max estimate of " + max);
         // No estimate exceeded the bound, return the maximum estimate
         return max;
     }

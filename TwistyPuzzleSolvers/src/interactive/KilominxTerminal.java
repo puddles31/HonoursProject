@@ -2,6 +2,8 @@ package interactive;
 
 import models.Kilominx;
 import models.KilominxController.Move;
+import models.IMoveController.IMove;
+import solvers.KilominxSolver;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -117,25 +119,22 @@ public class KilominxTerminal {
                 break;
             
             case "SOLVE":
-                // TODO: update after implementing solver
-                out = "ERROR: Solver not implemented yet.\n";
+                KilominxSolver solver = new KilominxSolver(kilominx);
+                try {
+                    IMove[] moves = solver.solve();
                 
-                // KilominxSolver solver = new KilominxSolver(kilominx);
-                // try {
-                //     Move[] moves = solver.solveKilominx();
-                
-                //     // Output and perform the moves to solve the kilominx
-                //     out = "Moves to solve the kilominx:\n";
-                //     for (int i = 0; i < moves.length; i++) {
-                //         out += moves[i] + "\n";
-                //         kilominx.moves.makeMove(moves[i]);
-                //     }
-                //     out += "\n";
+                    // Output and perform the moves to solve the kilominx
+                    out = "Moves to solve the kilominx:\n";
+                    for (int i = 0; i < moves.length; i++) {
+                        out += moves[i] + "\n";
+                        kilominx.getMoveController().makeMove(moves[i]);
+                    }
+                    out += "\n";
                     
-                // }
-                // catch (IllegalStateException e) {
-                //     out = "ERROR: " + e.getMessage() + "\n";
-                // }
+                }
+                catch (IllegalStateException e) {
+                    out = "ERROR: " + e.getMessage() + "\n";
+                }
 
                 break;
 
