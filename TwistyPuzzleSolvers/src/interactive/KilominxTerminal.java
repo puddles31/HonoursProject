@@ -1,6 +1,7 @@
 package interactive;
 
 import models.Kilominx;
+import models.Kilominx.Colour;
 import models.KilominxController.Move;
 import models.IMoveController.IMove;
 import solvers.KilominxSolver;
@@ -11,9 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * This class contains methods which allow the user to interact with a Kilominx.
- * If running the main method, the constructor should be called with {@code guiMode} set to {@code false}.
  * This will allow the user to make moves and enter commands via the terminal.
- * If {@code guiMode} is set to {@code true}, the user will not be able to edit the kilominx, but will be able to make moves and enter commands via the GUI.
  */
 public class KilominxTerminal {
 
@@ -31,14 +30,13 @@ public class KilominxTerminal {
 
     private Kilominx kilominx;
     private static Scanner sc;
-    private boolean guiMode;
     private Pattern movePattern, scramblePattern;
 
     /**
      * The main method which allows the user to interact with a Kilominx via the terminal by making moves or entering commands.
      */
     public static void main(String[] args) {
-        KilominxTerminal terminal = new KilominxTerminal(new Kilominx(), false);
+        KilominxTerminal terminal = new KilominxTerminal(new Kilominx());
 
         String input = ".";
 
@@ -63,20 +61,11 @@ public class KilominxTerminal {
     /**
      * Constructor for a kilominx terminal.
      * @param kilominx The kilominx to interact with.
-     * @param guiMode Whether the terminal is in GUI mode or not.
      */
-    public KilominxTerminal(Kilominx kilominx, boolean guiMode) {
+    public KilominxTerminal(Kilominx kilominx) {
         this.kilominx = kilominx;
-        this.guiMode = guiMode;
 
-        if (!guiMode) {
-            sc = new Scanner(System.in);
-        }
-        // TODO: remove else statement after GUI implemented
-        else {
-            System.out.println("ERROR: GUI mode not yet implemented.");
-            System.exit(0);
-        }
+        sc = new Scanner(System.in);
 
         movePattern = Pattern.compile("^(U|L|F|R|BL|BR|DL|DR|DBL|DBR|DB|D)(2?'?)$");
         scramblePattern = Pattern.compile("^SCRAMBLE ([0-9]+)$");
@@ -106,16 +95,7 @@ public class KilominxTerminal {
                 break;
             
             case "EDIT":
-                //TODO: update after implementing EDIT mode
-                out = "ERROR: Edit mode not implemented yet.\n";
-
-                // if (!guiMode) {
-                //     editCube();
-                // }
-                // else {
-                //     out = "ERROR: Cannot edit cube in GUI mode.\n";
-                // }
-
+                editKilominx();
                 break;
             
             case "SOLVE":
@@ -183,5 +163,68 @@ public class KilominxTerminal {
         return out;
     }
 
-    // TODO: implement private void editCube() method
+    /**
+     * Enter EDIT mode to allow the user to change the colours of the kilominx.
+     */
+    private void editKilominx() {
+        Colour[] colours = kilominx.getColours();
+        
+        System.out.println("Kilominx is now in EDIT mode. Enter a colour (Wh, DG, Re, DB, Ye, Pu, LB, Be, Pi, LG, Or, Gy) to change the selected cell. " +
+        "Enter '-' to go to the previous cell. Enter 'DONE' to exit EDIT mode.");    
+        
+        int index = 0;
+        String input = "";
+
+        // Keep asking for input until the user types "DONE"
+        while (!input.equals("DONE")) {
+            Kilominx.printEditState(colours, index);
+            if (index == 60) {
+                System.out.println("Press ENTER to finish editing. Enter '-' to go back and continue editing.");
+            }
+
+            input = sc.nextLine().toUpperCase();
+            
+            // Change the colour of the selected cell or move to next/previous cell based on the input
+            if (index < 60) {
+                switch (input) {
+                    case "WH": colours[index] = Colour.Wh; index++; break;
+                    case "DG": colours[index] = Colour.DG; index++; break;
+                    case "RE": colours[index] = Colour.Re; index++; break;
+                    case "DB": colours[index] = Colour.DB; index++; break;
+                    case "YE": colours[index] = Colour.Ye; index++; break;
+                    case "PU": colours[index] = Colour.Pu; index++; break;
+                    case "LB": colours[index] = Colour.LB; index++; break;
+                    case "BE": colours[index] = Colour.Be; index++; break;
+                    case "PI": colours[index] = Colour.Pi; index++; break;
+                    case "LG": colours[index] = Colour.LG; index++; break;
+                    case "OR": colours[index] = Colour.Or; index++; break;
+                    case "GY": colours[index] = Colour.Gy; index++; break;
+                    case "": index++; break;
+                    case "-": index--; break;
+                    case "DONE": break;
+                    default: break;
+                }
+            }
+            // If the user is at the last cell, allow them to finish editing by pressing ENTER
+            else {
+                if (input.equals("-")) {
+                    index--;
+                }
+                else if (input.equals("") || input.equals("DONE")) {
+                    break;
+                }
+            }
+
+            // Keep index between 0 and 60
+            index = Math.max(0, Math.min(index, 60));
+        }
+
+        // Convert the colours array to a kilominx state
+        try {
+            kilominx = new Kilominx(colours);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage() + " Kilominx reset to previous state.\n");
+        }
+    }
 }

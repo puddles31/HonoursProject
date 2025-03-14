@@ -147,7 +147,7 @@ public class Cube implements ITwistyPuzzle {
         }
 
         // Check for duplicate cubies
-        if (Stream.of(edgeCubies).distinct().count() != 12 || Stream.of(cornerCubies).distinct().count() != 8) {
+        if (Stream.of(edgeCubies).sorted().distinct().count() != 12 || Stream.of(cornerCubies).sorted().distinct().count() != 8) {
             throw new IllegalArgumentException("Duplicate cubie(s).");
         }
 
@@ -174,7 +174,7 @@ public class Cube implements ITwistyPuzzle {
      * @param cubies - The array of cubies to check.
      * @return The number of swaps needed to place the cubies in their correct positions.
      */
-    private int countSwaps(Cubie[] cubies) {
+    private static int countSwaps(Cubie[] cubies) {
         byte[] positions = new byte[cubies.length];
         for (int i = 0; i < cubies.length; i++) {
             positions[i] = cubies[i].index;
@@ -201,7 +201,7 @@ public class Cube implements ITwistyPuzzle {
      * @param index - The position index of the corner cubie.
      * @return The corner cubie at the given position index, or {@code null} if the cube state is invalid
      */
-    private Cubie cornerCubieFromColours(Colour[] colours, int index) {
+    private static Cubie cornerCubieFromColours(Colour[] colours, int index) {
         // Get the three colours of the cubie at the given position index
         Colour[] cubieColours = new Colour[3];
 
@@ -289,7 +289,7 @@ public class Cube implements ITwistyPuzzle {
      * @param index - The position index of the edge cubie.
      * @return The edge cubie at the given position index, or {@code null} if the cube state is invalid
      */
-    private Cubie edgeCubieFromColours(Colour[] colours, int index) {
+    private static Cubie edgeCubieFromColours(Colour[] colours, int index) {
         // Get the two colours of the cubie at the given position index
         Colour[] cubieColours = new Colour[2];
 

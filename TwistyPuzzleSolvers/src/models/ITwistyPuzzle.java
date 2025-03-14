@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 /**
  * Interface for a twisty puzzle (e.g. a Rubik's Cube, or a Kilominx).
  */
@@ -20,7 +22,7 @@ public interface ITwistyPuzzle {
     /**
      * Class for a cubie on a twisty puzzle.
      */
-    class Cubie {
+    class Cubie implements Comparable<Cubie> {
         // Cubies have an index (determines initial position and colours of cubie) and an orientation.
         byte index, orientation;
 
@@ -46,6 +48,20 @@ public interface ITwistyPuzzle {
 
             Cubie other = (Cubie) obj;
             return index == other.index && orientation == other.orientation;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(index, orientation);
+        }
+
+        @Override
+        public int compareTo(Cubie other) {
+            int i = Byte.compare(index, other.index);
+            if (i != 0) {
+                return i;
+            }
+            return Byte.compare(orientation, other.orientation);
         }
     }
 

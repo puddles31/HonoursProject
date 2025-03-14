@@ -1,5 +1,8 @@
 package models;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 /**
  * A Kilominx, represented as an array of "kubies" (Kilominx cubies).
  */
@@ -10,11 +13,21 @@ public class Kilominx implements ITwistyPuzzle {
      * White, Dark Green, Red, Dark Blue, Yellow, Purple, Light Blue, Beige, Pink, Light Green, Orange, Grey
      */
     public static enum Colour implements IColour {
-        Wh, DG, Re, DB, Ye, Pu, LB, Be, Pi, LG, Or, Gy;
+        Wh(1), Gy(2048), DG(2), LG(512), Re(4), Or(1024), DB(8), LB(64), Ye(16), Be(128), Pu(32), Pi(256);
+
+        private final int value;
+
+        private Colour(int value) {
+            this.value = value;
+        }
         
-        // TODO: if adding EDIT feature, then need to add colour values
+        /**
+         * Returns the "value" of the colour.
+         * This is used for converting between a indices/orientations model type and a colours model type.
+         * @return The value of the colour.
+         */
         public int value() {
-            return -1;
+            return value;
         }
     };
 
@@ -43,7 +56,7 @@ public class Kilominx implements ITwistyPuzzle {
     // Kubies are indexed from 0 to 19 in the following order, with the following initial colours:
     // 0,      2,      1,      4,      6,      3,      8,      5,      10,     7,      
     // UFL,    UFR,    UBL,    UBR,    UBM,    MFL,    FMD,    MFR,    FRD,    MBR,    
-    // WhDGRe, WhReDB, WhDGPu, WhDbYe, WhPuYe, DGReBe, ReBePi, ReDBPi, DBPiLG, DBYeLG, 
+    // WhDGRe, WhReDB, WhDGPu, WhDBYe, WhPuYe, DGReBe, ReBePi, ReDBPi, DBPiLG, DBYeLG, 
 
     // 12,     9,      14,     11,     16,     13,     15,     18,     17,     19
     // BRD,    MBM,    BLD,    MBL,    FLD,    DFM,    DFL,    DFR,    DBL,    DBR
@@ -97,10 +110,198 @@ public class Kilominx implements ITwistyPuzzle {
         moveController = new KilominxController(this);
     }
 
-    // TODO: if adding EDIT feature, then need to add:
-    //  - public Kilominx() constructor from array of kubie colours
-    //  - private int countSwaps() method (if needed still)
-    //  - private Kubie kubieFromColours() method
+    /**
+     * Constructor for a Kilominx from an array of kubie colours. 
+     * This constructor is used for creating a kilominx from Edit mode.
+     * @param colours - The array of kubie colours.
+     * @throws IllegalArgumentException if the kilominx state is invalid (invalid kilominx stickering, duplicate cubie(s), or parity errors).
+     */
+    public Kilominx(Colour[] colours) throws IllegalArgumentException {
+        for (int i = 0; i < 20; i++) {
+            kubies[i] = kubieFromColours(colours, i);
+            if (kubies[i] == null) {
+                throw new IllegalArgumentException("Invalid kilominx stickering.");
+            }
+        }
+
+        // Check for duplicate kubies
+        if (Stream.of(kubies).sorted().distinct().count() != 20) {
+            throw new IllegalArgumentException("Duplicate kubie(s).");
+        }
+        // Kubie parity: the sum of the orientations of the kubies must be a multiple of 3
+        if (Stream.of(kubies).mapToInt(cubie -> cubie.orientation).sum() % 3 != 0) {
+            throw new IllegalArgumentException("Kubie parity error.");
+        }
+        // Permutation parity: the sum of the number of swaps needed to place the kubies in the correst positions must be even
+        // https://puzzling.stackexchange.com/questions/53846/how-to-determine-whether-a-rubiks-cube-is-solvable (last accessed on 14-03-2025)
+        if ((countSwaps(kubies)) % 2 != 0) {
+            throw new IllegalArgumentException("Permutation parity error.");
+        }
+
+        moveController = new KilominxController(this);
+    }
+
+    /**
+     * Count the number of swaps needed to place the kubies in their correct positions.
+     * This method is used for checking the permutation parity of the kilominx.
+     * @param kubies - The array of kubies to check.
+     * @return The number of swaps needed to place the kubies in their correct positions.
+     */
+    private static int countSwaps(Cubie[] kubies) {
+        byte[] positions = new byte[kubies.length];
+        for (int i = 0; i < kubies.length; i++) {
+            positions[i] = kubies[i].index;
+        }
+
+        int swaps = 0;
+        for (int i = 0; i < positions.length; i++) {
+            // If kubie not in correct position, swap it with the kubie in its correct position
+            if (positions[i] != i) {
+                byte temp = positions[i];
+                positions[i] = positions[temp];
+                positions[temp] = temp;
+
+                swaps++;
+                i--;
+            }
+        }
+        return swaps;
+    }
+
+    /**
+     * Get the kubie at the given position index by checking the colours of the cubie.
+     * @param colours - The array of all cubie face colours.
+     * @param index - The position index of the corner cubie.
+     * @return The corner cubie at the given position index, or {@code null} if the cube state is invalid
+     */
+    private static Cubie kubieFromColours(Colour[] colours, int index) {
+        // Get the three colours of the kubie at the given position index
+        Colour[] kubieColours = new Colour[3];
+
+        switch (index) {
+            case KUBIE_UFL:
+                kubieColours = new Colour[]{colours[3], colours[8], colours[9]}; break;
+            case KUBIE_UFR:
+                kubieColours = new Colour[]{colours[4], colours[10], colours[11]}; break;
+            case KUBIE_UBL:
+                kubieColours = new Colour[]{colours[1], colours[7], colours[6]}; break;
+            case KUBIE_UBR:
+                kubieColours = new Colour[]{colours[2], colours[12], colours[13]}; break;
+            case KUBIE_UBM:
+                kubieColours = new Colour[]{colours[0], colours[14], colours[5]}; break;
+            case KUBIE_MFL:
+                kubieColours = new Colour[]{colours[18], colours[19], colours[31]}; break;
+            case KUBIE_FMD:
+                kubieColours = new Colour[]{colours[27], colours[38], colours[39]}; break;
+            case KUBIE_MFR:
+                kubieColours = new Colour[]{colours[20], colours[21], colours[32]}; break;
+            case KUBIE_FRD:
+                kubieColours = new Colour[]{colours[41], colours[28], colours[40]}; break;
+            case KUBIE_MBR:
+                kubieColours = new Colour[]{colours[33], colours[22], colours[23]}; break;
+            case KUBIE_BRD:
+                kubieColours = new Colour[]{colours[42], colours[43], colours[29]}; break;
+            case KUBIE_MBM:
+                kubieColours = new Colour[]{colours[34], colours[24], colours[15]}; break;
+            case KUBIE_BLD:
+                kubieColours = new Colour[]{colours[44], colours[35], colours[25]}; break;
+            case KUBIE_MBL:
+                kubieColours = new Colour[]{colours[17], colours[30], colours[16]}; break;
+            case KUBIE_FLD:
+                kubieColours = new Colour[]{colours[26], colours[36], colours[37]}; break;
+            case KUBIE_DFM:
+                kubieColours = new Colour[]{colours[55], colours[48], colours[49]}; break;
+            case KUBIE_DFL:
+                kubieColours = new Colour[]{colours[56], colours[46], colours[47]}; break;
+            case KUBIE_DFR:
+                kubieColours = new Colour[]{colours[57], colours[51], colours[50]}; break;
+            case KUBIE_DBL:
+                kubieColours = new Colour[]{colours[58], colours[54], colours[45]}; break;
+            case KUBIE_DBR:
+                kubieColours = new Colour[]{colours[59], colours[52], colours[53]}; break;
+        }
+
+        // Add the values of the three colours together to get a unique value for the kubie
+        int kubieValue = kubieColours[0].value() + kubieColours[1].value() + kubieColours[2].value();
+        byte kubieIndex = (byte) -1;
+
+        switch (kubieValue) {
+            case 7:    kubieIndex = KUBIE_UFL; break; // WhDGRe
+            case 13:   kubieIndex = KUBIE_UFR; break; // WhReDB
+            case 35:   kubieIndex = KUBIE_UBL; break; // WhDGPu
+            case 25:   kubieIndex = KUBIE_UBR; break; // WhDBYe
+            case 49:   kubieIndex = KUBIE_UBM; break; // WhPuYe
+            case 134:  kubieIndex = KUBIE_MFL; break; // DGReBe
+            case 388:  kubieIndex = KUBIE_FMD; break; // ReBePi
+            case 268:  kubieIndex = KUBIE_MFR; break; // ReDBPi
+            case 776:  kubieIndex = KUBIE_FRD; break; // DBPiLG
+            case 536:  kubieIndex = KUBIE_MBR; break; // DBYeLG
+            case 1552: kubieIndex = KUBIE_BRD; break; // YeLGOr
+            case 1072: kubieIndex = KUBIE_MBM; break; // YePuOr
+            case 1120: kubieIndex = KUBIE_BLD; break; // PuOrLB
+            case 98:   kubieIndex = KUBIE_MBL; break; // PuDGLB
+            case 194:  kubieIndex = KUBIE_FLD; break; // DGLBBe
+            case 2432: kubieIndex = KUBIE_DFM; break; // BePiGy
+            case 2240: kubieIndex = KUBIE_DFL; break; // LBBeGy
+            case 2816: kubieIndex = KUBIE_DFR; break; // PiLGGy
+            case 3136: kubieIndex = KUBIE_DBL; break; // OrLBGy
+            case 3584: kubieIndex = KUBIE_DBR; break; // LGOrGy
+            default: return null; // Invalid kilominx state
+        }
+
+        // Determine the orientation of the kubie
+        // Get the colours of the kubie in order of priority (default enum sorting)
+        Colour[] sortedColours = new Colour[3];
+        System.arraycopy(kubieColours, 0, sortedColours, 0, 3);
+        Arrays.sort(sortedColours);
+
+        // If highest priority colour is on the highest priority face, orientation is 0
+        if (kubieColours[0] == sortedColours[0]) {
+            return new Cubie(kubieIndex, (byte) 0);
+        }
+
+        switch (kubieIndex) {
+            // For even kubies:
+            case KUBIE_UFL:
+            case KUBIE_UFR:
+            case KUBIE_UBR:
+            case KUBIE_UBM:
+            case KUBIE_FMD:
+            case KUBIE_FRD:
+            case KUBIE_BRD:
+            case KUBIE_BLD:
+            case KUBIE_FLD:
+            case KUBIE_DFR:
+                // If second highest priority colour is on the highest priority face, orientation is 1, otherwise 2
+                if (kubieColours[0] == sortedColours[1]) {
+                    return new Cubie(kubieIndex, (byte) 1);
+                }
+                else {
+                    return new Cubie(kubieIndex, (byte) 2);
+                }
+            
+            // For odd kubies:
+            case KUBIE_UBL:
+            case KUBIE_MFL:
+            case KUBIE_MFR:
+            case KUBIE_MBR:
+            case KUBIE_MBM:
+            case KUBIE_MBL:
+            case KUBIE_DFM:
+            case KUBIE_DFL:
+            case KUBIE_DBL: 
+            case KUBIE_DBR:
+                // If second highest priority colour is on the highest priority face, orientation is 2, otherwise 1
+                if (kubieColours[0] == sortedColours[1]) {
+                    return new Cubie(kubieIndex, (byte) 2);
+                }
+                else {
+                    return new Cubie(kubieIndex, (byte) 1);
+                }
+            
+            default: return null;   // Invalid index
+        }
+    }
 
 
     /**
@@ -399,7 +600,122 @@ public class Kilominx implements ITwistyPuzzle {
         return colours;
     }
 
-    // TODO: if adding EDIT feature, then need to add public Colour[] getColours() method
+    /**
+     * Get the colours of the kubie faces on the kilominx.
+     * @return An array of the colours of the kubie faces on the kilominx. 
+     * The order of the colours is the same order which kubies are printed to the console (e.g. top face, upper row of side faces, etc.).
+     */
+    public Colour[] getColours() {
+        Colour[] colours = new Colour[60];
+
+        for (byte i = 0; i < 20; i++) {
+            Colour[] kubieColours = getKubieColours(i);
+            switch (i) {
+                case KUBIE_UFL:
+                    colours[3] = kubieColours[0];
+                    colours[8] = kubieColours[1];
+                    colours[9] = kubieColours[2];
+                    break;
+                case KUBIE_UFR:
+                    colours[4] = kubieColours[0];
+                    colours[10] = kubieColours[1];
+                    colours[11] = kubieColours[2];
+                    break;
+                case KUBIE_UBL:
+                    colours[1] = kubieColours[0];
+                    colours[7] = kubieColours[1];
+                    colours[6] = kubieColours[2];
+                    break;
+                case KUBIE_UBR:
+                    colours[2] = kubieColours[0];
+                    colours[12] = kubieColours[1];
+                    colours[13] = kubieColours[2];
+                    break;
+                case KUBIE_UBM:
+                    colours[0] = kubieColours[0];
+                    colours[14] = kubieColours[1];
+                    colours[5] = kubieColours[2];
+                    break;
+                case KUBIE_MFL:
+                    colours[18] = kubieColours[0];
+                    colours[19] = kubieColours[1];
+                    colours[31] = kubieColours[2];
+                    break;
+                case KUBIE_FMD:
+                    colours[27] = kubieColours[0];
+                    colours[38] = kubieColours[1];
+                    colours[39] = kubieColours[2];
+                    break;
+                case KUBIE_MFR:
+                    colours[20] = kubieColours[0];
+                    colours[21] = kubieColours[1];
+                    colours[32] = kubieColours[2];
+                    break;
+                case KUBIE_FRD:
+                    colours[41] = kubieColours[0];
+                    colours[28] = kubieColours[1];
+                    colours[40] = kubieColours[2];
+                    break;
+                case KUBIE_MBR:
+                    colours[33] = kubieColours[0];
+                    colours[22] = kubieColours[1];
+                    colours[23] = kubieColours[2];
+                    break;
+                case KUBIE_BRD:
+                    colours[42] = kubieColours[0];
+                    colours[43] = kubieColours[1];
+                    colours[29] = kubieColours[2];
+                    break;
+                case KUBIE_MBM:
+                    colours[34] = kubieColours[0];
+                    colours[24] = kubieColours[1];
+                    colours[15] = kubieColours[2];
+                    break;
+                case KUBIE_BLD:
+                    colours[44] = kubieColours[0];
+                    colours[35] = kubieColours[1];
+                    colours[25] = kubieColours[2];
+                    break;
+                case KUBIE_MBL:
+                    colours[17] = kubieColours[0];
+                    colours[30] = kubieColours[1];
+                    colours[16] = kubieColours[2];
+                    break;
+                case KUBIE_FLD:
+                    colours[26] = kubieColours[0];
+                    colours[36] = kubieColours[1];
+                    colours[37] = kubieColours[2];
+                    break;
+                case KUBIE_DFM:
+                    colours[55] = kubieColours[0];
+                    colours[48] = kubieColours[1];
+                    colours[49] = kubieColours[2];
+                    break;
+                case KUBIE_DFL:
+                    colours[56] = kubieColours[0];
+                    colours[46] = kubieColours[1];
+                    colours[47] = kubieColours[2];
+                    break;
+                case KUBIE_DFR:
+                    colours[57] = kubieColours[0];
+                    colours[51] = kubieColours[1];
+                    colours[50] = kubieColours[2];
+                    break;
+                case KUBIE_DBL:
+                    colours[58] = kubieColours[0];
+                    colours[54] = kubieColours[1];
+                    colours[45] = kubieColours[2];
+                    break;
+                case KUBIE_DBR:
+                    colours[59] = kubieColours[0];
+                    colours[52] = kubieColours[1];
+                    colours[53] = kubieColours[2];
+                    break;
+            }
+        }
+
+        return colours;
+    }
 
     /**
      * Print the Kilominx state to stdout in a human-readable format.
@@ -489,5 +805,93 @@ public class Kilominx implements ITwistyPuzzle {
         System.out.println(getKubieColours(KUBIE_DBR)[0] + "\n"); 
     }
 
-    // TODO: if adding EDIT feature, then need to add public static void printEditState() method
+    /**
+     * Print a version of the kilominx state for use during edit mode in a human-readable format.
+     * @param colours - The array of kubie face colours. Represents a kilominx state that is being edited.
+     * @param index - The index of the kubie face to highlight for editing. Set to -1 to not highlight any face.
+     */
+    public static void printEditState(Colour[] colours, int index) {
+        
+        // Print top face
+        System.out.print("                           ");
+        System.out.println((index == 0 ? "__" : colours[0].name()));
+        System.out.print("                        ");
+        System.out.print((index == 1 ? "__" : colours[1].name()) + "    ");
+        System.out.println((index == 2 ? "__" : colours[2].name()));
+        System.out.print("                         ");
+        System.out.print((index == 3 ? "__" : colours[3].name()) + "  ");
+        System.out.println((index == 4 ? "__" : colours[4].name()) + "\n");
+
+        // Print upper row of upper-middle faces
+        System.out.print(" " + (index == 5 ? "__" : colours[5].name()));
+        System.out.print("  " + (index == 6 ? "__" : colours[6].name()));
+        System.out.print("      " + (index == 7 ? "__" : colours[7].name()));
+        System.out.print("  " + (index == 8 ? "__" : colours[8].name()));
+        System.out.print("      " + (index == 9 ? "__" : colours[9].name()));
+        System.out.print("  " + (index == 10 ? "__" : colours[10].name()));
+        System.out.print("      " + (index == 11 ? "__" : colours[11].name()));
+        System.out.print("  " + (index == 12 ? "__" : colours[12].name()));
+        System.out.print("      " + (index == 13 ? "__" : colours[13].name()));
+        System.out.println("  " + (index == 14 ? "__" : colours[14].name()));
+
+        // Print middle row of upper-middle faces
+        System.out.print((index == 15 ? "__" : colours[15].name()) + "    ");
+        System.out.print((index == 16 ? "__" : colours[16].name()) + "    ");
+        System.out.print((index == 17 ? "__" : colours[17].name()) + "    ");
+        System.out.print((index == 18 ? "__" : colours[18].name()) + "    ");
+        System.out.print((index == 19 ? "__" : colours[19].name()) + "    ");
+        System.out.print((index == 20 ? "__" : colours[20].name()) + "    ");
+        System.out.print((index == 21 ? "__" : colours[21].name()) + "    ");
+        System.out.print((index == 22 ? "__" : colours[22].name()) + "    ");
+        System.out.print((index == 23 ? "__" : colours[23].name()) + "    ");
+        System.out.println((index == 24 ? "__" : colours[24].name()) + "    ");
+
+        // Print bottom row of upper-middle faces
+        System.out.print("   " + (index == 25 ? "__" : colours[25].name()));
+        System.out.print("          " + (index == 26 ? "__" : colours[26].name()));
+        System.out.print("          " + (index == 27 ? "__" : colours[27].name()));
+        System.out.print("          " + (index == 28 ? "__" : colours[28].name()));
+        System.out.println("          " + (index == 29 ? "__" : colours[29].name()) + "\n");
+
+        // Print upper row of lower-middle faces
+        System.out.print("         " + (index == 30 ? "__" : colours[30].name()));
+        System.out.print("          " + (index == 31 ? "__" : colours[31].name()));
+        System.out.print("          " + (index == 32 ? "__" : colours[32].name()));
+        System.out.print("          " + (index == 33 ? "__" : colours[33].name()));
+        System.out.println("          " + (index == 34 ? "__" : colours[34].name()));
+
+        // Print middle row of lower-middle faces
+        System.out.print("      " + (index == 35 ? "__" : colours[35].name()));
+        System.out.print("    " + (index == 36 ? "__" : colours[36].name()));
+        System.out.print("    " + (index == 37 ? "__" : colours[37].name()));
+        System.out.print("    " + (index == 38 ? "__" : colours[38].name()));
+        System.out.print("    " + (index == 39 ? "__" : colours[39].name()));
+        System.out.print("    " + (index == 40 ? "__" : colours[40].name()));
+        System.out.print("    " + (index == 41 ? "__" : colours[41].name()));
+        System.out.print("    " + (index == 42 ? "__" : colours[42].name()));
+        System.out.print("    " + (index == 43 ? "__" : colours[43].name()));
+        System.out.println("    " + (index == 44 ? "__" : colours[44].name()));
+
+        // Print bottom row of lower-middle faces
+        System.out.print("       " + (index == 45 ? "__" : colours[45].name()));
+        System.out.print("  " + (index == 46 ? "__" : colours[46].name()));
+        System.out.print("      " + (index == 47 ? "__" : colours[47].name()));
+        System.out.print("  " + (index == 48 ? "__" : colours[48].name()));
+        System.out.print("      " + (index == 49 ? "__" : colours[49].name()));
+        System.out.print("  " + (index == 50 ? "__" : colours[50].name()));
+        System.out.print("      " + (index == 51 ? "__" : colours[51].name()));
+        System.out.print("  " + (index == 52 ? "__" : colours[52].name()));
+        System.out.print("      " + (index == 53 ? "__" : colours[53].name()));
+        System.out.println("  " + (index == 54 ? "__" : colours[54].name()) + "\n");
+
+        // Print bottom face
+        System.out.print("                           ");
+        System.out.println((index == 55 ? "__" : colours[55].name()));
+        System.out.print("                        ");
+        System.out.print((index == 56 ? "__" : colours[56].name()) + "    ");
+        System.out.println((index == 57 ? "__" : colours[57].name()));
+        System.out.print("                         ");
+        System.out.print((index == 58 ? "__" : colours[58].name()) + "  ");
+        System.out.println((index == 59 ? "__" : colours[59].name()) + "\n"); 
+    }
 }
