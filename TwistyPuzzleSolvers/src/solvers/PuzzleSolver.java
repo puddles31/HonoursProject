@@ -2,6 +2,10 @@ package solvers;
 
 import models.ITwistyPuzzle;
 import models.IMoveController.IMove;
+
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -104,6 +108,7 @@ public abstract class PuzzleSolver {
         byte nextBound = getMaxNumberOfMoves(puzzle);
 
         long startTime = System.currentTimeMillis();
+        Duration dur;
 
         System.out.println("IDA*: Beginning search at depth " + nextBound);
 
@@ -113,7 +118,10 @@ public abstract class PuzzleSolver {
             // If depth level is complete
             if (nodeStack.isEmpty()) {
                 if (bound != 0) {
-                    System.out.println("IDA*: Finished bound " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
+                    dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
+                    System.out.println("IDA*: Finished bound " + bound + " after " + 
+                    String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()) + " (" +
+                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + ")");
                 }
 
                 // Push the root node (initial scrambled puzzle state) onto the stack
@@ -189,7 +197,10 @@ public abstract class PuzzleSolver {
             }
         }
 
-        System.out.println("IDA*: Solution found at depth " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
+        dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
+        System.out.println("IDA*: Solution found at depth " + bound + " after " + 
+                            String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()) + " (" +
+                            LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + ")");
         return Arrays.copyOf(moves, bound);
     }
 }
