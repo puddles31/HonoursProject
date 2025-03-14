@@ -102,7 +102,6 @@ public abstract class PuzzleSolver {
         
         byte bound = 0;
         byte nextBound = getMaxNumberOfMoves(puzzle);
-        // byte nextBound = 1;
 
         long startTime = System.currentTimeMillis();
 
@@ -116,11 +115,6 @@ public abstract class PuzzleSolver {
                 if (bound != 0) {
                     System.out.println("IDA*: Finished bound " + bound + " after " + (System.currentTimeMillis() - startTime) / 1000.0 + "s.");
                 }
-
-                // if (bound >= 1) {
-                //     System.out.println("DEBUG: Bound 1 done, exiting early");
-                //     System.exit(0);
-                // }
 
                 // Push the root node (initial scrambled puzzle state) onto the stack
                 nodeStack.addFirst(new IDAStarNode(puzzle, null, (byte) 0));
@@ -171,7 +165,6 @@ public abstract class PuzzleSolver {
                         // Create a copy of the current puzzle state and make the move on the copy
                         ITwistyPuzzle puzzleCopy = currentNode.puzzle.copy();
                         puzzleCopy.getMoveController().makeMove(move);
-                        // System.out.println("Making move " + move.toString());
 
                         // Calculate an estimate for the number of moves required to solve the child node
                         byte estimatedChildMoves = (byte)(currentNode.depth + (byte) 1 + getMaxNumberOfMoves(puzzleCopy, bound, (byte)(currentNode.depth + 1)));

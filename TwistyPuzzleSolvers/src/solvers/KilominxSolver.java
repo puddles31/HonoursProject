@@ -30,14 +30,11 @@ public class KilominxSolver extends PuzzleSolver {
             readSuccess = facePDBs[i].readDatabaseFromFile("kilominx/face_kubies_" + (i + 1) + ".pdb");
         }
 
-        // TODO: Currently ignoring sparse PDB 4 as it is wrong
-        sparsePDBs = new SparseKubiesPatternDatabase[4];
-        for (int i = 0; i < 3; i++) {
+        sparsePDBs = new SparseKubiesPatternDatabase[5];
+        for (int i = 0; i < 5; i++) {
             sparsePDBs[i] = new SparseKubiesPatternDatabase(i + 1);
             readSuccess = sparsePDBs[i].readDatabaseFromFile("kilominx/sparse_kubies_" + (i + 1) + ".pdb");
         }
-        sparsePDBs[3] = new SparseKubiesPatternDatabase(5);
-        readSuccess = sparsePDBs[3].readDatabaseFromFile("kilominx/sparse_kubies_" + (5) + ".pdb");
 
         if (readSuccess) {
             System.out.println("Pattern databases loaded successfully.");
@@ -102,21 +99,15 @@ public class KilominxSolver extends PuzzleSolver {
 
             // Check estimated number of moves from a face PDB
             estimatedMoves = facePDB.getNumberOfMoves(kilominx);
-            // System.out.print("\t Face PDB " + i + " has estimate " + estimatedMoves);
 
             // If estimate exceeds the bound, return
             if (estimatedMoves + depthHint > boundHint) {
-                // System.out.println(" (exceeded bound)");
                 return estimatedMoves;
             }
             // If estimate is greater than the current max, update max
             if (estimatedMoves > max) {
-                // System.out.println(" (new max)");
                 max = estimatedMoves;
             }
-            // else {
-            //     System.out.println();
-            // }
         }
 
         SparseKubiesPatternDatabase sparsePDB;
@@ -125,24 +116,17 @@ public class KilominxSolver extends PuzzleSolver {
 
             // Check estimated number of moves from a sparse PDB
             estimatedMoves = sparsePDB.getNumberOfMoves(kilominx);
-            // System.out.print("\t Sparse PDB " + i + " has estimate " + estimatedMoves);
 
             // If estimate exceeds the bound, return
             if (estimatedMoves + depthHint > boundHint) {
-                // System.out.println(" (exceeded bound)");
                 return estimatedMoves;
             }
             // If estimate is greater than the current max, update max
             if (estimatedMoves > max) {
-                // System.out.println(" (new max)");
                 max = estimatedMoves;
             }
-            // else {
-            //     System.out.println();
-            // }
         }
 
-        // System.out.println("\t No estimate exceeded the bound, returning max estimate of " + max);
         // No estimate exceeded the bound, return the maximum estimate
         return max;
     }

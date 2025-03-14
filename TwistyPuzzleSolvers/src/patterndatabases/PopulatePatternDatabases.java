@@ -23,12 +23,15 @@ public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse]");
+            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # - 1-5)]");
             System.exit(1);
         }
 
         Pattern facePdbPattern = Pattern.compile("^kilominx-face-([1-9]|1[0-2])$");
         Matcher facePdbMatcher = facePdbPattern.matcher(args[0]);
+
+        Pattern sparsePdbPattern = Pattern.compile("^kilominx-sparse-([1-5])$");
+        Matcher sparsePdbMatcher = sparsePdbPattern.matcher(args[0]);
 
         if (args[0].equals("cube-corners")) {
             populateCornerDatabase();
@@ -43,11 +46,12 @@ public class PopulatePatternDatabases {
             int setNo = Integer.valueOf(facePdbMatcher.group(1));
             populateFaceKubiesDatabase(setNo);
         }
-        else if (args[0].equals("kilominx-sparse")) {
-            populateSparseKubiesDatabases();
+        else if (sparsePdbMatcher.matches()) {
+            int setNo = Integer.valueOf(sparsePdbMatcher.group(1));
+            populateSparseKubiesDatabase(setNo);
         }
         else {
-            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse]");
+            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # - 1-5)]");
             System.exit(1);
         }
     }
@@ -114,48 +118,23 @@ public class PopulatePatternDatabases {
     }
 
     /**
-     * Populate the sparse kubies pattern dataabases for the Kilominx.
+     * Populate a sparse kubies pattern dataabase for the Kilominx.
+     * @param setNo - The set number for the sparse patttern database to populate (1-5).
+     * @throws IllegalArgumentException If the set number is not between 1 and 5
+     * @see SparseKubiesPatternDatabase
      */
-    private static void populateSparseKubiesDatabases() {
+    private static void populateSparseKubiesDatabase(int setNo) throws IllegalArgumentException {
+        if (setNo < 1 || setNo > 5) {
+            throw new IllegalArgumentException("The set number must be between 1 and 5.");
+        }
+
         Kilominx kilominx = new Kilominx();
-
-        SparseKubiesPatternDatabase firstSparseKubiesPDB = new SparseKubiesPatternDatabase(1);
-        System.out.println("Populating first sparse kubies database...");
-        iterativeDeepeningDepthFirstSearch(kilominx, firstSparseKubiesPDB);
-        firstSparseKubiesPDB.writeDatabaseToFile("kilominx/", "sparse_kubies_1.pdb");
-        System.out.println("First sparse kubies database populated.\n");
-
-        kilominx = new Kilominx();
-
-        SparseKubiesPatternDatabase secondSparseKubiesPDB = new SparseKubiesPatternDatabase(2);
-        System.out.println("Populating second sparse kubies database...");
-        iterativeDeepeningDepthFirstSearch(kilominx, secondSparseKubiesPDB);
-        secondSparseKubiesPDB.writeDatabaseToFile("kilominx/", "sparse_kubies_2.pdb");
-        System.out.println("Second sparse kubies database populated.\n");
-
-        kilominx = new Kilominx();
-
-        SparseKubiesPatternDatabase thirdSparseKubiesPDB = new SparseKubiesPatternDatabase(3);
-        System.out.println("Populating third sparse kubies database...");
-        iterativeDeepeningDepthFirstSearch(kilominx, thirdSparseKubiesPDB);
-        thirdSparseKubiesPDB.writeDatabaseToFile("kilominx/", "sparse_kubies_3.pdb");
-        System.out.println("Third sparse kubies database populated.\n");
-
-        kilominx = new Kilominx();
-
-        SparseKubiesPatternDatabase fourthSparseKubiesPDB = new SparseKubiesPatternDatabase(4);
-        System.out.println("Populating fourth sparse kubies database...");
-        iterativeDeepeningDepthFirstSearch(kilominx, fourthSparseKubiesPDB);
-        fourthSparseKubiesPDB.writeDatabaseToFile("kilominx/", "sparse_kubies_4.pdb");
-        System.out.println("Fourth sparse kubies database populated.\n");
-
-        kilominx = new Kilominx();
-
-        SparseKubiesPatternDatabase fifthSparseKubiesPDB = new SparseKubiesPatternDatabase(5);
-        System.out.println("Populating fifth sparse kubies database...");
-        iterativeDeepeningDepthFirstSearch(kilominx, fifthSparseKubiesPDB);
-        fifthSparseKubiesPDB.writeDatabaseToFile("kilominx/", "sparse_kubies_5.pdb");
-        System.out.println("Fifth sparse kubies database populated.\n");
+        SparseKubiesPatternDatabase sparsePDB = new SparseKubiesPatternDatabase(setNo);
+        System.out.println("Populating sparse " + setNo + " database...");
+    
+        iterativeDeepeningDepthFirstSearch(kilominx, sparsePDB);
+        sparsePDB.writeDatabaseToFile("kilominx/", "sparse_kubies_" + setNo + ".pdb");
+        System.out.println("Sparse " + setNo + " database populated.\n");
     }
 
 
