@@ -121,7 +121,7 @@ public abstract class PuzzleSolver {
                     dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
                     System.out.println("IDA*: Finished bound " + bound + " after " + 
                     String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()) + " (" +
-                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + ")");
+                    LocalTime.now().format(DateTimeFormatter.ofPattern("h:mm a")) + ")");
                 }
 
                 // Push the root node (initial scrambled puzzle state) onto the stack
@@ -200,7 +200,7 @@ public abstract class PuzzleSolver {
         dur = Duration.ofMillis(System.currentTimeMillis() - startTime);
         System.out.println("IDA*: Solution found at depth " + bound + " after " + 
                             String.format("%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart()) + " (" +
-                            LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + ")");
+                            LocalTime.now().format(DateTimeFormatter.ofPattern("h:mm a")) + ")");
         return Arrays.copyOf(moves, bound);
     }
 }
