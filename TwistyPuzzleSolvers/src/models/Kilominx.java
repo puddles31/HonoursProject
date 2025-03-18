@@ -361,18 +361,238 @@ public class Kilominx implements ITwistyPuzzle {
 
 
     /**
-     * Check if the Kilominx is solved.
+     * Check if the Kilominx is solved, regardless of the orientation of the Kilominx.
      * @return {@code true} if the Kilominx is solved, {@code false} otherwise.
      */
     public boolean isSolved() {
-        // Check that all kubies are in the position and orientation
-        for (byte i = 0; i < 20; i++) {
-            if (kubies[i].index != i || kubies[i].orientation != 0) {
-                return false;
-            }
-        }
+        // Since the kilominx has no centre pieces, it has no fixed reference point to determine the solved state.
+        // Instead, we use the kubie in the UFL position as the reference point, 
+        // and check if the other kubies are in the correct positions/orientations based on the UFL kubie's index/orientation.
+        
+        switch (kubies[KUBIE_UFL].index) {
+            case KUBIE_UFL:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
 
-        return true;
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{0, 3, 1, 2, 11, 6, 16, 14, 4, 15, 9, 8, 17, 7, 13, 10, 5, 18, 12, 19})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 2});
+
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{0, 2, 3, 1, 8, 16, 5, 13, 11, 10, 15, 4, 18, 14, 7, 9, 6, 12, 17, 19})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1});
+                }
+            case KUBIE_UFR:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{2, 0, 4, 5, 6, 7, 1, 9, 10, 11, 12, 3, 14, 18, 16, 13, 8, 15, 19, 17})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 0, 0, 2, 0, 0, 1, 2, 1, 2, 0, 0, 1, 0, 0, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{2, 5, 0, 4, 3, 1, 8, 16, 6, 13, 11, 10, 15, 9, 18, 12, 7, 19, 14, 17})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 0, 2, 1, 2, 0, 0, 1, 0, 0, 2, 1, 2, 0, 0, 1, 2, 1, 0, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{2, 4, 5, 0, 10, 8, 7, 18, 3, 12, 13, 6, 19, 16, 9, 11, 1, 14, 15, 17})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 2, 0, 1, 0, 2, 0, 2, 1, 0, 0, 0, 1, 0, 2, 0, 1, 2, 1});
+                }
+            case KUBIE_UBL:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{1, 6, 0, 11, 2, 3, 4, 5, 16, 7, 8, 9, 10, 15, 12, 17, 14, 19, 13, 18})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2, 1, 2, 0, 0, 0, 2, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{1, 11, 6, 0, 9, 4, 14, 12, 2, 17, 7, 16, 19, 5, 15, 8, 3, 13, 10, 18})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 1, 2, 1, 1, 0, 2, 0, 0, 0, 0, 0, 2, 1, 0, 2, 0, 1, 2, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{1, 0, 11, 6, 16, 14, 3, 15, 9, 8, 17, 2, 13, 12, 5, 7, 4, 10, 19, 18})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 0, 0, 0, 2, 0, 0, 1, 2, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1});
+                }
+            case KUBIE_UBR:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{4, 2, 6, 7, 1, 9, 0, 11, 12, 3, 14, 5, 16, 19, 8, 18, 10, 13, 17, 15})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 2, 0, 2, 0, 2, 2, 1, 1, 2, 1, 0, 1, 0, 1, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{4, 7, 2, 6, 5, 0, 10, 8, 1, 18, 3, 12, 13, 11, 19, 14, 9, 17, 16, 15})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 1, 2, 0, 1, 1, 0, 0, 1, 2, 2, 2, 0, 1, 2, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{4, 6, 7, 2, 12, 10, 9, 19, 5, 14, 18, 1, 17, 8, 11, 3, 0, 16, 13, 15})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 0, 2, 1, 2, 0, 2, 1, 0, 0, 0, 1, 2, 1, 0, 2, 2, 1});
+                }
+            case KUBIE_UBM:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{6, 4, 1, 9, 0, 11, 2, 3, 14, 5, 16, 7, 8, 17, 10, 19, 12, 18, 15, 13})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 2, 0, 1, 0, 1, 2, 1, 2, 1, 1, 0, 2, 0, 2, 0, 0, 0});
+
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{6, 9, 4, 1, 7, 2, 12, 10, 0, 19, 5, 14, 18, 3, 17, 16, 11, 15, 8, 13})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 1, 1, 0, 2, 2, 0, 0, 1, 2, 2, 1, 0, 2, 1, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{6, 1, 9, 4, 14, 12, 11, 17, 7, 16, 19, 0, 15, 10, 3, 5, 2, 8, 18, 13})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 0, 2, 2, 1, 0, 1, 2, 0, 0, 0, 2, 1, 1, 0, 2, 2, 1});
+                }
+            case KUBIE_MFL:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{3, 16, 0, 8, 1, 2, 11, 6, 5, 14, 4, 15, 9, 10, 17, 18, 13, 19, 7, 12})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 1, 1, 2, 1, 0, 1, 0, 0, 2, 1, 2, 0, 2, 1, 2, 2, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{3, 8, 16, 0, 15, 11, 13, 17, 1, 18, 14, 5, 19, 6, 10, 4, 2, 7, 9, 12})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 1, 2, 2, 1, 0, 2, 2, 2, 1, 0, 0, 1, 1, 0, 2, 1, 1, 2, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{3, 0, 8, 16, 5, 13, 2, 10, 15, 4, 18, 1, 7, 17, 6, 14, 11, 9, 19, 12})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 2, 0, 0, 0, 2, 1, 0, 1, 2, 1, 2, 0, 2, 1, 0, 0, 0, 1, 1});
+                }
+            case KUBIE_FMD:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{8, 3, 5, 13, 2, 10, 0, 4, 18, 1, 7, 16, 6, 19, 11, 17, 15, 14, 12, 9})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 2, 0, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 2, 1, 0, 1, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{8, 13, 3, 5, 16, 0, 15, 11, 2, 17, 1, 18, 14, 4, 19, 7, 10, 12, 6, 9})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 1, 1, 2, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1, 1, 2, 2, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{8, 5, 13, 3, 18, 15, 10, 19, 16, 7, 17, 2, 12, 11, 4, 1, 0, 6, 14, 9})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1});
+                }
+            case KUBIE_MFR:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{5, 8, 2, 10, 0, 4, 3, 1, 7, 16, 6, 13, 11, 12, 15, 19, 18, 17, 9, 14})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{5, 10, 8, 2, 13, 3, 18, 15, 0, 19, 16, 7, 17, 1, 12, 6, 4, 9, 11, 14})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{5, 2, 10, 8, 7, 18, 4, 12, 13, 6, 19, 0, 9, 15, 1, 16, 3, 11, 17, 14})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 2, 1, 0, 2, 2, 1, 1, 1, 2, 1, 2, 0, 2, 1, 1, 2, 2, 1, 1});
+                }
+            case KUBIE_FRD:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{10, 7, 18, 5, 19, 13, 12, 17, 8, 9, 15, 4, 14, 3, 6, 0, 2, 1, 16, 11})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 1, 2, 2, 1, 0, 1, 2, 1, 2, 1, 1, 0, 2, 1, 2, 2, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{10, 5, 7, 18, 4, 12, 2, 6, 19, 0, 9, 8, 1, 17, 3, 15, 13, 16, 14, 11})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 2, 1, 0, 2, 2, 2, 1, 1, 2, 1, 1, 0, 2, 1, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{10, 18, 5, 7, 8, 2, 13, 3, 4, 15, 0, 19, 16, 6, 17, 9, 12, 14, 1, 11})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 2, 1, 0, 2, 2, 1, 0, 1, 2, 1, 2, 0, 2, 1, 1, 0, 2, 1, 1});
+                }
+            case KUBIE_MBR:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{7, 12, 10, 4, 18, 5, 19, 13, 2, 17, 8, 9, 15, 0, 14, 1, 6, 11, 3, 16})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 2, 1, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{7, 4, 12, 10, 9, 19, 6, 14, 18, 1, 17, 2, 11, 13, 0, 8, 5, 3, 15, 16})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1, 1, 2, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{7, 10, 4, 12, 2, 6, 5, 0, 9, 8, 1, 18, 3, 14, 13, 17, 19, 15, 11, 16})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 0, 2, 1, 2, 1, 2, 1, 2, 1, 0, 1, 2, 1, 2, 2, 2, 1});
+                }
+            case KUBIE_BRD:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{12, 19, 7, 9, 10, 4, 18, 5, 6, 13, 2, 17, 8, 1, 15, 11, 14, 16, 0, 3})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 2, 0, 0, 0, 2, 1, 0, 1, 2, 1, 2, 0, 2, 1, 0, 0, 0, 1, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{12, 9, 19, 7, 17, 18, 14, 15, 10, 11, 13, 6, 16, 5, 1, 2, 4, 0, 8, 3})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 0, 1, 1, 2, 1, 0, 1, 0, 0, 2, 1, 2, 0, 2, 1, 2, 2, 0, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{12, 7, 9, 19, 6, 14, 4, 1, 17, 2, 11, 10, 0, 15, 5, 13, 18, 8, 16, 3})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 2, 2, 1, 0, 2, 2, 2, 1, 0, 0, 1, 1, 0, 2, 1, 1, 2, 1});
+                }
+            case KUBIE_MBM:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{9, 14, 12, 6, 19, 7, 17, 18, 4, 15, 10, 11, 13, 2, 16, 0, 1, 3, 5, 8})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 1, 2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 2, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{9, 6, 14, 12, 11, 17, 1, 16, 19, 0, 15, 4, 3, 18, 2, 10, 7, 5, 13, 8})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{9, 12, 6, 14, 4, 1, 7, 2, 11, 10, 0, 19, 5, 16, 18, 15, 17, 13, 3, 8})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 2, 1, 0, 2, 1, 1, 1, 1, 2, 2, 1, 0, 2, 2, 1, 2, 2, 1, 1});
+                }
+            case KUBIE_BLD:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{14, 17, 9, 11, 12, 6, 19, 7, 1, 18, 4, 15, 10, 0, 13, 3, 16, 8, 2, 5})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 0, 1, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{14, 11, 17, 9, 15, 19, 16, 13, 12, 3, 18, 1, 8, 7, 0, 4, 6, 2, 10, 5})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{14, 9, 11, 17, 1, 16, 6, 0, 15, 4, 3, 12, 2, 13, 7, 18, 19, 10, 8, 5})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 2, 2, 1});
+                }
+            case KUBIE_MBL:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{11, 1, 16, 14, 3, 15, 0, 8, 17, 2, 13, 6, 5, 19, 4, 12, 9, 7, 18, 10})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 2, 0, 2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{11, 14, 1, 16, 6, 0, 9, 4, 3, 12, 2, 17, 7, 8, 19, 13, 15, 18, 5, 10})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 1, 1, 2, 1, 1, 1, 0, 0, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{11, 16, 14, 1, 17, 9, 15, 19, 6, 13, 12, 3, 18, 4, 8, 2, 0, 5, 7, 10})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 2, 1, 1, 2, 2, 2, 1, 0, 0, 1, 1, 2, 2, 1, 2, 2, 1});
+                }
+            case KUBIE_FLD:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{16, 11, 3, 15, 0, 8, 1, 2, 13, 6, 5, 14, 4, 18, 9, 19, 17, 12, 10, 7})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{16, 15, 11, 3, 14, 1, 17, 9, 0, 19, 6, 13, 12, 2, 18, 5, 8, 10, 4, 7})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{16, 3, 15, 11, 13, 17, 8, 18, 14, 5, 19, 0, 10, 9, 2, 6, 1, 4, 12, 7})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 0, 2, 1, 1, 1, 1, 2, 2, 1, 0, 2, 2, 1, 2, 2, 2, 1});
+                }
+            case KUBIE_DFM:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{13, 18, 15, 8, 17, 16, 19, 14, 3, 12, 11, 10, 9, 0, 7, 2, 5, 4, 1, 6})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 2, 0, 2, 0, 2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{13, 8, 18, 15, 10, 19, 5, 7, 17, 2, 12, 3, 4, 14, 0, 11, 16, 1, 9, 6})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 1, 2, 0, 1, 1, 0, 0, 2, 1, 2, 2, 0, 1, 2, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{13, 15, 8, 18, 3, 5, 16, 0, 10, 11, 2, 17, 1, 7, 14, 12, 19, 9, 4, 6})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 0, 1, 1, 2, 0, 2, 1, 0, 0, 0, 1, 2, 2, 0, 2, 2, 1});
+                }
+            case KUBIE_DFL:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{15, 13, 17, 16, 19, 14, 18, 12, 11, 10, 9, 8, 7, 1, 5, 0, 3, 2, 6, 4})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 2, 0, 1, 0, 2, 2, 1, 2, 1, 1, 0, 2, 0, 1, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{15, 16, 13, 17, 8, 18, 3, 5, 19, 0, 10, 11, 2, 12, 1, 9, 14, 6, 7, 4})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 2, 2, 1, 1, 0, 1, 2, 0, 0, 1, 2, 2, 2, 0, 2, 1, 1, 1, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{15, 17, 16, 13, 11, 3, 14, 1, 8, 9, 0, 19, 6, 5, 12, 10, 18, 7, 2, 4})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 1, 0, 2, 1, 1, 0, 1, 2, 0, 0, 0, 2, 2, 1, 0, 2, 2, 1});
+                }
+            case KUBIE_DFR:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{18, 19, 13, 10, 15, 8, 17, 16, 5, 14, 3, 12, 11, 2, 9, 4, 7, 6, 0, 1})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 0, 0, 2, 0, 0, 1, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{18, 10, 19, 13, 12, 17, 7, 9, 15, 4, 14, 5, 6, 16, 2, 3, 8, 0, 11, 1})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 0, 2, 1, 0, 0, 0, 1, 0, 0, 2, 1, 2, 0, 0, 0, 2, 1, 0, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{18, 13, 10, 19, 5, 7, 8, 2, 12, 3, 4, 15, 0, 9, 16, 14, 17, 11, 6, 1})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 2, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 2, 1});
+                }
+            case KUBIE_DBL:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{17, 15, 19, 14, 18, 12, 13, 10, 9, 8, 7, 16, 5, 6, 3, 1, 11, 0, 4, 2})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 2, 1, 2, 0, 2, 0, 2, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{17, 14, 15, 19, 16, 13, 11, 3, 18, 1, 8, 9, 0, 10, 6, 7, 12, 4, 5, 2})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 1, 2, 1, 1, 0, 2, 2, 0, 0, 0, 0, 2, 1, 0, 2, 1, 1, 2, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{17, 19, 14, 15, 9, 11, 12, 6, 16, 7, 1, 18, 4, 3, 10, 8, 13, 5, 0, 2})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 2, 1});
+                }
+            case KUBIE_DBR:
+                switch (kubies[KUBIE_UFL].orientation) {
+                    case 0: return Arrays.equals(getKubieIndices(),  new byte[]{19, 17, 18, 12, 13, 10, 15, 8, 7, 16, 5, 14, 3, 4, 11, 6, 9, 1, 2, 0})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0});
+                            
+                    case 1: return Arrays.equals(getKubieIndices(),  new byte[]{19, 12, 17, 18, 14, 15, 9, 11, 13, 6, 16, 7, 1, 8, 4, 5, 10, 2, 3, 0})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 2, 2});
+                            
+                    case 2: return Arrays.equals(getKubieIndices(),  new byte[]{19, 18, 12, 17, 7, 9, 10, 4, 14, 5, 6, 13, 2, 11, 8, 16, 15, 3, 1, 0})
+                            && Arrays.equals(getKubieOrientations(), new byte[]{2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1});
+                }
+        }
+        
+        return false;
     }
 
 
