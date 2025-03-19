@@ -185,22 +185,23 @@ public class KilominxTerminal {
             input = sc.nextLine().toUpperCase();
             
             // Change the colour of the selected cell or move to next/previous cell based on the input
+            // If the current index is before or after an uneditable cell, skip to the next editable cell
             if (index < 60) {
                 switch (input) {
-                    case "WH": colours[index] = Colour.Wh; index++; break;
-                    case "DG": colours[index] = Colour.DG; index++; break;
-                    case "RE": colours[index] = Colour.Re; index++; break;
-                    case "DB": colours[index] = Colour.DB; index++; break;
-                    case "YE": colours[index] = Colour.Ye; index++; break;
-                    case "PU": colours[index] = Colour.Pu; index++; break;
-                    case "LB": colours[index] = Colour.LB; index++; break;
-                    case "BE": colours[index] = Colour.Be; index++; break;
-                    case "PI": colours[index] = Colour.Pi; index++; break;
-                    case "LG": colours[index] = Colour.LG; index++; break;
-                    case "OR": colours[index] = Colour.Or; index++; break;
-                    case "GY": colours[index] = Colour.Gy; index++; break;
-                    case "": index++; break;
-                    case "-": index--; break;
+                    case "WH": colours[index] = Colour.Wh; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "DG": colours[index] = Colour.DG; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "RE": colours[index] = Colour.Re; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "DB": colours[index] = Colour.DB; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "YE": colours[index] = Colour.Ye; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "PU": colours[index] = Colour.Pu; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "LB": colours[index] = Colour.LB; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "BE": colours[index] = Colour.Be; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "PI": colours[index] = Colour.Pi; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "LG": colours[index] = Colour.LG; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "OR": colours[index] = Colour.Or; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "GY": colours[index] = Colour.Gy; index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "": index = (index == 2 ? index + 2 : (index == 7 ? index + 3 : index + 1)); break;
+                    case "-": index = (index == 4 ? index - 2 : (index == 10 ? index - 3 : index - 1)); break;
                     case "DONE": break;
                     default: break;
                 }

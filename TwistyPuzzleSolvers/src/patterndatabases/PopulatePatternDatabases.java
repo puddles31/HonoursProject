@@ -17,13 +17,13 @@ import java.util.regex.Pattern;
 
 /**
  * This class contains methods to populate the pattern databases for the Rubik's Cube and Kilominx.
- * Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse]
+ * Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # = 1-5)]
  */
 public class PopulatePatternDatabases {
     
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # - 1-5)]");
+            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # = 1-5)]");
             System.exit(1);
         }
 
@@ -51,7 +51,7 @@ public class PopulatePatternDatabases {
             populateSparseKubiesDatabase(setNo);
         }
         else {
-            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # - 1-5)]");
+            System.err.println("Usage: java PopulatePatternDatabases [cube-corners | cube-first-edges | cube-second-edges | kilominx-face-# (with # = 1-12) | kilominx-sparse-# (with # = 1-5)]");
             System.exit(1);
         }
     }

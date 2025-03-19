@@ -362,122 +362,229 @@ public class KilominxController implements IMoveController {
      * Perform a clockwise turn of the U face.
      */
     public void moveU() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBR, Kilominx.KUBIE_UBM, Kilominx.KUBIE_UBL});
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveD();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFL, Kilominx.KUBIE_MBL, Kilominx.KUBIE_MBM, Kilominx.KUBIE_MBR, Kilominx.KUBIE_MFR});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_FLD, Kilominx.KUBIE_BLD, Kilominx.KUBIE_BRD, Kilominx.KUBIE_FRD});
+
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_BRD, (byte) 2);
     }
 
     /**
      * Perform a counter-clockwise turn of the U face.
      */
     public void moveUPrime() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UBL, Kilominx.KUBIE_UBM, Kilominx.KUBIE_UBR, Kilominx.KUBIE_UFR});
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDPrime();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFL, Kilominx.KUBIE_MFR, Kilominx.KUBIE_MBR, Kilominx.KUBIE_MBM, Kilominx.KUBIE_MBL});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_FRD, Kilominx.KUBIE_BRD, Kilominx.KUBIE_BLD, Kilominx.KUBIE_FLD});
+
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_BLD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 1);
+
     }
 
     /**
      * Perform two clockwise turns of the U face.
      */
     public void moveU2() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UBR, Kilominx.KUBIE_UBL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBM});
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveD2();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFL, Kilominx.KUBIE_MBM, Kilominx.KUBIE_MFR, Kilominx.KUBIE_MBL, Kilominx.KUBIE_MBR});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_BLD, Kilominx.KUBIE_FRD, Kilominx.KUBIE_FLD, Kilominx.KUBIE_BRD});
+
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_BLD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_BRD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the U face.
      */
     public void moveU2Prime() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UBM, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBL, Kilominx.KUBIE_UBR});
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveD2Prime();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFL, Kilominx.KUBIE_MBR, Kilominx.KUBIE_MBL, Kilominx.KUBIE_MFR, Kilominx.KUBIE_MBM});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_BRD, Kilominx.KUBIE_FLD, Kilominx.KUBIE_FRD, Kilominx.KUBIE_BLD});
+
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_BLD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_BRD, (byte) 1);
     }
 
     /**
      * Perform a clockwise turn of the L face.
      */
     public void moveL() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_MBL, Kilominx.KUBIE_FLD, Kilominx.KUBIE_MFL, Kilominx.KUBIE_UFL});
-
-        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 1);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDBR();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFR, Kilominx.KUBIE_DFM, Kilominx.KUBIE_DBL, Kilominx.KUBIE_MBM, Kilominx.KUBIE_UBR});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_DFL, Kilominx.KUBIE_BLD, Kilominx.KUBIE_UBM, Kilominx.KUBIE_UFR});
+    
+        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_BLD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the L face.
      */
     public void moveLPrime() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_UFL, Kilominx.KUBIE_MFL, Kilominx.KUBIE_FLD, Kilominx.KUBIE_MBL});
-
-        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 2);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDBRPrime();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFR, Kilominx.KUBIE_UBR, Kilominx.KUBIE_MBM, Kilominx.KUBIE_DBL, Kilominx.KUBIE_DFM});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBM, Kilominx.KUBIE_BLD, Kilominx.KUBIE_DFL});
+    
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DBL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the L face.
      */
     public void moveL2() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_FLD, Kilominx.KUBIE_UFL, Kilominx.KUBIE_MBL, Kilominx.KUBIE_MFL});
-
-        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 1);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDBR2();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFR, Kilominx.KUBIE_DBL, Kilominx.KUBIE_UBR, Kilominx.KUBIE_DFM, Kilominx.KUBIE_MBM});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_BLD, Kilominx.KUBIE_UFR, Kilominx.KUBIE_DFL, Kilominx.KUBIE_UBM});
+    
+        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_DBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_BLD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the L face.
      */
     public void moveL2Prime() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_MFL, Kilominx.KUBIE_MBL, Kilominx.KUBIE_UFL, Kilominx.KUBIE_FLD});
-
-        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 2);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDBR2Prime();
+        rotateKubies(new byte[] {Kilominx.KUBIE_MFR, Kilominx.KUBIE_MBM, Kilominx.KUBIE_DFM, Kilominx.KUBIE_UBR, Kilominx.KUBIE_DBL});
+        rotateKubies(new byte[] {Kilominx.KUBIE_FMD, Kilominx.KUBIE_UBM, Kilominx.KUBIE_DFL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_BLD});
+    
+        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_BLD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 1);
     }
 
     /**
      * Perform a clockwise turn of the F face.
      */
     public void moveF() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_MFL, Kilominx.KUBIE_FMD, Kilominx.KUBIE_MFR, Kilominx.KUBIE_UFR});
-
-        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 1);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDB();
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBM, Kilominx.KUBIE_MBR, Kilominx.KUBIE_DFR, Kilominx.KUBIE_DFL, Kilominx.KUBIE_MBL});
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_UBR, Kilominx.KUBIE_FRD, Kilominx.KUBIE_DFM, Kilominx.KUBIE_FLD});
+    
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_DFR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 1);
     }
 
     /**
      * Perform a counter-clockwise turn of the F face.
      */
     public void moveFPrime() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_MFR, Kilominx.KUBIE_FMD, Kilominx.KUBIE_MFL});
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDBPrime();
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBM, Kilominx.KUBIE_MBL, Kilominx.KUBIE_DFL, Kilominx.KUBIE_DFR, Kilominx.KUBIE_MBR});
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_FLD, Kilominx.KUBIE_DFM, Kilominx.KUBIE_FRD, Kilominx.KUBIE_UBR});
 
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 2);
     }
 
     /**
      * Perform two clockwise turns of the F face.
      */
     public void moveF2() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_FMD, Kilominx.KUBIE_UFR, Kilominx.KUBIE_MFL, Kilominx.KUBIE_MFR});
-        
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 1);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDB2();
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBM, Kilominx.KUBIE_DFR, Kilominx.KUBIE_MBL, Kilominx.KUBIE_MBR, Kilominx.KUBIE_DFL});
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_FRD, Kilominx.KUBIE_FLD, Kilominx.KUBIE_UBR, Kilominx.KUBIE_DFM});
+
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_DFR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 1);
     }
 
     /**
      * Perform two counter-clockwise turns of the F face.
      */
     public void moveF2Prime() {
-        rotateKubies(new byte[] {Kilominx.KUBIE_UFL, Kilominx.KUBIE_MFR, Kilominx.KUBIE_MFL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_FMD});
-
-        increaseKubieOrientation(Kilominx.KUBIE_UFL, (byte) 1);
-        increaseKubieOrientation(Kilominx.KUBIE_UFR, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_MFL, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_MFR, (byte) 2);
-        increaseKubieOrientation(Kilominx.KUBIE_FMD, (byte) 2);
+        // This move affects the UFL kubie, so make the move and then rotate the entire Kilominx so the UFL kubie is back in the UFL position
+        moveDB2Prime();
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBM, Kilominx.KUBIE_DFL, Kilominx.KUBIE_MBR, Kilominx.KUBIE_MBL, Kilominx.KUBIE_DFR});
+        rotateKubies(new byte[] {Kilominx.KUBIE_UBL, Kilominx.KUBIE_DFM, Kilominx.KUBIE_UBR, Kilominx.KUBIE_FLD, Kilominx.KUBIE_FRD});
+    
+        increaseKubieOrientation(Kilominx.KUBIE_UBM, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MBR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFR, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFL, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_MBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBL, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_UBR, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FRD, (byte) 1);
+        increaseKubieOrientation(Kilominx.KUBIE_DFM, (byte) 2);
+        increaseKubieOrientation(Kilominx.KUBIE_FLD, (byte) 2);
     }
 
     /**
