@@ -7,7 +7,7 @@ import models.ITwistyPuzzle;
 /**
  * The pattern database for a sparse selection of kubies of a Kilominx. 
  * Depending on the selected set number, it looks at kubie indices:
- *   0 (UFL), 7 (MBR), 13 (DFM), 14 (BLD)   (set 1)
+ *   2 (UFR), 7 (MBR), 13 (DFM), 14 (BLD)   (set 1 - note that UFL replaced by UFR, as UFL is now a fixed kubie)
  *   2 (UFR), 9 (MBM), 16 (FLD), 18 (DFR)   (set 2)
  *   4 (UBR), 8 (FMD), 11 (MBL), 19 (DBR)   (set 3)
  *   6 (UBM), 3 (MFL), 10 (FRD), 17 (DBL)   (set 4)
@@ -24,7 +24,7 @@ public class SparseKubiesPatternDatabase extends PatternDatabase {
     final static byte N = 20, K = 4;
 
     // Kubie sets
-    static final byte[] SET_1 = {Kilominx.KUBIE_UFL, Kilominx.KUBIE_MBR, Kilominx.KUBIE_DFM, Kilominx.KUBIE_BLD};
+    static final byte[] SET_1 = {Kilominx.KUBIE_UFR, Kilominx.KUBIE_MBR, Kilominx.KUBIE_DFM, Kilominx.KUBIE_BLD};
     static final byte[] SET_2 = {Kilominx.KUBIE_UFR, Kilominx.KUBIE_MBM, Kilominx.KUBIE_FLD, Kilominx.KUBIE_DFR};
     static final byte[] SET_3 = {Kilominx.KUBIE_UBR, Kilominx.KUBIE_FMD, Kilominx.KUBIE_MBL, Kilominx.KUBIE_DBR};
     static final byte[] SET_4 = {Kilominx.KUBIE_UBM, Kilominx.KUBIE_MFL, Kilominx.KUBIE_FRD, Kilominx.KUBIE_DBL};

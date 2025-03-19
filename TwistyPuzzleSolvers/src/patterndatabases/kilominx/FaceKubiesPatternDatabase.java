@@ -5,9 +5,8 @@ import models.Kilominx;
 import models.ITwistyPuzzle;
 
 /**
- * The pattern database for the 5 kubies on a specified face of a Kilominx.
+ * The pattern database for the 5 kubies on a specified face of a Kilominx. (on faces U, F and L, kubie UFL is replaced by a kubie close to the other kubies on the face)
  * Depending on the selected set number, it looks at the kubie indices that are part of a specific face on the Kilominx.
- * 
  * @see PatternDatabase
  */
 public class FaceKubiesPatternDatabase extends PatternDatabase {
@@ -19,9 +18,9 @@ public class FaceKubiesPatternDatabase extends PatternDatabase {
     final static byte N = 20, K = 5;
 
     // Kubie sets
-    static final byte[] SET_1 =  {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UBL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBR, Kilominx.KUBIE_UBM}; // top face
-    static final byte[] SET_2 =  {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UBL, Kilominx.KUBIE_MFL, Kilominx.KUBIE_MBL, Kilominx.KUBIE_FLD}; // left face
-    static final byte[] SET_3 =  {Kilominx.KUBIE_UFL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_MFL, Kilominx.KUBIE_MFR, Kilominx.KUBIE_FMD}; // front face
+    static final byte[] SET_1 =  {Kilominx.KUBIE_MBR, Kilominx.KUBIE_UBL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBR, Kilominx.KUBIE_UBM}; // top face; UFL is fixed, so replaced by MBR
+    static final byte[] SET_2 =  {Kilominx.KUBIE_DFL, Kilominx.KUBIE_UBL, Kilominx.KUBIE_MFL, Kilominx.KUBIE_MBL, Kilominx.KUBIE_FLD}; // left face; UFL is fixed, so replaced by DFL
+    static final byte[] SET_3 =  {Kilominx.KUBIE_DFM, Kilominx.KUBIE_UFR, Kilominx.KUBIE_MFL, Kilominx.KUBIE_MFR, Kilominx.KUBIE_FMD}; // front face; UFL is fixed, so replaced by DFM
     static final byte[] SET_4 =  {Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBR, Kilominx.KUBIE_MFR, Kilominx.KUBIE_MBR, Kilominx.KUBIE_FRD}; // right face
     static final byte[] SET_5 =  {Kilominx.KUBIE_UBL, Kilominx.KUBIE_UBM, Kilominx.KUBIE_MBM, Kilominx.KUBIE_MBL, Kilominx.KUBIE_BLD}; // back-left face
     static final byte[] SET_6 =  {Kilominx.KUBIE_UBR, Kilominx.KUBIE_UBM, Kilominx.KUBIE_MBR, Kilominx.KUBIE_MBM, Kilominx.KUBIE_BRD}; // back-right face
