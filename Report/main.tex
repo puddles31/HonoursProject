@@ -1,0 +1,127 @@
+\documentclass[12pt]{report}
+\usepackage[a4paper, width=150mm, top=25mm, bottom=25mm, headheight=20mm]{geometry}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{soul}  % For highlighting text - remove when done
+\usepackage[hidelinks]{hyperref}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+% For highlighting text - remove when done
+\newcommand{\hlc}[2][yellow]{{%
+    \colorlet{foo}{#1}%
+    \sethlcolor{foo}\hl{#2}}%
+}
+
+\pagestyle{fancy}
+\fancyhead[L]{From Scramble to Solution}
+\fancyhead[R]{\leftmark}
+\fancyfoot[C]{\thepage}
+
+\title{From Scramble to Solution: Developing an Optimal Solver for a Rubik's Cube Variant}
+\author{Samuel Borg}
+\date{\today}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1.5cm}
+            
+        \Huge
+        \textbf{From Scramble to Solution}
+            
+        \vspace{0.5cm}
+        \LARGE
+        Developing an Optimal Solver for \\a Rubik's Cube Variant
+
+        \vspace{2cm}
+        \textbf{Samuel Borg}
+
+        \Large
+        \textit{Supervisor: Ian Gent}
+
+        \vspace{0.5cm}
+
+        \large
+        \today
+
+        \vspace{3cm}
+
+        \includegraphics[width=0.4\textwidth]{unilogo}
+
+        \Large
+        \vspace{0.5cm}
+        School of Computer Science\\
+        University of St Andrews
+    \end{center}
+\end{titlepage}
+
+\chapter*{Abstract}
+The Rubik's Cube is the most well-known combination puzzle of all time, and has led to the creation of numerous variants of the puzzle. One such puzzle is the Kilominx, a 2x2 dodecahedron-shaped puzzle with 12 faces and 20 cubies (individual cube elements of the puzzle). While the Rubik's Cube has been widely researched, leading to the creation of an optimal solver for the cube, the Kilominx has not been as widely studied.
+
+This report describes the work that was accomplished to create an optimal solver for the Kilominx, guaranteeing a solution in as few moves as possible. The state of the Kilominx is represented as an array of cubies, each with an index and orientation. The solver uses an iterative-deepening A* (IDA*) algorithm to explore the search tree, using a number of pattern databases - large lookup tables which contain the number of moves needed to solve different subsets of cubies - as a lower-bound heuristic. In order to index into the pattern databases, a Lehmer code is computed for the state of the Kilominx, which can then be used to calculate the state's sequential index.
+
+The solver performs very well up to a depth of 11, finding solutions in a matter of seconds. However, as solutions require longer sequences of moves to solve, the solver takes exponentially more time to find the optimal solution.
+
+
+\chapter*{Declaration}
+I declare that the material submitted for assessment is my own work except where credit is explicitly given to others by citation or acknowledgement. This work was performed during the current academic year except where otherwise stated.
+
+The main text of this project report is \hlc[yellow]{[insert word count]} words long, including project specification and plan.
+
+In submitting this project report to the University of St Andrews, I give permission for it to be made available for use in accordance with the regulations of the University Library. I also give permission for the title and abstract to be published and for copies of the report to be made and supplied at cost to any bona fide library or research worker, and to be made available on the World Wide Web. I retain the copyright in this work.
+
+\chapter*{Acknowledgements}
+I would like to thank my supervisor, Ian Gent, for his invaluable guidance, insight and support throughout this project. His expertise and enthusiasm have made this project an incredibly engaging and rewarding journey.
+
+I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my amazing friends Emil, Ben, Zoe, Josh, Maya, Jess and Alfie for their unwavering support and belief in me all the way through my studies.
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/introduction}
+
+\chapter{Context Survey}
+\input{chapters/context_survey}
+
+\chapter{Requirements Specification}
+\input{chapters/requirements}
+
+% \chapter{Software Engineering Process}
+% % The development approach taken and justification for its
+% % adoption.
+
+% \chapter{Ethics}
+% % Any ethical considerations for the project. You should scan
+% % the signed ethical approval document, and include it as an
+% % appendix. 
+
+\chapter{Design}
+\input{chapters/design}
+
+\chapter{Implementation}
+\input{chapters/implementation}
+
+\chapter{Evaluation and Critical Appraisal}
+\input{chapters/evaluation}
+
+\chapter{Conclusions}
+\input{chapters/conclusions}
+
+% BIBLIOGRAPHY GOES HERE!
+
+\appendix
+\chapter{Testing Summary}
+% This should describe the steps taken to debug, test, verify or
+% otherwise confirm the correctness of the various modules
+% and their combination.
+
+\chapter{User Manual}
+% Instructions on installing, executing and using the system
+% where appropriate.
+
+\end{document}
