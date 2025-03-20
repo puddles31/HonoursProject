@@ -61,11 +61,12 @@
 \end{titlepage}
 
 \chapter*{Abstract}
-The Rubik's Cube is the most well-known combination puzzle of all time, and has led to the creation of numerous variants of the puzzle. One such puzzle is the Kilominx, a 2x2 dodecahedron-shaped puzzle with 12 faces and 20 cubies (individual cube elements of the puzzle). While the Rubik's Cube has been widely researched, leading to the creation of an optimal solver for the cube, the Kilominx has not been as widely studied.
+The Rubik's Cube is the most well-known combination puzzle of all time, and has led to the creation of numerous variants of the puzzle. One such puzzle is the Kilominx, a 2x2 dodecahedron-shaped puzzle with 12 faces and 20 cubies (individual cube elements of the puzzle). While the Rubik's Cube has already been extensively researched, the Kilominx has not been studied as widely.
 
-This report describes the work that was accomplished to create an optimal solver for the Kilominx, guaranteeing a solution in as few moves as possible. The state of the Kilominx is represented as an array of cubies, each with an index and orientation. The solver uses an iterative-deepening A* (IDA*) algorithm to explore the search tree, using a number of pattern databases - large lookup tables which contain the number of moves needed to solve different subsets of cubies - as a lower-bound heuristic. In order to index into the pattern databases, a Lehmer code is computed for the state of the Kilominx, which can then be used to calculate the state's sequential index.
+This report describes the work that was accomplished to create an optimal solver for the Kilominx, guaranteeing a solution in as few moves as possible. The state of the Kilominx is represented as an array of cubies, each with an index and orientation. The solver uses an iterative-deepening A* (IDA*) algorithm to explore the search tree, using a number of pattern databases - large lookup tables which contain the number of moves needed to solve different sets of cubies - as a lower-bound heuristic. In order to index into the pattern databases, a Lehmer code is computed for the state of the Kilominx which can then be used to calculate the state's sequential index.
 
-The solver performs very well up to a depth of 11, finding solutions in a matter of seconds. However, as solutions require longer sequences of moves to solve, the solver takes exponentially more time to find the optimal solution.
+The solver performs very well up to \hlc[yellow]{a depth of 11}, finding solutions in a matter of seconds. However, as solutions require longer sequences of moves to solve, the solver takes exponentially more time to find the optimal solution. With further optimisation, the solver could be used to help tighten the bounds on the Kilominx's God's Number, which is the maximum number of moves needed to solve the puzzle from any given state.
+
 
 
 \chapter*{Declaration}
@@ -76,20 +77,20 @@ The main text of this project report is \hlc[yellow]{[insert word count]} words 
 In submitting this project report to the University of St Andrews, I give permission for it to be made available for use in accordance with the regulations of the University Library. I also give permission for the title and abstract to be published and for copies of the report to be made and supplied at cost to any bona fide library or research worker, and to be made available on the World Wide Web. I retain the copyright in this work.
 
 \chapter*{Acknowledgements}
-I would like to thank my supervisor, Ian Gent, for his invaluable guidance, insight and support throughout this project. His expertise and enthusiasm have made this project an incredibly engaging and rewarding journey.
+% I would like to thank my supervisor, Ian Gent, for his invaluable guidance, insight and support throughout this project. His expertise and enthusiasm have made this project an incredibly engaging and rewarding journey.
 
-I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my amazing friends Emil, Ben, Zoe, Josh, Maya, Jess and Alfie for their unwavering support and belief in me all the way through my studies.
+% I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my amazing friends Emil, Ben, Zoe, Josh, Maya, Jess and Alfie for their unwavering support and belief in me all the way through my studies.
 
 \tableofcontents
 
 \chapter{Introduction}
-\input{chapters/introduction}
+\input{chapters/1-introduction}
 
 \chapter{Context Survey}
-\input{chapters/context_survey}
+\input{chapters/2-context_survey}
 
 \chapter{Requirements Specification}
-\input{chapters/requirements}
+\input{chapters/3-requirements}
 
 % \chapter{Software Engineering Process}
 % % The development approach taken and justification for its
@@ -101,16 +102,16 @@ I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my
 % % appendix. 
 
 \chapter{Design}
-\input{chapters/design}
+\input{chapters/4-design}
 
 \chapter{Implementation}
-\input{chapters/implementation}
+\input{chapters/5-implementation}
 
-\chapter{Evaluation and Critical Appraisal}
-\input{chapters/evaluation}
+\chapter{Evaluation}
+\input{chapters/6-evaluation}
 
 \chapter{Conclusions}
-\input{chapters/conclusions}
+\input{chapters/7-conclusions}
 
 % BIBLIOGRAPHY GOES HERE!
 

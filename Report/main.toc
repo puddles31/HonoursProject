@@ -1,16 +1,18 @@
 \contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Introduction}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.1}Objectives}{5}{section.1.1}%
 \contentsline {chapter}{\numberline {2}Context Survey}{6}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Context Survey}{6}{section.2.1}%
+\contentsline {section}{\numberline {2.1}Korf's Algorithm for the Rubik's Cube}{6}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Iterative-Deepening A*}{6}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Pattern Databases}{6}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Sequential Indexing with Lehmer Codes}{6}{section.2.2}%
+\contentsline {section}{\numberline {2.3}God's Number}{6}{section.2.3}%
 \contentsline {chapter}{\numberline {3}Requirements Specification}{7}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Requirements}{7}{section.3.1}%
 \contentsline {chapter}{\numberline {4}Design}{8}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Design}{8}{section.4.1}%
 \contentsline {chapter}{\numberline {5}Implementation}{9}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Implementation}{9}{section.5.1}%
-\contentsline {chapter}{\numberline {6}Evaluation and Critical Appraisal}{10}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Evaluation}{10}{section.6.1}%
+\contentsline {chapter}{\numberline {6}Evaluation}{10}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Experimental Results}{10}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Evaluation Against Objectives}{10}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Critical Appraisal}{10}{section.6.3}%
 \contentsline {chapter}{\numberline {7}Conclusions}{11}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Conclusions}{11}{section.7.1}%
 \contentsline {chapter}{\numberline {A}Testing Summary}{12}{appendix.A}%
 \contentsline {chapter}{\numberline {B}User Manual}{13}{appendix.B}%
