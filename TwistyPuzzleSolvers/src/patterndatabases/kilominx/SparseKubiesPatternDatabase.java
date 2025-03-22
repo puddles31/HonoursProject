@@ -17,11 +17,11 @@ import models.ITwistyPuzzle;
  */
 public class SparseKubiesPatternDatabase extends PatternDatabase {
     
-    // For this database, we are looking at 4 out of 20 kubies, so n=20 and k=4
-    // There are 20(P)4 * 3^4 (4 of 20 kubies; each of 4 kubies can be in one of 3 orientations) = 9418680 possible states
-    // Also note that roughly 9MB storage needed (9418680 bytes / 1024^2 = ~9MB)
-    final static int DATABASE_SIZE = 9418680;
-    final static byte N = 20, K = 4;
+    // For this database, we are looking at 4 out of 19 kubies (the 20th kubie is fixed), so n=19 and k=4
+    // There are 19(P)4 * 3^4 (4 of 19 kubies; each of 4 kubies can be in one of 3 orientations) = 7534944 possible states
+    // Also note that roughly 7MB storage needed (7534944 bytes / 1024^2 = ~7MB)
+    final static int DATABASE_SIZE = 7534944;
+    final static byte N = 19, K = 4;
 
     // Kubie sets
     static final byte[] SET_1 = {Kilominx.KUBIE_UFR, Kilominx.KUBIE_MBR, Kilominx.KUBIE_DFM, Kilominx.KUBIE_BLD};
@@ -35,7 +35,7 @@ public class SparseKubiesPatternDatabase extends PatternDatabase {
 
     /**
      * Constructor for the sparse kubies pattern database.
-     * Sets the database size to 9418680, n to 20, and k to 4.
+     * Sets the database size to 7534944, n to 19, and k to 4.
      * @param setNo The set number of the kubies to look at (1-5)
      * @throws IllegalArgumentException If the set number is not between 1 and 5
      */

@@ -11,11 +11,11 @@ import models.ITwistyPuzzle;
  */
 public class FaceKubiesPatternDatabase extends PatternDatabase {
     
-    // For this database, we are looking at 5 out of 20 kubies, so n=20 and k=5
-    // There are 20(P)5 * 3^5 (5 of 20 kubies; each of 5 kubies can be in one of 3 orientations) = 452096640 possible states
-    // Also note that roughly 431MB storage needed (452096640 bytes / 1024^2 = ~431MB)
-    final static int DATABASE_SIZE = 452096640;
-    final static byte N = 20, K = 5;
+    // For this database, we are looking at 5 out of 19 kubies (the 20th kubie is fixed), so n=19 and k=5
+    // There are 19(P)5 * 3^5 (5 of 19 kubies; each of 5 kubies can be in one of 3 orientations) = 339072480 possible states
+    // Also note that roughly 323MB storage needed (339072480 bytes / 1024^2 = ~323MB)
+    final static int DATABASE_SIZE = 339072480;
+    final static byte N = 19, K = 5;
 
     // Kubie sets
     static final byte[] SET_1 =  {Kilominx.KUBIE_MBR, Kilominx.KUBIE_UBL, Kilominx.KUBIE_UFR, Kilominx.KUBIE_UBR, Kilominx.KUBIE_UBM}; // top face; UFL is fixed, so replaced by MBR
@@ -36,7 +36,7 @@ public class FaceKubiesPatternDatabase extends PatternDatabase {
 
     /**
      * Constructor for a face kubies pattern database.
-     * Sets the database size to 452096640, n to 20, and k to 5.
+     * Sets the database size to 339072480, n to 19, and k to 5.
      * @param setNo The set number of the kubies to look at (1-12)
      * @throws IllegalArgumentException If the set number is not between 1 and 12
      */
