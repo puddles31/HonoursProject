@@ -92,27 +92,27 @@ public class FaceKubiesPatternDatabase extends PatternDatabase {
             int kubieIndex = allKubieIndices[i];
 
             if (kubieIndex == set[0]) {
-                kubieIndices[0] = i;
+                kubieIndices[0] = (byte)(i - 1); // UFL is fixed at position 0, so shift all indices down by 1
                 kubieOrientations[0] = allKubieOrientations[i];
                 counter++;
             }
             else if (kubieIndex == set[1]) {
-                kubieIndices[1] = i;
+                kubieIndices[1] = (byte)(i - 1); // UFL is fixed at position 0, so shift all indices down by 1
                 kubieOrientations[1] = allKubieOrientations[i];
                 counter++;
             }
             else if (kubieIndex == set[2]) {
-                kubieIndices[2] = i;
+                kubieIndices[2] = (byte)(i - 1); // UFL is fixed at position 0, so shift all indices down by 1
                 kubieOrientations[2] = allKubieOrientations[i];
                 counter++;
             }
             else if (kubieIndex == set[3]) {
-                kubieIndices[3] = i;
+                kubieIndices[3] = (byte)(i - 1); // UFL is fixed at position 0, so shift all indices down by 1
                 kubieOrientations[3] = allKubieOrientations[i];
                 counter++;
             }
             else if (kubieIndex == set[4]) {
-                kubieIndices[4] = i;
+                kubieIndices[4] = (byte)(i - 1); // UFL is fixed at position 0, so shift all indices down by 1
                 kubieOrientations[4] = allKubieOrientations[i];
                 counter++;
             }
