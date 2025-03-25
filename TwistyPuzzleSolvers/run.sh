@@ -12,6 +12,8 @@ elif [[ $1 == "kilominx" && ($# == 1 || $2 == "terminal" || $2 == "-t") ]]; then
     java -cp TwistyPuzzleSolvers/classes interactive.KilominxTerminal
 elif [[ $1 == "pdb" ]]; then
     java -cp TwistyPuzzleSolvers/classes patterndatabases.PopulatePatternDatabases $2
+elif [[ $1 == "test" ]]; then
+    java -cp TwistyPuzzleSolvers/classes interactive.KilominxTester
 else 
-    echo "Usage: run.sh [cube|kilominx|pdb] [terminal|gui|pdb-flag]"
+    echo "Usage: run.sh [cube|kilominx|pdb|test] [terminal|gui|pdb-flag]"
 fi

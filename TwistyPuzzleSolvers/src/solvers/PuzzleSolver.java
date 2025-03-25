@@ -27,6 +27,14 @@ public abstract class PuzzleSolver {
     }
 
     /**
+     * Set the puzzle instance to solve.
+     * @param puzzle - The puzzle to solve.
+     */
+    public void setPuzzleInstance(ITwistyPuzzle puzzle) {
+        this.puzzle = puzzle;
+    }
+
+    /**
      * Get the maximum number of moves required to solve a puzzle state across all databases.
      * @param puzzle - The puzzle to get the maximum number of moves for.
      * @return The maximum number of moves required to solve one of the subsets of cubies.
