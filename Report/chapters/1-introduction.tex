@@ -4,4 +4,16 @@
 % outline key aspects of your project for the reader to look for
 % in the rest of your report.
 
+When the Rubik's Cube was globally released in 1980, it became an instant success, selling around 200 million units by the end of 1983[1]. The Rubik's Cube also became a popular subject of research for computer scientists, in part due to the massive 43 quintillion[2] possible states that the cube can be in. Many different algorithms were designed to try and solve the cube in as few a number of moves as possible, but it wasn't until 1997 that Richard E. Korf published a paper[3] describing a method to solve the Rubik's Cube optimally (the shortest possible number of moves to solve any given cube state) by using large lookup tables called pattern databases as a heuristic function to guide an IDA* search algorithm. 
+
+[1] - https://archive.org/details/lightersideofmat0000unse/page/340/mode/1up
+[2] - https://ruwix.com/the-rubiks-cube/mathematics-of-the-rubiks-cube-permutation-group/
+[3] - https://www.cs.princeton.edu/courses/archive/fall06/cos402/papers/korfrubik.pdf
+
+God's Number stuff here
+
+% This method used an iterative-deepening A* (IDA*) algorithm - a memory-efficient variant of the A* search algorithm - with a lower-bound heuristic function in pattern databases (https://onlinelibrary.wiley.com/doi/pdf/10.1111/0824-7935.00065) - large precomputed lookup tables, each storing the number of moves required to solve a different set of cubies.
+
+The widespread success of the Rubik's Cube also led to the creation of a number of different variants of the puzzle, each working similarly to the Rubik's Cube but of different shapes and sizes. The Kilominx is one of these variants, part of the larger "minx" family of dodecahedron-shaped puzzles. The Kilominx is a 2x2 dodecahedral puzzle with 12 faces and 20 cubies. Although some research has been done on tightening the bounds of its God's Number, no optimal solver has been created for the puzzle.
+
 \section{Objectives}
