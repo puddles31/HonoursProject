@@ -16,3 +16,4 @@
 \contentsline {chapter}{\numberline {7}Conclusions}{11}{chapter.7}%
 \contentsline {chapter}{\numberline {A}Testing Summary}{12}{appendix.A}%
 \contentsline {chapter}{\numberline {B}User Manual}{13}{appendix.B}%
+\contentsline {chapter}{References}{14}{appendix*.5}%
