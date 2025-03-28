@@ -6,11 +6,15 @@
 \usepackage{parskip}
 \usepackage{xcolor}
 \usepackage{soul}  % For highlighting text - remove when done
-\usepackage[hidelinks]{hyperref}
-
+\usepackage{hyperref}
+\usepackage[explicit,compact]{titlesec}
+\usepackage{pdfpages}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
 \graphicspath{{./images/}}
 \counterwithout{figure}{chapter}
 \addbibresource{citations.bib}
+\titleformat{\chapter}[block]{\bfseries\huge}{\filright\huge\thechapter.}{1ex}{\huge\filright #1}
+\titlespacing*{\section}{0pt}{5.5ex plus 1ex minus .2ex}{3.3ex plus .2ex}
 
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 
@@ -65,11 +69,7 @@
 \end{titlepage}
 
 \chapter*{Abstract}
-The Rubik's Cube is the most well-known combination puzzle of all time, and has inspired numerous variants of the puzzle. One such puzzle is the Kilominx, a 2x2 dodecahedron-shaped puzzle with 12 faces and 20 cubies (individual cube elements of the puzzle). While the Rubik's Cube has already been extensively researched, the Kilominx has not.
-
-This report details my work in creating an optimal solver for the Kilominx, guaranteeing solutions in as few moves as possible. A separate program I wrote precomputes several pattern databases, each containing the number of moves required to solve different sets of cubies in all possible states. The solver uses an iterative-deepening A* (IDA*) algorithm to find the optimal solution, using the pattern databases as a lower-bound heuristic. In order to efficiently index into the pattern databases, the solver computes a Lehmer code for the puzzle state, which is then used to calculate the state's sequential index.
-
-In theory, the solver can optimally solve any state given enough time, but in practice it can only find solutions up to a depth of 14 within a reasonable timeframe. As solutions require longer sequences of moves to solve, the solver takes exponentially more time to find the optimal solution. With further optimisation, the solver could be used to help tighten the bounds on the Kilominx's God's Number - the maximum number of moves needed to solve the puzzle from any given state.
+\input{chapters/0-abstract}
 
 \chapter*{Declaration}
 I declare that the material submitted for assessment is my own work except where credit is explicitly given to others by citation or acknowledgement. This work was performed during the current academic year except where otherwise stated.
@@ -94,28 +94,29 @@ I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my
 \chapter{Requirements Specification}
 \input{chapters/3-requirements}
 
-% \chapter{Software Engineering Process}
-% % The development approach taken and justification for its
-% % adoption.
+\chapter{Software Engineering Process}
+\input{chapters/4-engineering}
 
-% \chapter{Ethics}
-% % Any ethical considerations for the project. You should scan
-% % the signed ethical approval document, and include it as an
-% % appendix. 
+\chapter{Ethics}
+\input{chapters/5-ethics}
 
 \chapter{Design}
-\input{chapters/4-design}
+\input{chapters/6-design}
 
 \chapter{Implementation}
-\input{chapters/5-implementation}
+\input{chapters/7-implementation}
 
 \chapter{Evaluation}
-\input{chapters/6-evaluation}
+\input{chapters/8-evaluation}
 
 \chapter{Conclusions}
-\input{chapters/7-conclusions}
+\input{chapters/9-conclusions}
 
 \appendix
+\chapter{Artefact Evaluation Form}
+\label{appendix:artefact}
+\includepdf[pages=1]{ethics.pdf}
+
 \chapter{Testing Summary}
 % This should describe the steps taken to debug, test, verify or
 % otherwise confirm the correctness of the various modules
