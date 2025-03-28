@@ -1,12 +1,16 @@
 \documentclass[12pt]{report}
 \usepackage[a4paper, width=150mm, top=25mm, bottom=25mm, headheight=20mm]{geometry}
-% \usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{parskip}
 \usepackage{xcolor}
 \usepackage{soul}  % For highlighting text - remove when done
 \usepackage[hidelinks]{hyperref}
+
+\graphicspath{{./images/}}
+\counterwithout{figure}{chapter}
+\addbibresource{citations.bib}
 
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 
@@ -65,7 +69,7 @@ The Rubik's Cube is the most well-known combination puzzle of all time, and has 
 
 This report details my work in creating an optimal solver for the Kilominx, guaranteeing solutions in as few moves as possible. A separate program I wrote precomputes several pattern databases, each containing the number of moves required to solve different sets of cubies in all possible states. The solver uses an iterative-deepening A* (IDA*) algorithm to find the optimal solution, using the pattern databases as a lower-bound heuristic. In order to efficiently index into the pattern databases, the solver computes a Lehmer code for the puzzle state, which is then used to calculate the state's sequential index.
 
-In theory, the solver can optimally solve any state given enough time, but in practice it can only find solutions up to \hlc[yellow]{a depth of 11} within a reasonable timeframe. As solutions require longer sequences of moves to solve, the solver takes exponentially more time to find the optimal solution. With further optimisation, the solver could be used to help tighten the bounds on the Kilominx's God's Number - the maximum number of moves needed to solve the puzzle from any given state.
+In theory, the solver can optimally solve any state given enough time, but in practice it can only find solutions up to a depth of 14 within a reasonable timeframe. As solutions require longer sequences of moves to solve, the solver takes exponentially more time to find the optimal solution. With further optimisation, the solver could be used to help tighten the bounds on the Kilominx's God's Number - the maximum number of moves needed to solve the puzzle from any given state.
 
 \chapter*{Declaration}
 I declare that the material submitted for assessment is my own work except where credit is explicitly given to others by citation or acknowledgement. This work was performed during the current academic year except where otherwise stated.
@@ -111,8 +115,6 @@ I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my
 \chapter{Conclusions}
 \input{chapters/7-conclusions}
 
-% BIBLIOGRAPHY GOES HERE!
-
 \appendix
 \chapter{Testing Summary}
 % This should describe the steps taken to debug, test, verify or
@@ -122,5 +124,7 @@ I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my
 \chapter{User Manual}
 % Instructions on installing, executing and using the system
 % where appropriate.
+
+\printbibliography[heading=bibintoc, title={References}]
 
 \end{document}
