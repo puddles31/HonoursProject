@@ -13,10 +13,11 @@ public class KilominxTester {
     public static void main(String[] args) {
         KilominxTester tester = new KilominxTester();
 
-        for (int scrambleLength = 10; scrambleLength < 15; scrambleLength++) {
-            for (int i = 0; i < 10; i++) {
-                tester.testRun(scrambleLength);
-            }
+        int scrambleLength = Integer.valueOf(args[0]);
+        int testRuns = Integer.valueOf(args[1]);
+
+        for (int i = 0; i < testRuns; i++) {
+            tester.testRun(scrambleLength);
         }
     }
 
