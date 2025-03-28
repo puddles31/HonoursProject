@@ -1,0 +1,29 @@
+% Indicating the structure of the system, with particular focus
+% on main ideas of the design, unusual design features, etc.
+
+\section{Design Overview}
+% Quick overview of layout of classes (inheritance, abstract classes, etc)
+
+\section{Representing State}
+% Talk about using an array of Cubies (index + orientation) to represent the state of the cube/kilominx
+% Why do it this way?
+% How does the order of the array matter?
+% What does "orientation" mean? How do we use it to get the colours?
+
+\section{Making Moves}
+% Talk about making moves on the cube/kilominx, and briefly talk about the idea of skipping moves to reduce search
+% For kilominx, talk about fixing a cubie in one position, and how this affects the moves
+
+\section{Populating Pattern Databases}
+% Talk about the design of the pattern databases themselves, and how they are populated via search
+% How did I choose which cubies for the pattern databases?
+
+\section{Lehmer Codes}
+% Talk about using Lehmer codes to calculate database indices - full maths section here
+
+\section{Searching for Solutions}
+% Talk about IDA* search
+
+\section{Interacting with the Puzzles}
+% Quick talk about terminal/GUI classes
+% Talk about editing the puzzles, and the checks to ensure input is valid

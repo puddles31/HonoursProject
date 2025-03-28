@@ -1,0 +1,177 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{unitssold}{online}{}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{addendum}{Last accessed on 25/03/25}
+      \field{title}{The Lighter Side of Mathematics}
+      \verb{urlraw}
+      \verb https://archive.org/details/lightersideofmat0000unse/page/340/mode/1up
+      \endverb
+      \verb{url}
+      \verb https://archive.org/details/lightersideofmat0000unse/page/340/mode/1up
+      \endverb
+    \endentry
+    \entry{states}{online}{}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{addendum}{Last accessed on 25/03/25}
+      \field{title}{Mathematics of the Rubik's Cube}
+      \verb{urlraw}
+      \verb https://ruwix.com/the-rubiks-cube/mathematics-of-the-rubiks-cube-permutation-group/
+      \endverb
+      \verb{url}
+      \verb https://ruwix.com/the-rubiks-cube/mathematics-of-the-rubiks-cube-permutation-group/
+      \endverb
+    \endentry
+    \entry{korf}{inproceedings}{}{}
+      \name{author}{1}{}{%
+        {{hash=8980d2bdb255071dca218f4193bf365d}{%
+           family={Korf},
+           familyi={K\bibinitperiod},
+           given={R.\bibnamedelimi E.},
+           giveni={R\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{8980d2bdb255071dca218f4193bf365d}
+      \strng{fullhash}{8980d2bdb255071dca218f4193bf365d}
+      \strng{fullhashraw}{8980d2bdb255071dca218f4193bf365d}
+      \strng{bibnamehash}{8980d2bdb255071dca218f4193bf365d}
+      \strng{authorbibnamehash}{8980d2bdb255071dca218f4193bf365d}
+      \strng{authornamehash}{8980d2bdb255071dca218f4193bf365d}
+      \strng{authorfullhash}{8980d2bdb255071dca218f4193bf365d}
+      \strng{authorfullhashraw}{8980d2bdb255071dca218f4193bf365d}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{addendum}{Last accessed on 25/03/25}
+      \field{booktitle}{AAAI'97}
+      \field{title}{Finding Optimal Solutions to Rubik's Cube Using Pattern Databases}
+      \field{year}{1997}
+      \verb{urlraw}
+      \verb https://www.cs.princeton.edu/courses/archive/fall06/cos402/papers/korfrubik.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.cs.princeton.edu/courses/archive/fall06/cos402/papers/korfrubik.pdf
+      \endverb
+    \endentry
+    \entry{patterndatabases}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5d69dcc348113b272fd9c243cfe64d4a}{%
+           family={Culberson},
+           familyi={C\bibinitperiod},
+           given={J.\bibnamedelimi C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=37af2d33782c75db01b10afde4bf9430}{%
+           family={Schaeffer},
+           familyi={S\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{fullhash}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{fullhashraw}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{bibnamehash}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{authorbibnamehash}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{authornamehash}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{authorfullhash}{45023f8ba7a9761f97ece1460e61a5a8}
+      \strng{authorfullhashraw}{45023f8ba7a9761f97ece1460e61a5a8}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{addendum}{Last accessed on 26/03/25}
+      \field{journaltitle}{Computational Intelligence}
+      \field{number}{3}
+      \field{title}{Pattern Databases}
+      \field{volume}{14}
+      \field{year}{1998}
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1111/0824-7935.00065
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1111/0824-7935.00065
+      \endverb
+    \endentry
+    \entry{godsnumber}{online}{}{}
+      \name{author}{4}{}{%
+        {{hash=b1e728f5de88ae9f9d15917634f252dc}{%
+           family={Rokicki},
+           familyi={R\bibinitperiod},
+           given={T.},
+           giveni={T\bibinitperiod}}}%
+        {{hash=7cb17beaf3fd57a0352a16dea006132a}{%
+           family={Kociemba},
+           familyi={K\bibinitperiod},
+           given={H.},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a5e9eb5c82960a20d2ca4782d1f6b41f}{%
+           family={Davidson},
+           familyi={D\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d24e5c9c2623b1687c965fc4aa832e6e}{%
+           family={Dethridge},
+           familyi={D\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{29e16831e35a7624a26a1d42f4e48a9b}
+      \strng{fullhash}{e3be6a630f94b0d0ec76705c81362a9a}
+      \strng{fullhashraw}{e3be6a630f94b0d0ec76705c81362a9a}
+      \strng{bibnamehash}{29e16831e35a7624a26a1d42f4e48a9b}
+      \strng{authorbibnamehash}{29e16831e35a7624a26a1d42f4e48a9b}
+      \strng{authornamehash}{29e16831e35a7624a26a1d42f4e48a9b}
+      \strng{authorfullhash}{e3be6a630f94b0d0ec76705c81362a9a}
+      \strng{authorfullhashraw}{e3be6a630f94b0d0ec76705c81362a9a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{addendum}{Last accessed on 26/03/25}
+      \field{title}{God's Number is 20}
+      \verb{urlraw}
+      \verb https://www.cube20.org/
+      \endverb
+      \verb{url}
+      \verb https://www.cube20.org/
+      \endverb
+    \endentry
+    \entry{kilominxgodsnumber}{online}{}{}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labeltitlesource}{title}
+      \field{addendum}{Last accessed on 26/03/25}
+      \field{title}{God's Algorithm - Optimal solutions of the Rubik's Cube}
+      \verb{urlraw}
+      \verb https://www.speedsolving.com/wiki/index.php/God's_Algorithm#Minxes
+      \endverb
+      \verb{url}
+      \verb https://www.speedsolving.com/wiki/index.php/God's_Algorithm#Minxes
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
