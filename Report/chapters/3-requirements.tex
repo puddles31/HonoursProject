@@ -1,4 +1,17 @@
-% Capturing the properties the software solution must have in
-% the form of requirements specification. You may wish to
-% specify different types of requirements and given them
-% priorities if applicable.
+The following requirements were derived from the primary and secondary project objectives (as outlined in \textbf{\hyperref[section:objectives]{Section 1.1}}).
+
+\textbf{Requirements for Primary Objectives:}
+\begin{itemize}
+    \item Model the behaviour of a Rubik's Cube and a Kilominx, allowing them to be manipulated by making moves.
+    \item Create representations for the pattern databases, which calculate the Lehmer rank of a permutation of cubie indices to determine the permutation's index in the pattern database.
+    \item Populate the pattern databases by implementing a breadth-first search (BFS) algorithm or an iterative deepening depth-first search (IDDFS) algorithm.
+    \item Implement an IDA* search algorithm to find the optimal solution for a given puzzle state, using the pattern databases as a heuristic function.
+    \item Create a command-line interface which lets the user interact with the puzzles and the solver, allowing the user to: view the current state of the puzzle; enter commands to make moves; and use the solver to find an optimal solution for a given puzzle state.
+\end{itemize}
+
+\textbf{Requirements for Secondary Objectives:}
+\begin{itemize}
+    \item Use the solver to increase the lower bound of the Kilominx's God's Number by finding an optimal solution of a greater number of moves than the current lower bound.
+    \item Create a simple GUI program which uses the previously created classes to allow users to interact with a Rubik's Cube and Kilominx.
+    \item Connect the solver to the GUI to find the optimal solution for the puzzle, and then display the solution to the user.
+\end{itemize}
