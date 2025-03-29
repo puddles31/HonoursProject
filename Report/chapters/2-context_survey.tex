@@ -5,15 +5,62 @@
 % You may also describe potentially useful tools and
 % technologies here but do not go into project-specific
 % decisions.
+\section{Terminology}
+\textbf{Cubie} - An individual cube-shaped element of the puzzle. The Rubik's Cube has 26 cubies (excluding the non-visible cubie at the centre of the cube), and the Kilominx has 20 cubies (sometimes referred to as "\textbf{kubies}" - Kilominx cubies).
+
+\textbf{Face} - A face of the puzzle, which can be twisted to change the state of the puzzle. The Rubik's Cube has 6 faces, while the Kilominx has 12 faces.
+
+\textbf{Twist} - A twist is a rotation of a face of the puzzle. A twist is only valid if the face is aligned with the rest of the puzzle when the twist is completed. Twists are the basic moves that can be made on the puzzle to change its state. The Rubik's Cube has 6 faces, and each face can be twisted in 3 different ways (90 degrees clockwise, 90 degrees counterclockwise, or 180 degrees). The Kilominx has 12 faces, and each face can be twisted in 4 different ways (72 degrees clockwise, 72 degrees counterclockwise, 144 degrees clockwise, or 144 degrees counterclockwise).
+
+\textbf{Move Notation} - Twists on the Rubik's Cube can be represented in a shorthand notation \cite{rubiksnotation}, where a letter represents a \textbf{clockwise} twist of the face represented by that letter. If the letter is followed by an apostrophe (e.g. $U$, read as "U Prime"), it represents a \textbf{counterclockwise} twist of the face. If the letter is followed by the number 2 (e.g. $U2$), it represents \textbf{two clockwise} twists of the face (a 180-degree twist). The letters used to represent the faces of the Rubik's Cube are as follows:
+\begin{itemize}
+    \item $U$ - Up
+    \item $L$ - Left
+    \item $F$ - Front
+    \item $R$ - Right
+    \item $B$ - Back
+    \item $D$ - Down
+\end{itemize}
+
+The notation for the Kilominx is similar, but instead uses up to three letters to represent the faces of the puzzle. In addition, to represent a \textbf{double counterclockwise} twist, the face is followed by a 2 and an apostrophe (e.g. $U2'$). The letters used to represent the faces of the Kilominx are as follows:
+\begin{itemize}
+    \item $U$ - Up
+    \item $L$ - Left
+    \item $F$ - Front
+    \item $R$ - Right
+    \item $BL$ - Back Left
+    \item $BR$ - Back Right
+    \item $DL$ - Down Left
+    \item $DR$ - Down Right
+    \item $DBL$ - Down Back Left
+    \item $DBR$ - Down Back Right
+    \item $DB$ - Down Back
+    \item $D$ - Down
+\end{itemize}
+
+ 
 
 \section{Korf's Algorithm for the Rubik's Cube}
-% Go into detail about Korf's paper for the rubik's cube. Mention any important design decisions he made. Relate it to what I am doing.
+As mentioned briefly in the introduction, Richard E. Korf published a paper in 1997 \cite{korf} which described a method to find optimal solutions for the Rubik's Cube, using a combination of an IDA* search algorithm and large memory-based lookup tables called pattern databases, which served as the lower-bound heuristic function for the IDA* search. The paper was a landmark in the field of Rubik's Cube research, as it was the first to find optimal solutions for the cube, and it also introduced a number of important concepts that would be used in later research on the cube.
+
+\subsection{Representing the Cube State}
+The Rubik's Cube is made up of 26 cubies (not including the cubie at the centre of the cube). Six of these cubies are centre cubies, which are fixed in place and do not move, while the other cubies are either corner cubies (of which there are 8) or edge cubies (of which there are 12). The corner cubies can be oriented in 3 different ways, while the edge cubies can be oriented in 2 different ways. Korf suggests representing the state of the cube as an array of 20 elements, where each element represents a cubie on the cube, encoding the cubie's initial position (or index) and orientation. While this representation is less intuitive than a more object-oriented approach, it is much more efficient for the IDA* search algorithm, as it allows for faster access and manipulation of the cube's state. In order to make moves on the cube, specific cubies are swapped around in the array, and their orientations are updated accordingly.
+
 \subsection{Iterative-Deepening A*}
+In order to find an optimal solution for the cube, a search algorithm with an admissible heuristic function is needed. An admissible heuristic function is one that never overestimates the cost of reaching the goal state from the current state (i.e. the heuristic function is always less than or equal to the actual cost). The A* search algorithm is a well-known search algorithm that uses an admissible heuristic function to guide the search towards the goal state. However, the A* search algorithm has an exponential space complexity of $O(b^d)$, where $b$ is the branching factor and $d$ is the depth of the search tree. This means that the algorithm can quickly run out of memory for large search spaces, such as with the Rubik's Cube.
+
+Instead, Korf uses an IDA* search algorithm, which is a combination of the A* search algorithm and iterative deepening search. IDA* works by performing a depth-first search with a depth limit, using an admissible heuristic to prune branches if their estimated cost exceeds the current bound. After the search space is fully explored, the depth limit is increased and the search is repeated. This allows the algorithm to use less memory than A*, as it only needs to store the current path in memory, rather than the entire search tree. The IDA* search algorithm has a space complexity of $O(bd)$, which is much more manageable for large search spaces.
+
+Korf also notes that when iterating over possible moves in the IDA* search, we can skip over moves that are redundant, where twisting the same face twice in a row is equivalent to just one twist (e.g. $F F2$ is equivalent to $F'$), and moves that aren't in a specific order: since twists on opposite faces are independent and commutative (e.g. twisting the front face and then the back face is the same as twisting the back face and then the front face), we can define an arbitrary order for each pair of opposite faces, and only consider moves which are in that order (e.g. we allow $F$ then $B$, but not $B$ then $F$). This allows us to reduce the number of possible moves that need to be considered in the IDA* search, resulting in a reduced branching factor for the search algorithm.
+
 \subsection{Pattern Databases}
 % Small section here about the other pattern databases paper. Why use pattern databases?
 
 \subsection{Sequential Indexing with Lehmer Codes}
 % Again, more here to do with sequential indexing and lehmer codes. Use Korf's other paper, and possibly the article that explains it.
+
+\section{Feather's Algorithm}
+% very small section here about the more recent Feather's algorithm.
 
 \section{God's Number}
 % What research has been done on God's Number for the cube and the kilominx? What methods were used? How does it relate to what I'm doing?
