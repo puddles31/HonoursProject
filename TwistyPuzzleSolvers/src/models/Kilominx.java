@@ -62,6 +62,8 @@ public class Kilominx implements ITwistyPuzzle {
     // BRD,    MBM,    BLD,    MBL,    FLD,    DFM,    DFL,    DFR,    DBL,    DBR
     // YeLGOr, YePuOr, PuOrLB, PuDGLB, DGLBBe, BePiGy, LBBeGy, PiLGGy, OrLBGy, LGOrGy
 
+    // Kubies which initially return colours in a CCW order have an even index, and kubies which initially return colours in a CW order have an odd index.
+
     // Kubies have an orientation of:
     //  - 0 (oriented),
     //  - 1 (colours turned CW),
