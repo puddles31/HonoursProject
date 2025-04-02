@@ -11,9 +11,6 @@ import java.io.FileInputStream;
  * Abstract class for a pattern database.
  * A pattern database is a hash table which stores the number of moves required to solve a subset of cubies.
  * The hash function used is {@link #getDatabaseIndex}, which maps subsets of cubies to unique integers.
- * @see CornerPatternDatabase
- * @see FirstEdgePatternDatabase
- * @see SecondEdgePatternDatabase
  */
 public abstract class PatternDatabase {
 
@@ -27,10 +24,10 @@ public abstract class PatternDatabase {
 
     /**
      * Constructor for a pattern database.
-     * Cannot be instantiated directly (as implementation differs between corner/edge databases).
+     * Cannot be instantiated directly (as implementation differs between pattern databases).
      * @param databaseSize - The size of the database. Should be equal to the number of possible states for the subset of cubies.
-     * @param n - The number of elements in the permutation. Should be 8 for corners, 12 for edges.
-     * @param k - The number of elements picked in the partial permutation. Should be 8 for corners, 7 for edges.
+     * @param n - The number of elements in the permutation.
+     * @param k - The number of elements picked in the partial permutation.
      */
     protected PatternDatabase(int databaseSize, byte n, byte k) {
         // Initialise the array with max byte values
@@ -145,9 +142,6 @@ public abstract class PatternDatabase {
      * @param puzzle - The puzzle to calculate the database index for.
      * @return The database index for the given puzzle.
      * @throws IllegalArgumentException if the given puzzle is not a valid puzzle for this database.
-     * @see CornerPatternDatabase#getDatabaseIndex(Cube)
-     * @see FirstEdgePatternDatabase#getDatabaseIndex(Cube)
-     * @see SecondEdgePatternDatabase#getDatabaseIndex(Cube)
      */
     protected abstract int getDatabaseIndex(ITwistyPuzzle puzzle) throws IllegalArgumentException;
 
