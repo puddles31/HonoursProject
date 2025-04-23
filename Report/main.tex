@@ -3,19 +3,26 @@
 \usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
+\usepackage{amsmath}
 \usepackage{parskip}
-\usepackage{xcolor}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{longtable}
 \usepackage{soul}  % For highlighting text - remove when done
 \usepackage{hyperref}
 \usepackage[explicit,compact]{titlesec}
 \usepackage{pdfpages}
+\usepackage{multicol}
+\usepackage{csquotes}
+
 \hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
 \graphicspath{{./images/}}
 \counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
 \addbibresource{citations.bib}
 \titleformat{\chapter}[block]{\bfseries\huge}{\filright\huge\thechapter.}{1ex}{\huge\filright #1}
-\titlespacing*{\section}{0pt}{5.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
-\titlespacing*{\subsection}{0pt}{3.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
+\titlespacing*{\chapter}{0pt}{4ex plus 1ex minus .2ex}{3.8ex plus .2ex}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{1.8ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.0ex plus 1ex minus .2ex}{1.3ex plus .2ex}
 
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 
@@ -75,7 +82,7 @@
 \chapter*{Declaration}
 I declare that the material submitted for assessment is my own work except where credit is explicitly given to others by citation or acknowledgement. This work was performed during the current academic year except where otherwise stated.
 
-The main text of this project report is \hlc[yellow]{[insert word count]} words long, including project specification and plan.
+The main text of this project report is 10,635 words long, including project specification and plan.
 
 In submitting this project report to the University of St Andrews, I give permission for it to be made available for use in accordance with the regulations of the University Library. I also give permission for the title and abstract to be published and for copies of the report to be made and supplied at cost to any bona fide library or research worker, and to be made available on the World Wide Web. I retain the copyright in this work.
 
@@ -101,31 +108,33 @@ I would also like to thank my parents, Juliet and Peter, my brother, Tom, and my
 \chapter{Ethics}
 \input{chapters/5-ethics}
 
-\chapter{Design}
-\input{chapters/6-design}
-
-\chapter{Implementation}
-\input{chapters/7-implementation}
+\chapter{Design \& Implementation}
+\input{chapters/6-design-implementation}
 
 \chapter{Evaluation}
-\input{chapters/8-evaluation}
+\input{chapters/7-evaluation}
 
 \chapter{Conclusions}
-\input{chapters/9-conclusions}
+\input{chapters/8-conclusions}
 
 \appendix
-\chapter{Artefact Evaluation Form}
-\label{appendix:artefact}
-\includepdf[pages=1]{ethics.pdf}
 
-\chapter{Testing Summary}
-% This should describe the steps taken to debug, test, verify or
-% otherwise confirm the correctness of the various modules
-% and their combination.
+\chapter{Useful Terminology}
+\input{chapters/a-terminology}
 
 \chapter{User Manual}
-% Instructions on installing, executing and using the system
-% where appropriate.
+\input{chapters/b-manual}
+
+\chapter{Experimental Results}
+\input{chapters/c-testing}
+
+\chapter{Artefact Evaluation Form}
+\label{appendix:artefact}
+\begin{figure}[h]
+    \includegraphics[width=0.8\textwidth]{Ethics.pdf}
+    \centering
+    \caption{The artefact evaluation form.}
+\end{figure}
 
 \printbibliography[heading=bibintoc, title={References}]
 

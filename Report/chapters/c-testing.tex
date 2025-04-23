@@ -1,0 +1,142 @@
+\label{appendix:results}
+The tables below show the full experimental results that were obtained by running the Kilominx solver on pseudo-randomly scrambled states of different scramble lengths, as discussed in \textbf{\hyperref[section:experiment]{Section 7.1}}. The results show the scramble/solution lengths, the lists of moves that make up the scramble/solution, and the solve times. Rows which are highlighted green show test cases where the solver found an optimal solution of a length less than the scramble length. 
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{7cm}|p{2cm}|p{7cm}|p{2.8cm}|}
+\hline
+\rowcolor[HTML]{EFEFEF} 
+\textbf{Scramble Length} & \textbf{Scramble} & \textbf{Solution Length} & \textbf{Solution} & \textbf{Solve Time (HH:MM:SS)} \\ \hline
+10 & DBR2', D2, DL, F, R2, D, DL, D,   DBL', DBR' & 10 & DBR, R2', DBL, D', DL', F',   DBL', DL', D2', DBR2 & 00:00:00 \\ \hline
+ & F2, BR2, DB, BR2', R, BR', R2',   BL, U, L2 & 10 & L2', U', R2, BL', BR, R', F2',   D2, DB', D2' & 00:00:01 \\ \hline
+ & L2', BL, DBR2', D', DBR, BR, U2,   DBL, DL', DBL' & 10 & U2', DBR, DB, DBR', BR', BL',   L2, DBR', R, DBR2 & 00:00:01 \\ \hline
+ & DB2', BR', D', DR2, DB, BL2',   DBL2', DB2', BR', R2' & 10 & R2, BR, DR2', DB2, DBL2, BL2,   DB', BR, D, DB2 & 00:00:00 \\ \hline
+ & L2, DL2', DB, D', DBR2', D2',   DBL2, L', DB2, DBL' & 10 & DBL, L, D2', DBL2', D2, DBR2, D,   DL2, L2', R' & 00:00:01 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}DR2, R, DB2, DBL, BL, DBL2,   DBR2, BR2', U2, DR2 & \cellcolor[HTML]{E2EFD9}9 & \cellcolor[HTML]{E2EFD9}U2', BR2, DBL, DBR2', R', BL',   DR2', DBL', DB2' & \cellcolor[HTML]{E2EFD9}00:00:00 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}U', R2', D, DL', L, BR', DBL2,   DB, D2, DBR2 & \cellcolor[HTML]{E2EFD9}9 & \cellcolor[HTML]{E2EFD9}DBR2', D2', DB', DBL2', L', R2',   U, DR, D' & \cellcolor[HTML]{E2EFD9}00:00:00 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}DR2', DBL', L, R, D, DR2', F2',   BL', DBL', BL' & \cellcolor[HTML]{E2EFD9}9 & \cellcolor[HTML]{E2EFD9}F2, L', DB, DBR, DB, D2, DR,   DB', DBL & \cellcolor[HTML]{E2EFD9}00:00:00 \\ \hline
+ & DBL2, D2, DBR2', BR, DBL2', BL,   L2', DL', D2', DR2' & 10 & DR2, D2, DL, L2, BL', BR', DBL2,   DBR2, D2', DBL2' & 00:00:00 \\ \hline
+ & DR2', R', DBR2', BR, DB, D,   DBR2', DR2', DBL2, BL & 10 & BL', DR2, DBL2', DBR2, D', DB',   BR', DBR2, R, DR2 & 00:00:00 \\ \hline
+ &  &  &  &  \\ \hline
+11 & BR, R2, F, DBL', L2, D, DB, DBL,   D2', DBL2, DBR2' & 11 & DBL2', DBR2, D2, DBL', L2', R',   F', DBR', R2', BL, BR' & 00:00:05 \\ \hline
+ & D, DBR, R2, U2, DBL2', BL2', DR,   DL2, DBR', R2, DBL & 11 & R2', DBL', BL2, U2', DL, DB2',   DBR2, R2', DBL', DBR', D' & 00:00:20 \\ \hline
+ & BR', DR2, D2, DL', DR2', DBR',   DR, DBL2, DL2', DR2', DL2 & 11 & DL2', DR2, DL2, DR', DBL2', DBR,   BR, DR2, DL, D2', DR2' & 00:00:26 \\ \hline
+ & DR', D2, DL', DBL2', BL2', U2,   DR2, DL2, DR', D2, DBL2' & 11 & U2', DBR2, D2', DBL, DB2',   DBL2', BL2, DBL2, DL, D2', DR & 00:00:34 \\ \hline
+ & DBR2', DR2', DL2, DR', D2, DR,   D2', DBR, DR, DBR2, BR & 11 & BR', DBR2', DR', DBR', D2, DR',   D2', DR, DL2', DR2, DBR2 & 00:00:54 \\ \hline
+ & BR2, DR, DBL2', DB', DBL, DB,   BL2, DB2', DBL, DB2', BR2' & 11 & BR2, DR', DB2, DBL', DB2, BL2',   DB', DBL', DB, BR2', DBL2 & 00:00:12 \\ \hline
+ & BL2', U2', BL2, D, DR, D2',   DBL', D', DBR2', DB2, DBL2 & 11 & DBL2', DB2', DBR2, D, DBL, BL2',   U2, D2, DB', BL2, D' & 00:00:24 \\ \hline
+ & DBR2', DB, BL', BR2', DR', D2,   DBL, D, DBL2', D', DB' & 11 & DB, BR2, D, DBL2, D', DBL', BL,   D2', DR, DB', DBR2 & 00:00:26 \\ \hline
+ & DR2, DBL, DB2', DBL2', L2', R,   BR', DBR', R', DBL2', BL' & 11 & R, BL, DBL2, L2, DBR, D, DR2',   DB', DBL2, DB2, DBL' & 00:00:12 \\ \hline
+ & DB2, DBR', R, F2, BR, DB, D,   DL2', D2', DB, BR' & 11 & BR, DB', D2, DL2, F2', R', BL',   DB', D', DBR, DB2' & 00:00:15 \\ \hline
+ &  &  &  &  \\ \hline
+12 & U, DBR, D', DL2', L2, F', DBL,   L', DB2', BL', L, DB & 12 & F, DL', DB', D, DL, L2', DBR2,   BR', U', DBL2, D, DR' & 00:01:24 \\ \hline
+ & F', BR, BL2', DBL2, BL', DB',   BR2, DB2', D, DR', DL, DB & 12 & DL', DR, F, DB', DBR', DB2,   BL2', DB, DBL, D2', DBL2, BL' & 00:05:08 \\ \hline
+ & L2', F2, R, BL2', DR2, DL2,   DB2', D', DBR', D, DB', BL' & 12 & BL, DB, D', DBR, D, DB2, BL2,   DL2', DR2', R', F2', L2 & 00:07:45 \\ \hline
+ & L, U', L, U2, L', BR2, BL2,   DR2', DBL, DL', DBL', BL & 12 & BL', DBL, DL, DR2, DBL', BL2',   L, U2', L', U, L', DB2' & 00:06:52 \\ \hline
+ & D', DL', L2, DL, DB, DBR2, D,   DBR, DR2, F2', DBL2', DB' & 12 & F2, DB, DBR2, DR2', DBR', D',   DL', L2', DBR2', R', DL, D & 00:01:10 \\ \hline
+ & DL, DBR2', BR2, DBR, D, DB',   BL', BR2, DR', R', U', R2 & 12 & R2', U, R, BR2', BL, DR, DB, D',   DBR', BR2', DL', DBR2 & 00:08:59 \\ \hline
+ & DR', DBR2', DR2, DB, BL2, U2',   DBR', DR, DB2, DBL', L2', R2' & 12 & L2, U2, DL2, DR, DL2', DR2',   DB', DBL, BL2', DB', DBR2, DR & 00:07:19 \\ \hline
+ & DL2, L, BL2, DR2, F', DB2',   BR2', BL2, U', R2', BR, DBL' & 12 & BR', R2, U, BL2', BR2, DB2,   BR2', DL, F, L', D2', DL2' & 00:06:04 \\ \hline
+ & F2, L, BL2', DR2, DB2, DBL2',   L', F2', BR2, DBL', DB, D2 & 12 & F2, BR2', DB', DBL2', L, DBL2,   DBR, DB2', BL2, L', F2', BL2' & 00:05:29 \\ \hline
+ & BL2, DBR2', DB2, BR, DR2', DL,   DBL2', BL2, DL2', D2', DBR2', BR2 & 12 & BR2', BL2', DBR2, BR', D2, DL2,   DBL2, DB2', BL2', DL', DR2, DBR2 & 00:03:32 \\ \hline
+\end{tabular}%
+}
+\centering
+\caption{Kilominx Solver results on pseudo-random scrambled states of lengths 10 to 12.}
+\label{tab:results-1}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{7cm}|p{2cm}|p{7cm}|p{2.8cm}|}
+\hline
+\rowcolor[HTML]{EFEFEF} 
+\textbf{Scramble Length} & \textbf{Scramble} & \textbf{Solution Length} & \textbf{Solution} & \textbf{Solve Time (HH:MM:SS)} \\ \hline
+13 & BR2, BL2, DL2, D', DL2', D, DR',   DBR2', D2, DBR2, BR2', DR2', DB2 & 13 & DR2, DB2', BR2, BL2', DBR2',   D2', DBR2, BR2', DR, D', DL2, D, DL2' & 00:13:54 \\ \hline
+ & BL2, U2', R', F', D2', DL, DB',   D2, DBL2, BL', D2', DL, F2 & 13 & F2', BL, DL', D2, DBL2', D2',   DL', F, DB, DBR2, R, U2, BL2' & 01:14:13 \\ \hline
+ & \cellcolor[HTML]{C5E0B3}D2, DR2, DBL', DBR', R, DB2,   D2', DBL', DBR, R', U, BR, DL & \cellcolor[HTML]{C5E0B3}11 & \cellcolor[HTML]{C5E0B3}BR', U', R, DBR', R', D2, DB2',   DBR, DR2', DBL, D2' & \cellcolor[HTML]{C5E0B3}00:00:15 \\ \hline
+ & U', F, L2', DR2', DB2', DBR2,   BR, DBL2, L2', DL2, DB2, D, DR2' & 13 & DR2, D', DL2', L2, BR', DBL2',   L2, BR2', DBR2', DR2, F', U, DB2 & 02:21:01 \\ \hline
+ & DB, BR', U2, R2, BR2, DR, R,   DBR2', BR', DR2', DB, DBL', DB' & 13 & DB, DBL, DB', BR, DR2, DBR2, R',   BR2', DR', R2', U2', BR, DB' & 00:18:52 \\ \hline
+ & D, DL2, DBR, BR2', D2', DBL2,   DL2', L, D2', DB2', DBL, DL, L' & 13 & L, DL', DBL', L', BR2, DB2, BR2,   DL2, DBL2', D2, DL2', DBR', D' & 00:50:36 \\ \hline
+ & F, R2, DB2', D2', DL2, DB', D2',   DL2, L', DL2', L, F2, DBL & 13 & F2', L', DL2, L, BR', R2', DL2',   D2, DL2', F', DB, DBL2, DB2 & 02:32:11 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}BR2, DL', DBR2', BR', BL2', U',   BR, DBL2', DL', D', DR2', D2, DBL2' & \cellcolor[HTML]{E2EFD9}12 & \cellcolor[HTML]{E2EFD9}BR', U, BL2, DL2, D2', DBR2, BR,   D, DR, DBR2, BR2', DL2' & \cellcolor[HTML]{E2EFD9}00:05:56 \\ \hline
+ & DBR2', R2, BR2, D', DBR', DB2,   D, DL2', DB2, BL, DR', DB2', D' & 13 & D, DR, DB2, BL', DL2, DB2', D',   DB2', DBR, BR2', R2', D, DBR2 & 00:42:26 \\ \hline
+ & DR, F2, BR', BL', U2, BL, DBR2',   BR2', R, F, D', DL, DR' & 13 & DR, DL', F', R', BR2, DBL, BL',   U2', DL2, F2', DBR, D, DR' & 00:47:47 \\ \hline
+ & R, DL2', DBL2', DL, DBL2', L2,   U, DR2, DBR, R2, BR', U, R2 & 13 & R2', U', BR, R2', U', DR', DL2',   L2', R', DBL2, DL', DBL2, DL2 & 01:03:20 \\ \hline
+ & F2, BL, L2', DBR2, BR2', BL',   D2', DBL, DBR2', DR, DL2, DR2', DB2' & 13 & DR2, DL2', DR', DB2, DBL', BL,   L2, DBR2, R2, F2', BL2, DBL2', DBR' & 02:08:26 \\ \hline
+ & D', DBL2, DBR, R2', DB2, DBR',   DB2', D, DR2, DB', D', DL, F' & 13 & F, DL', D, DR2', DB, D', DB2,   DBR, R2, DB2', DBL2', DBR', D & 00:27:15 \\ \hline
+ & F', DR2', DL2', F, D, DBR2,   BR2', U, DL2', D2, DR', DL, DBL' & 13 & U', DB, BR2, DBL', DL, F',   DBL2', BL2, D2', DBL', DL2, DR2, F & 01:15:18 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}BR, DR, D', DBL', DBR, DR2',   DBL', DB2', BR2', BL2, DB2, BL2, BR & \cellcolor[HTML]{E2EFD9}12 & \cellcolor[HTML]{E2EFD9}BR', BL2', DB2', BL2', BR2, DR2,   DB2, DBR', BR', DBL2, D, DR' & \cellcolor[HTML]{E2EFD9}00:03:50 \\ \hline
+ & \cellcolor[HTML]{C5E0B3}BL', BR', D2, DR2, DBL2, L', R,   DB, BR', DBL2, D2', DBR2, DR' & \cellcolor[HTML]{C5E0B3}11 & \cellcolor[HTML]{C5E0B3}DR, DBR2', BR, D2, DBL2', L, D',   DBL2', BL, DR2', D2' & \cellcolor[HTML]{C5E0B3}00:00:03 \\ \hline
+ & R2', DL', DR', DL', DB2', DBL2,   DL2, DB', DBR2', DB2', DBR2', DR2, F2' & 13 & F2, DR2', DL', DBR2, DB2, DBR2,   DR, R2, DL', DB, DBL2', DL2, DB2 & 01:46:25 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}BR, DBL2', D', DBR2', BR2, DL2,   DR2, DL', F', BL2', DBL2', DBR, BR & \cellcolor[HTML]{E2EFD9}12 & \cellcolor[HTML]{E2EFD9}F, BL', BR2, D2, DBL2, DL, DR2',   DBR2, BR', DL2', D, DBL2 & \cellcolor[HTML]{E2EFD9}00:09:53 \\ \hline
+ & DR2, DBL, D', DBL, L2', U2',   BR2, BL2', DR, D2', DBL2, BL2', DB & 13 & DB', BL2, DBL2', BL2, BR2', U2,   L2, R2, DR', DBL', D, DR2', DBL' & 00:53:48 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}BL', BR', BL, L, DBL2', L, D2,   DB', DBL2, D, DL2', DBL2, DBR & \cellcolor[HTML]{E2EFD9}12 & \cellcolor[HTML]{E2EFD9}DL, DBR', D2', DBL2', L, DR',   DL2', L2', BL', L', R, BR & \cellcolor[HTML]{E2EFD9}00:05:00 \\ \hline
+ & F', DL2, DBL', L', BR', D', DL',   DBL2', DL2, L2, DBL2', L', DL & 13 & DL', L, DBL2, L2', DL2', DBL2,   DL, L, DR, DB, DBL, DL2', F & 01:11:28 \\ \hline
+ & BL2, L', DR, D, DBR2, DR2, DL,   DB, BL, DBR2, BR', D2', DL' & 13 & BR, BL', L, F, R2, F', BL2',   DBR2', R2', D', DBR2', DR', R' & 00:22:22 \\ \hline
+ & DR', DL2, F2', U2', DR2', DBR,   DB, BR', BL2, BR', U2', R', BR & 13 & BR', R, U2, BR, BL2', BR, U2,   DL', F2, DL2', DBR', DR, DB2 & 01:55:28 \\ \hline
+ & U, F', DB, BR, DB, BL2, DR2',   DBL2, DBR', DB2, DBR2', BR2, DR2' & 13 & BR2', DR2, DBR2, DB2', DBR, DR2,   F, D2', DBL2', DB', BL', U', DBR' & 02:36:31 \\ \hline
+ & L, DL2, DB, BR2', DR, DB', BL,   D2', DBL2, BL', BR2, DBR', BR2' & 13 & BR2, DBR, BR2', BL, DBL2', BL',   D2, DB, BR2, DR', DL2', L', BR' & 01:55:54 \\ \hline
+\end{tabular}%
+}
+\centering
+\caption{Kilominx Solver results on pseudo-random scrambled states of length 13 (first half).}
+\label{tab:results-2}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{7cm}|p{2cm}|p{7cm}|p{2.8cm}|}
+\hline
+\rowcolor[HTML]{EFEFEF} 
+\textbf{Scramble Length} & \textbf{Scramble} & \textbf{Solution Length} & \textbf{Solution} & \textbf{Solve Time (HH:MM:SS)} \\ \hline
+ 13 & DBR2, R, D2', DBR', R2', BL',   DBL, D, DB2', BL2, DBR, DR2', R2 & 13 & R2', BL2', DR2, DBR', R2, DB2,   D', DBR, R', DBL', BL, D2, DBR2' & 03:52:22 \\ \hline
+ & DBR2', D2', DBR, DB, DBL', DB',   D', DB', BR2', DR2, R2', U2, F2 & 13 & F2', U2', R2, BR2, DR2', DB, D,   DB, DBL, DB', DBR', D2, DBR2 & 00:47:58 \\ \hline
+ & U', DBR, BR2, D', DBR2, DB, BL,   D2, DL, DBL', DL, DB, D' & 13 & D, DL', DB', DBL, BL', DL', D2',   DB', DBR2', BR2', U, D, DB' & 04:14:35 \\ \hline
+ & DBL2', DBR2, D, DR2', DBL, DB,   DBL2, DB2, BR2, DB2, D', DB', DBR & 13 & DBR', DB, D, DR2, DB2', BR2',   DB2', DBL2', DB', DBL', D', DBL2, DBR2' & 03:44:57 \\ \hline
+ & DBR', DR', DBL2', L2, U2, BL,   DBR, D2', DBR2, DR', D, DBR2', DB' & 13 & DB, BL', U2', BR, DL2, D', DBL,   DL2', D2, DL', L2', DBL2, DBR & 02:38:15 \\ \hline
+ & DBR2, R, DL2', F2, DBL', DB,   DBL, L, BR2', D', DB', BL2, DL2' & 13 & BL2', DB, BR2, DL2, L', F2',   DL2, DB, BR', DB', BR, R', DBR2' & 00:22:15 \\ \hline
+ & DBL', D', DR2, DB, DBR, DB2',   DBL2, DL2', DBL2, L, R2', DBR, DR & 13 & L', D', DBR', DR2, DBL2', DL2,   DBL2', DB2, DBR', DR2', DB', D, DBL & 03:40:56 \\ \hline
+ & DBR2', DB2', DBR, R2', DR, D',   DR, D', DB', D2, DR2, DBR2', D2 & 13 & D2', DBR2, DR2', D2', DB, D,   DR', D, DR', R2, DBR', DB2, DBR2 & 03:48:56 \\ \hline
+ & DL2, D2, DR2, DBL, L2, DR2, R',   DBR2', DR, DBL2, D2, DBL2', BL2' & 13 & BL2, DBL2, D2', DR', DBR2, R,   BR2', DBL2', L2', DB2', DBL', D2', DL2' & 02:12:32 \\ \hline
+ & D, DL2', DR', D', DL2', DB2,   BR', DB2, DBL2, DB2, BL2, DL2, L & 13 & L', BL2', DL2', DB2', DBL2',   DB2', BR, DL2, DB2', D, DR, DL2, D' & 01:41:29 \\ \hline
+ & \cellcolor[HTML]{C5E0B3}DR2, DB', BL, DR2', F, R2, DB',   BL2', DBR', R2', DR2, DBL', DB2' & \cellcolor[HTML]{C5E0B3}11 & \cellcolor[HTML]{C5E0B3}DR2', R2, DB2, DBR, R2', F', BL,   BR2, DB, BL', DB & \cellcolor[HTML]{C5E0B3}00:00:24 \\ \hline
+ & DBL2, D2, DL, DB2', BL, DBL2,   DB', DBL2, DL', DBL2, DB2, BR', DR' & 13 & BR, DBR', DB2', DBL, DB2', DBR,   DB2', DBL2', BL', DR, DB2, D2', DBL2' & 04:22:24 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}BL2, DB, BR, DR, DBL', L2',   DBL', L', BR, U2', BL', D2, DBL2' & \cellcolor[HTML]{E2EFD9}12 & \cellcolor[HTML]{E2EFD9}DBL2, BL, U2, L, DR2, DB', DBL,   L2, DBL, DB', BL2', DR' & \cellcolor[HTML]{E2EFD9}00:07:21 \\ \hline
+ & R2, DR', F2, DBR2', DR, DBL,   D2', DR, DL', D2, DL2, DR2, DBL2' & 13 & DR2', DBL2, DL2', D2', DL, DR',   D2, DR', F2', BR', DR, R2', DBL2 & 00:36:13 \\ \hline
+ & L, DBR, DR', D2, DBL, BL2', DL,   DR2', D, DBL', D, DL', DBR2 & 13 & DL, DBR2', D', DBL, BL2, D',   DR2, DL', DBL', L', DB2', D, DBR' & 02:11:12 \\ \hline
+ & U, DB, BR', DBL2', BL', D2, DB',   BL2, BR', U, DL, F, DB2' & 13 & F', U', DBL', DBR2, BR, BL2',   DB, BL, BR, U', D2', DB2, DBR' & 01:53:43 \\ \hline
+ & DBR', D', DR', F', R2', DBL2',   L2', R2, DBR2, DB', DBR2', R2', DBL2 & 13 & R2, DBL2', L2, DBR2, DR, DBR2',   R2, F, DB2', D2, DR, D, DBR & 02:07:46 \\ \hline
+ & DL2', F2', U, R2', DBL2', DB',   BL2, L2', F2, DB2', D2, DBR', DR & 13 & DR', F2', DBL, BL2', L2, DR2,   R2, BL2', U', F2, BL, DL2, DB2 & 03:12:47 \\ \hline
+ & D, DB2', BL2, D2, DL', DBL2',   D2, DB', DBL', DB', D', DR', F' & 13 & F, DR, D, DB, DBL, DB, D2',   DBL2, BL2', DL, D2', DB2, D' & 03:56:32 \\ \hline
+ & \cellcolor[HTML]{C5E0B3}U2, L', BL2, U, R2', DL2, L2,   R', F, DB2, D2', DBL2', DB2' & \cellcolor[HTML]{C5E0B3}11 & \cellcolor[HTML]{C5E0B3}F', DB2, BL2, DBL2, L2', U', D,   DBL2', BL2', L, U2' & \cellcolor[HTML]{C5E0B3}00:00:18 \\ \hline
+ & DL2, DR2, DBR', BR2, DR2, DBR',   D, DL2', DR', F, BL', DBL2, DL2 & 13 & DL2', F', BL2', BR, DR, DL2, D',   DBR, BR2', DR2', DBR, DR2', DL2' & 00:25:09 \\ \hline
+ & DB2, BL', DR2', D2, DL2, DBR',   DR2', DBL2', BL, L, DB, DBL2', L2 & 13 & L2', R2, DBL2, L', BR', BL',   DBL2, BL, DL2', DBR, D2', DR2, DB2' & 04:41:21 \\ \hline
+ & DR2', DBR, DR', F, DL, DBL', L,   DL2, D', DBR', R, U', DL2' & 13 & U, DR2, R', DBR, D, DL2', L',   DBL, DL', F', DR, DBR', DR2 & 04:59:39 \\ \hline
+ & \cellcolor[HTML]{E2EFD9}DR', R2', DR2, DBR2, D', DL',   DBR2, DB', BR2, DL', L', F', DL2' & \cellcolor[HTML]{E2EFD9}12 & \cellcolor[HTML]{E2EFD9}DL2, F, L, BR2', DL2, DB, DBR2',   D, DBR2', DR2', R2, DR & \cellcolor[HTML]{E2EFD9}00:03:32 \\ \hline
+ & DB2', DBR2, R2, D', DB, DBL2,   DL, DBL2, DL', D, DBR', D, DBL2 & 13 & DBL2', D', DBR, R2', D', DL,   DBL2', DL', DBL2', DB', D, DBR2', DB2 & 04:25:09 \\ \hline
+\end{tabular}%
+}
+\centering
+\caption{Kilominx Solver results on pseudo-random scrambled states of length 13 (second half).}
+\label{tab:results-3}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{7cm}|p{2cm}|p{7cm}|p{2.8cm}|}
+\hline
+\rowcolor[HTML]{EFEFEF} 
+\textbf{Scramble Length} & \textbf{Scramble} & \textbf{Solution Length} & \textbf{Solution} & \textbf{Solve Time (HH:MM:SS)} \\ \hline
+14 & BR, BL2', BR', R2, DR2, D',   DB2', DBR', DB2, DBR2, BR', DR, DBR', DR' & 14 & DR, DBR, BR, DR', DBR2', DB2',   DBR, DB2, D, DR2', R2', BR, BL2, BR' & 52:46:10 \\ \hline
+ & DB', BL2, DR', DBR2, DB2', DBL',   BL2', L, F2', U', DR', DL, DBL', L2' & 14 & L2, U, DL, DR', F2, BL, L', BL2,   DBL, DB2, BL2', DBR2', DR, DB & 14:11:03 \\ \hline
+\end{tabular}%
+}
+\centering
+\caption{Kilominx Solver results on pseudo-random scrambled states of length 14.}
+\label{tab:results-4}
+\end{table}

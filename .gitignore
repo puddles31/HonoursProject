@@ -9,6 +9,7 @@
 *.out
 *.run.xml
 *.synctex.gz
+*.toc
 
 # Java class files
 *.class

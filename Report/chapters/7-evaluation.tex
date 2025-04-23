@@ -1,0 +1,58 @@
+\section{Summary and Analysis of Results}
+\label{section:experiment}
+In order to evaluate the performance of the solver on the Kilominx, I generated sets of pseudo-random scrambles of lengths 10 to 14 and then solved them using the optimal Kilominx solver, which reports the time taken by the IDA* search algorithm to find the optimal solution. The scramble generator uses the same logic to skip moves as the solvers, so they don't make moves that immediately undo previous moves. This means that for scrambles of lower numbers of moves (around 15 moves or less), scrambles of $n$ moves are more likely to be optimally solved in exactly $n$ moves. I chose to generate 10 scrambles each for lengths 10 to 12, as these lengths can be solved very quickly with a smaller range of possible solve times, and then 50 scrambles of length 13, as these scrambles take longer to solve with a much larger range of possible solve times. Finally, I generated 2 scrambles of length 14, as these scrambles take substantially longer to solve - if I had more time to test, I would have like to generate more scrambles of this length. A summary of the results are shown in \textbf{\hyperref[tab:results-summary]{Table 1}} below, and the full results are shown in \textbf{\hyperref[appendix:results]{Appendix C}}.
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{2cm}|p{5cm}|p{5cm}|}
+\hline
+\rowcolor[HTML]{EFEFEF} 
+\textbf{Scramble Length} & \textbf{Number of Tests} & \textbf{Average Solve Time (HH:MM:SS)} & \textbf{Standard Deviation (HH:MM:SS)} \\ \hline
+10 & 10 & 00:00:00 & 00:00:00 \\ \hline
+11 & 10 & 00:00:23 & 00:00:14 \\ \hline
+12 & 10 & 00:05:22 & 00:02:38 \\ \hline
+13 & 50 & 01:42:12 & 01:31:13 \\ \hline
+14 & 2 & 33:28:37 & 27:17:02 \\ \hline
+\end{tabular}%
+}
+\caption{A summary of the averages and standard deviations for the solve times of scramble lengths 10 to 14.}
+\label{tab:results-summary}
+\end{table}
+
+For scrambles of length 10, solutions are found almost instantly. Every single test run found an optimal solution in under a second with no variance. Scrambles of lengths 11 and 12 are also found fairly quickly, with average solve times of 23 seconds and just over 5 minutes respectively. The standard deviations at these lengths are also relatively small.
+
+At scrambles of length 13, where the majority of testing was done, there was an average solve time of 1 hour and 42 minutes. This is considerably longer than the average solve time at scramble length 12, with an increase by a factor of $\frac{1\cdot60^2 + 42\cdot60 + 12}{5\cdot60+22}= 19.04 \text{ (to 4 s.f.)}$. The standard deviation at this length is also somewhat large, at 1 hour and 31 minutes - just below the average solve time. This tells us that the average solve times can vary a lot, going from less than 15 minutes up to over 3 hours.
+
+Only two test runs were done for scramble length 14, as they took much longer to find optimal solutions than lower scramble lengths. As such, these results are much less accurate, and can only give us a very rough idea at the solve times for this scramble length. The two test runs have solve times of roughly 53 hours and 14 hours respectively (as shown in \textbf{\hyperref[tab:results-4]{Table 5}}), giving an average solve time of 33 hours and 29 minutes. This is an increase from the average solve time at length 13 by a factor of $\frac{33\cdot60^2 + 28\cdot60 + 37}{1\cdot60^2 + 42\cdot60 + 12}= 19.65 \text{ (to 4 s.f.)}$, which is fairly consistent with the increase in average solve time from length 12 to 13. The standard deviation at length 14 is also very large, at 27 hours and 17 minutes - again, this is a little less than the average solve time. We can predict that solve times at this length could range from around 5 hours to around 60 hours (although this might be inaccurate due to the very small number of test cases at this length).
+
+If we assume that the average solve time for length 14 \textit{is} accurate and we assume that the increase in average solve times stays consistent at a factor of 19, then we can try to predict what the average solve times could be for scrambles of lengths 15 to 19:
+\begin{gather*}
+    \text{Length 15: }120517 \cdot 19 = 2289823 \text{ seconds} = 636.06\text{ hours} \\
+    \text{Length 16: }2289823 \cdot 19 = 43506637 \text{ seconds} = 12085\text{ hours} \\
+    \text{Length 17: }43506637 \cdot 19 = 826626103 \text{ seconds} = 229620\text{ hours} \\
+    \text{Length 18: }826626103 \cdot 19 = 15705895957 \text{ seconds} = 4362700\text{ hours} \\
+    \text{Length 19: }15705895957 \cdot 19 = 298412023183 \text{ seconds} = 82892000 \text{ hours}
+\end{gather*}
+The exponential growth in average solve time between scramble lengths means that for higher scramble lengths, it would take an enormous amount of CPU time to find an optimal solution (for perspective, 82892000 hours is equivalent to about 9456 years!).
+
+\section{Critical Appraisal}
+\subsection{Evaluation Against Objectives}
+The primary objectives for the project were to create optimal solvers for the Rubik's Cube and Kilominx by implementing an IDA* search algorithm using pattern databases. Both of these objectives were achieved - a user is able to input a puzzle state into the program, and then invoke the solver to find an optimal solution. The Rubik's Cube was briefly tested at different depths up to a depth of 15, which were solved in a short amount of time, and the Kilominx was tested more thoroughly at depths 10 to 14 (as discussed in \textbf{\hyperref[section:experiment]{Section 7.1}}).
+
+This is a significant achievement, as this is the first time Korf's algorithm has been used to create an optimal solver for the Kilominx. The performance of the solver is also impressive, being able to find optimal solutions up to a depth of 13 in under 2 hours (on average), and up to a depth of 14 in under 40 hours (on average) - this is particularly impressive given the exponential growth in average solve times.
+
+The first secondary objective was to use the solver to tighten the bounds of the God's Number for the Kilominx. The initial plan to meet this objective was to use the solver to find an optimal solution of 19 moves - one more than the current lower bound on God's Number. This would have proven that there exists a state for the Kilominx which requires a minimum of 19 moves to solve. This objective was not achieved, as the solver was only able to find solutions up to a depth of 14 in a reasonable amount of time. However, the objective was set at the start of the project, before I knew roughly how long the solver might take to find optimal solutions at higher depths. Using the predicted value obtained from the Kilominx's results, the solver could take about 9456 years of CPU time to find a solution at depth 19, which is an enormous amount of time. Had I known this at the start of the project, I would not have set this objective, as it is not feasible for the solver to run for this much time. This is not a failure of the project, but rather a limitation of the solver and the exponential growth in average solve times. In addition to this, it is also entirely possible that the lower bound of 18 is actually God's Number, and could not be improved on. This is something I would not have been able to directly prove with my solver, even if it could quickly find solutions at depth 18 - instead, a more mathematical based proof would be required, which is completely out of scope for this project. 
+
+The other secondary objective was to create a simple GUI for the program, allowing users to interact with the puzzles and the solvers to find optimal solutions. This objective was partially achieved, in that a simple GUI was implemented for the Rubik's Cube, but it is not fully complete: the edit command is not available in the GUI, and the visualisation of the cube state uses a 2D representation, similar to what is used in the CLI - I would have liked to implement a 3D model of the cube in order to make it easier for a user to read the current cube state. In addition to this, no GUI was implemented for the Kilominx. This objective was not fully met due to time constraints in the project: I decided to prioritise testing and fixing bugs for the Kilominx solver to ensure it was giving correct solutions so that the primary objectives were achieved. The GUI was only an additional way to interact with the solvers, and was not a core part of the project - as such, the failure of this requirement does not detract from the overall success of the project.
+
+The two tertiary objectives for the project were also not met. The first, which was to survey users about their experience with the GUI, was not met as a direct result of not completing the GUI due to time constraints. The second, which was to investigate better ways to input a Kilominx state into the solver, is similar to the GUI objective in that it only enhances the way users interact with the solver and does not impact the solver itself.
+
+\subsection{Comparison to Existing Work}
+It is challenging to compare the Kilominx solver to existing work, as my Kilominx solver is (as far as I am aware) the first of its kind. As such, I will instead compare the performance of the Kilominx solver to the performance of existing Rubik's Cube solvers.
+
+In Korf's paper on creating an optimal solver for the Rubik's Cube \cite{korf}, he managed to find optimal solutions up to a depth of 18 - only two less than the cube's God's Number (which was not yet known at the time the paper was published). While Korf does not provide any details about how long it took to find these solutions, he does state that "Complete searches to depth 17 ... take about two days. A complete depth 18 search should take less than four weeks.". Given that solutions were found at depth 18, this means that a complete search of depth 17 was completed first before the solutions at depth 18 were found - therefore, the depth 18 solutions each took between two days (48 hours) and four weeks (672 hours) to find.
+
+A more recent implementation of Korf's algorithm \cite{korfimplementation} improves on these results significantly. This implementation manages to find solutions at depth 18 between 2.7 hours and 10.7 hours, and also manages to find a solution at depth 19 in 24.6 hours.
+
+Comparing these results to the results from my Kilominx solver, we can see that the depth at which my solver can find solutions is much lower. This is to be expected, as the size of the Kilominx's search space is much larger than that of the Rubik's Cube (due to the Kilominx's larger branching factor). The average solve time of the Kilominx at a depth of 14 is about 33.5 hours, which is a comparable time to the solve time for the Rubik's Cube at depth 19, 24.6 hours. We can assume that the number of nodes generated in the search trees for the two solvers should be of a similar order of magnitude, as they take a similar amount of time to find the optimal solutions - the difference between them is that the Kilominx solver needs to generate more nodes at each depth level compared to the Rubik's Cube solver (again due to the greater branching factor of the Kilominx).

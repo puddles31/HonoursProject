@@ -1,0 +1,38 @@
+% Instructions on installing, executing and using the system
+% where appropriate.
+\section{Compilation and Running}
+The project contains a bash script, `run.sh` which can be used to quickly compile the project, and run any of the available programs based on the provided command-line argument(s). The script must be run from inside the `CS4099` directory (i.e. running the command will look like: '\$ TwistyPuzzleSolvers/run.sh ...'. You might also need to update the execute permissions of the script in order to run it - this can be done using '\$ chmod 777 TwistyPuzzleSolvers/run.sh'. Aside from a recent Java installation, no other dependencies are required. The available arguments are as follows:
+\begin{itemize}
+    \item 'cube' - Runs the Rubik's Cube terminal program.
+    \item 'cube gui' - Runs the Rubik's Cube GUI program.
+    \item 'kilominx' - Runs the Kilominx terminal program.
+    \item 'pdb [pdb-type]' - Runs the pattern database populator program for the supplied pattern database type.
+    \item 'test [scramble-length] [\#-of-test-runs]' - Runs the Kilominx test run program, generating scrambles of the specified length and running the specified number of test runs.
+\end{itemize}
+
+\section{Pattern Database Populator}
+The pattern database populator takes an argument for the type of pattern database, and then populates that pattern database. Note that for larger pattern databases (such as the Kilominx face pattern databases), the program can take a \textbf{very long time} to finish population (\textbf{over 24 hours}). These pattern databases are \textbf{not} included in the project submission as they are large files (some are roughly 500 MB each), so they need to be manually generated in order for the solvers to work correctly. The available pattern database types are as follows:
+\begin{itemize}
+    \item 'cube-corners' - For the Rubik's Cube corner cubies pattern database.
+    \item 'cube-first-edges' - For the first Rubik's Cube edge cubies pattern database.
+    \item 'cube-second-edges' - For the second Rubik's Cube edge cubies pattern database.
+    \item 'kilominx-face-\#' (with \# = 1-12) - For a Kilominx face cubies pattern database of the specified set number.
+    \item 'kilominx-sparse-\#' (with \# = 1-5) - For the Kilominx sparse cubies pattern database of the specified set number.
+\end{itemize}
+
+\section{Rubik's Cube and Kilominx Terminals}
+The terminal programs for the Rubik's Cube and Kilominx allow you to make moves and enter commands to interact with the puzzle. The moves for the puzzles are defined above in \textbf{\hyperref[section:moves]{Appendix A}}. The commands are as follows:
+\begin{itemize}
+    \item HELP - Display a help message.
+    \item RESET - Reset the puzzle to the solved state.
+    \item EDIT - Enter editing mode.
+    \item SCRAMBLE [n] - Scramble the puzzle with n random moves.
+    \item SOLVE - Solve the puzzle using the optimal solver.
+    \item QUIT - Exit the program.
+\end{itemize}
+It should be noted that in order to use the SOLVE command, all of the pattern databases associated with the puzzle need to have been generated beforehand - see the previous section for more info on how to do this.
+
+\section{Rubik's Cube GUI}
+The GUI program for the Rubik's Cube works in a similar way to the terminal program, but with a coloured display for the cube state and a separate panel to enter terminal commands. The EDIT command is not available in GUI mode.
+
+A number of hotkeys are also defined to quickly make moves on the cube - they can be performed by pressing the face letter on the keyboard. You can also perform counter-clockwise moves by holding down the SHIFT key, and double moves by holding down the CTRL key.

@@ -1,69 +1,75 @@
-% Surveying the context, the background literature and any
-% recent work with similar aims. The context survey describes
-% the work already done in this area, either as described in
-% textbooks, research papers, or in publicly available software.
-% You may also describe potentially useful tools and
-% technologies here but do not go into project-specific
-% decisions.
-\section{Terminology}
-\textbf{Cubie} - An individual cube-shaped element of the puzzle. The Rubik's Cube has 26 cubies (excluding the non-visible cubie at the centre of the cube), and the Kilominx has 20 cubies (sometimes referred to as "\textbf{kubies}" - Kilominx cubies).
-
-\textbf{Face} - A face of the puzzle, which can be twisted to change the state of the puzzle. The Rubik's Cube has 6 faces, while the Kilominx has 12 faces.
-
-\textbf{Twist} - A twist is a rotation of a face of the puzzle. A twist is only valid if the face is aligned with the rest of the puzzle when the twist is completed. Twists are the basic moves that can be made on the puzzle to change its state. The Rubik's Cube has 6 faces, and each face can be twisted in 3 different ways (90 degrees clockwise, 90 degrees counterclockwise, or 180 degrees). The Kilominx has 12 faces, and each face can be twisted in 4 different ways (72 degrees clockwise, 72 degrees counterclockwise, 144 degrees clockwise, or 144 degrees counterclockwise).
-
-\textbf{Move Notation} - Twists on the Rubik's Cube can be represented in a shorthand notation \cite{rubiksnotation}, where a letter represents a \textbf{clockwise} twist of the face represented by that letter. If the letter is followed by an apostrophe (e.g. $U$, read as "U Prime"), it represents a \textbf{counterclockwise} twist of the face. If the letter is followed by the number 2 (e.g. $U2$), it represents \textbf{two clockwise} twists of the face (a 180-degree twist). The letters used to represent the faces of the Rubik's Cube are as follows:
-\begin{itemize}
-    \item $U$ - Up
-    \item $L$ - Left
-    \item $F$ - Front
-    \item $R$ - Right
-    \item $B$ - Back
-    \item $D$ - Down
-\end{itemize}
-
-The notation for the Kilominx is similar, but instead uses up to three letters to represent the faces of the puzzle. In addition, to represent a \textbf{double counterclockwise} twist, the face is followed by a 2 and an apostrophe (e.g. $U2'$). The letters used to represent the faces of the Kilominx are as follows:
-\begin{itemize}
-    \item $U$ - Up
-    \item $L$ - Left
-    \item $F$ - Front
-    \item $R$ - Right
-    \item $BL$ - Back Left
-    \item $BR$ - Back Right
-    \item $DL$ - Down Left
-    \item $DR$ - Down Right
-    \item $DBL$ - Down Back Left
-    \item $DBR$ - Down Back Right
-    \item $DB$ - Down Back
-    \item $D$ - Down
-\end{itemize}
-
- 
-
 \section{Korf's Algorithm for the Rubik's Cube}
 As mentioned briefly in the introduction, Richard E. Korf published a paper in 1997 \cite{korf} which described a method to find optimal solutions for the Rubik's Cube, using a combination of an IDA* search algorithm and large memory-based lookup tables called pattern databases, which served as the lower-bound heuristic function for the IDA* search. The paper was a landmark in the field of Rubik's Cube research, as it was the first to find optimal solutions for the cube, and it also introduced a number of important concepts that would be used in later research on the cube.
 
 \subsection{Representing the Cube State}
-The Rubik's Cube is made up of 26 cubies (not including the cubie at the centre of the cube). Six of these cubies are centre cubies, which are fixed in place and do not move, while the other cubies are either corner cubies (of which there are 8) or edge cubies (of which there are 12). The corner cubies can be oriented in 3 different ways, while the edge cubies can be oriented in 2 different ways. Korf suggests representing the state of the cube as an array of 20 elements, where each element represents a cubie on the cube, encoding the cubie's initial position (or index) and orientation. While this representation is less intuitive than a more object-oriented approach, it is much more efficient for the IDA* search algorithm, as it allows for faster access and manipulation of the cube's state. In order to make moves on the cube, specific cubies are swapped around in the array, and their orientations are updated accordingly.
+The Rubik's Cube is made up of 26 cubies (not including the cubie at the centre of the cube). Six of these cubies are centre cubies (central to each of the six faces), which are fixed in place and do not move, while the other cubies are either corner cubies (of which there are 8) or edge cubies (of which there are 12). The corner cubies can be oriented in 3 different ways, while the edge cubies can be oriented in 2 different ways. Korf suggests representing the state of the cube as an array of 20 elements, where each element represents a cubie on the cube, encoding the cubie's initial position (or index) and orientation. While this representation is less intuitive than a more object-oriented approach, it is much more efficient for the IDA* search algorithm, as it allows for faster access and manipulation of the cube's state. Moves can be made on the cube by swapping around specific cubies in the array and updating their orientations.
 
 \subsection{Iterative-Deepening A*}
-In order to find an optimal solution for the cube, a search algorithm with an admissible heuristic function is needed. An admissible heuristic function is one that never overestimates the cost of reaching the goal state from the current state (i.e. the heuristic function is always less than or equal to the actual cost). The A* search algorithm is a well-known search algorithm that uses an admissible heuristic function to guide the search towards the goal state. However, the A* search algorithm has an exponential space complexity of $O(b^d)$, where $b$ is the branching factor and $d$ is the depth of the search tree. This means that the algorithm can quickly run out of memory for large search spaces, such as with the Rubik's Cube.
+In order to find an optimal solution for the cube, a search algorithm with an admissible heuristic function is needed. An admissible heuristic function is one that never overestimates the cost of reaching the goal state from the current state (i.e. the heuristic function is always less than or equal to the actual cost). The A* search algorithm is a well-known search algorithm that uses an admissible heuristic function to guide the search towards the goal state. However, the A* search algorithm has an exponential space complexity of $O(b^d)$, where $b$ is the branching factor and $d$ is the depth of the search tree. This means that the algorithm can quickly run out of memory for large search spaces, such as with the Rubik's Cube which has a branching factor of $18 \ ( =6 \text{ faces} \cdot 3 \text{ moves per face})$.
 
-Instead, Korf uses an IDA* search algorithm, which is a combination of the A* search algorithm and iterative deepening search. IDA* works by performing a depth-first search with a depth limit, using an admissible heuristic to prune branches if their estimated cost exceeds the current bound. After the search space is fully explored, the depth limit is increased and the search is repeated. This allows the algorithm to use less memory than A*, as it only needs to store the current path in memory, rather than the entire search tree. The IDA* search algorithm has a space complexity of $O(bd)$, which is much more manageable for large search spaces.
+Instead, Korf uses an IDA* search algorithm, which he previously described in a paper in 1985 \cite{idastar}. The IDA* algorithm is a combination of the A* search algorithm and iterative deepening search. IDA* works by performing a depth-first search with a depth limit, using an admissible heuristic to prune branches if their estimated cost exceeds the current bound. After the search space is fully explored, the depth limit is increased and the search is repeated. This allows the algorithm to use less memory than A*, as it only needs to store the current path in memory, rather than the entire search tree. The IDA* search algorithm has a space complexity of $O(bd)$, which is much more manageable for large search spaces.
 
-Korf also notes that when iterating over possible moves in the IDA* search, we can skip over moves that are redundant, where twisting the same face twice in a row is equivalent to just one twist (e.g. $F F2$ is equivalent to $F'$), and moves that aren't in a specific order: since twists on opposite faces are independent and commutative (e.g. twisting the front face and then the back face is the same as twisting the back face and then the front face), we can define an arbitrary order for each pair of opposite faces, and only consider moves which are in that order (e.g. we allow $F$ then $B$, but not $B$ then $F$). This allows us to reduce the number of possible moves that need to be considered in the IDA* search, resulting in a reduced branching factor for the search algorithm.
+Korf also notes that when iterating over possible moves in the IDA* search, we can skip over moves that are redundant, where twisting the same face twice in a row is equivalent to just one twist (e.g. $F, F2$ is equivalent to $F'$), and moves that aren't in a specific order: since twists on opposite faces are independent and commutative (e.g. twisting the front face and then the back face is the same as twisting the back face and then the front face), we can define an arbitrary order for each pair of opposite faces, and only consider moves which are in that order (e.g. we allow $F, B$, but not $B, F$). This reduces the asymptotic branching factor after the first move from 18 to a value between 12 and 15 (Korf calculates this value as approximately 13.34847, as explained in a paper in 1998 \cite{branchingfactor}). This results in a reduced search space, making it faster to find optimal solutions.
 
 \subsection{Pattern Databases}
-% Small section here about the other pattern databases paper. Why use pattern databases?
+Pattern databases, which were first described in a paper by Joseph C. Culberson and Jonathan Schaeffer in 1998 \cite{patterndatabases}, are used by Korf as the admissible heuristic for the IDA* search. Each pattern database is a large lookup table which contains the number of moves required to solve a specific subset of cubies from any state. Korf uses three pattern databases: one for the corner cubies, one for the first six edge cubies, and one for the other six edge cubies.
+
+Since the index and orientation of a corner cubie is determined by the positions and orientations of the seven other corner cubies, there are a total of $8! \cdot 3^7 = 88,179,840$ different states for the corner cubie pattern database. For the edge cubie pattern databases, there are a total of $12! / 6! \cdot 2^6 = 42,577,920$ different states. In order to combine the pattern databases together to get a single admissible heuristic, we take the maximum value from the databases for a given state.
+
+The pattern databases are precomputed ahead of time using an iterative-deepening depth-first-search (IDDFS). At each cube state, a unique database index is generated for the state and the number of moves required to get to that state from the initial (solved) cube state is set for the database entry at the index.
 
 \subsection{Sequential Indexing with Lehmer Codes}
-% Again, more here to do with sequential indexing and lehmer codes. Use Korf's other paper, and possibly the article that explains it.
+\label{subsection:lehmercodes}
+In order to generate a unique database index for a cube state, we need a perfect hash function - a function which maps elements to hashes (or indices) with no collisions. This is important because the pattern databases are so large that if we used a hash function which allowed collisions, the worst-case time complexity for indexing into the pattern database would be high - ideally we want to have a constant lookup time, as we index into the pattern databases regularly during search. 
+
+This can be achieved by computing the Lehmer codes \cite{lehmer} of the permutations of cubie indices and orientations, and then converting them into base-10 numbers which are combined together to create the sequential index (or lexicographical rank) for the pattern database. Lehmer codes are a way of encoding a permutation by using a factorial number system \cite{factorial}, where (for non-partial permutations) the $i$-th digit from the right has a base of $i!$. For each permutation element, the associated digit in the permutation's Lehmer code is equal to that element minus the number of elements to its left which are less than it.
+
+There are a few different ways to compute the Lehmer code for a permutation, but it is important to use an efficient algorithm. Korf, along with Peter Schultze, described a method in a paper published in 2005 \cite{permutationalg} which can perform this calculation in linear time. First, we create a bit string the same size as the number of permutation elements, initially set to all zeros. Then for each permutation element:
+\begin{itemize}
+    \item Use that element as an index for the bit string (going left to right), and set the bit to one.
+    \item Temporarily right-shift the bit string by $n-k$, where $n$ is the number of permutation elements and $k$ is the current permutation element. Note that the shift is not cyclic.
+    \item Count the number of ones in the shifted bit string, and then subtract this number from the permutation element to get the Lehmer digit for that element.
+\end{itemize} 
+
+As an example, given the permutation $\{3, 1, 0, 2\}$, the equivalent Lehmer code is calculated as follows:
+\begin{align*}
+&\text{Initially, bit string $=0000$.}\\
+&\text{First element is 3, so bit string} = 0001 \text{.}\\
+&\text{\hspace{0.4cm} Right shifting by $4-3=1$ gives the bit string $0000$.}\\
+&\text{\hspace{0.4cm} $0$ ones in shifted bits, so Lehmer digit is $3-0=3$.}\\
+&\text{Second element is 1, so bit string} = 0101 \text{.}\\
+&\text{\hspace{0.4cm} Right shifting by $4-1=3$ gives the bit string $0000$.}\\
+&\text{\hspace{0.4cm} $0$ ones in shifted bits, so Lehmer digit is $1-0=1$.}\\
+&\text{Third element is 0, so bit string} = 1101 \text{.}\\
+&\text{\hspace{0.4cm} Right shifting by $4-0=4$ gives the bit string $0000$.}\\
+&\text{\hspace{0.4cm} $0$ ones in shifted bits, so Lehmer digit is $0-0=0$.}\\
+&\text{Fourth element is 2, so bit string} = 1111 \text{.}\\
+&\text{\hspace{0.4cm} Right shifting by $4-2=2$ gives the bit string $0011$.}\\
+&\text{\hspace{0.4cm} $2$ ones in shifted bits, so Lehmer digit is $2-2=0$.}\\
+&\text{Hence, the Lehmer code for the permutation is $3100$.}\\
+\end{align*}
+
+When calculating the database index for the corner cubies, we can convert the Lehmer code into base-10 by multiplying each digit of the Lehmer code by the digit's base, where the $i$-th digit from the right has a base of $i!$ (such that the rightmost digit has an index of $0$). Converting the Lehmer code into base-10 works slightly differently for the edge cubies, because the permutation of the edge cubie indices is a partial permutation - it is a subset of a full permutation, as we are only considering 6 of the 12 edge cubies. Now, each digit has a base of $(n-1-i)P(k-1-i)$, where $n$ is the number of elements in the full permutation set ($12$), $k$ is the number of elements picked from the set ($6$), and $i$ is the index of the digit (where the leftmost digit has an index of 0).
+
+A similar process is repeated for the orientations of the cubies, however it should be noted that we allow repetition in this permutation, and that for the corner cubies the orientation of the 8th cubie is determined by the orientations of the other 7. The index rank and the orientation rank are combined together to create the index into the database.
+
+\subsection{Results}
+Korf was able to optimally solve randomly-scrambled Rubik's Cubes up to a depth of 18, with one solution generating over one trillion nodes in the IDA* search tree. Korf notes that complete searches of depth 16 took less than four hours, and complete searches of depth 17 took about two days. While he did not perform a complete search of depth 18, Korf speculates that it should take less than four weeks. It should be noted that Korf obtained these results in 1997 on a Sun Ultra-Sparc Model 1 workstation - modern computers are more powerful with much more available memory. This allows for the use of larger pattern databases, which in turn reduces the time needed to find optimal solutions.
 
 \section{Feather's Algorithm}
-% very small section here about the more recent Feather's algorithm.
+Much more recently\footnote{The earliest year I found the algorithm being mentioned was in 2010, but it seems to have been introduced by Feather some time before this. Feather's webpage \cite{feather} which describes the algorithm was only published in late 2024. As such, I was unaware this algorithm existed until I had already started work on the project.}, a new two-phase algorithm introduced by Michael Feather \cite{feather} has been used to find both optimal and suboptimal solutions in reasonable time. The main idea behind the algorithm is to simplify the Rubik's Cube to use 3 colours instead of 6 (where opposite faces share the same colour). Any 3-colour solutions that are found while searching for an optimal solution are then checked against a database which contains the distances from all of the 3.9 million unique 3-colour solutions to the normal 6-colour solution of the cube. If the distance is 8 moves or less away from being solved (of which there are 117,265 states), then the search tree is explored and a solution is generated. Other tricks like using cube symmetry to help prune the search tree are also used to reduce search.
+
+On a modern computer with a Ryzen 7 3.8 GHz 8-Core processor and 64 GB of DDR4 RAM, Feather was able to find optimal solutions to randomly-scrambled cubes in less than a minute, with an average solve of 1.94 seconds. Optimal solutions of length 19 moves were found in an average of 30 seconds \cite{featherperformance}.
 
 \section{God's Number}
-% What research has been done on God's Number for the cube and the kilominx? What methods were used? How does it relate to what I'm doing?
+The God's Number of a puzzle is the maximum number of moves required to solve the puzzle optimally. More specifically, for a God's Number of $N$, there exists a puzzle state which requires a minimum of $N$ moves to solve, but there does not exist a puzzle state which requires a minimum of $N+1$ moves to solve.
 
-\section{The Kilominx}
-% Any research on the Kilominx?
+This number is closely related to the process of finding optimal solutions for a puzzle - the term God's algorithm refers to an algorithm which can find a solution to a puzzle with the fewest possible moves (i.e. an optimal solution). While an optimal solver such as one that implements Korf's algorithm could be considered a God's algorithm, some researchers argue \cite{godsalgorithm} that God's algorithm should also be practical - the algorithm should not require large amounts of time or memory.
+
+\subsection{Rubik's Cube}
+The God's Number for the Rubik's Cube has been researched extensively ever since the Rubik's Cube first released. Initially, the God's Number had a lower bound of 18 and an upper bound of around 80 (from one of the human-solvable algorithms in an early solution booklet). Over the years, these bounds were tightened until it was proved in 2010 that the God's Number for the cube is 20 \cite{godsnumber}.
+
+This was accomplished by partitioning all possible cube positions into many sets of positions, then reducing the number of positions in each set by using symmetry methods. Instead of looking for optimal solutions, they only looked for moves that could be solved in 20 moves or less (at this point, the lower bound had already been proved to be 20), so they only needed to prove that there were no positions that required more than 20 moves. Finally, they used about 35 CPU years to find the remaining solutions to the positions in each of the sets.
+
+\subsection{Kilominx}
+The bounds on the Kilominx's God's Number currently sit at a lower bound of 18 and an upper bound of 31 \cite{kilominxgodsnumber} (which was proved in 2021 with extensive searches based on group theory reductions \cite{kilominxgodsnumberproof}). While the God's Number for the Kilominx is still an open area of research, no substantial progress has been made since 2021. 
