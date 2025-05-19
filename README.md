@@ -4,7 +4,8 @@
 This project contains my work from my Senior Honours project at the University of St Andrews in developing an optimal solver for the Kilominx, a 2x2 dodecahedron-shaped variant of the Rubik's Cube. The solver adapts Korf's Algorithm for the Rubik's Cube, making use of an IDA* search algorithm and a number of pattern databases as heuristics. The solver is able to find optimal solutions for the Kilominx up to a depth of 14 moves in a reasonable amount of time, but it could theoretically find any solutions given enough time.
 
 This project is accompanied by my dissertation, which gives more detail into the design, implementation and results of the solver:\
-➤ https://docs.google.com/viewer?url=https://raw.githubusercontent.com/puddles31/HonoursProject/main/Report/main.pdf
+➤ https://docs.google.com/viewer?url=https://raw.githubusercontent.com/puddles31/HonoursProject/main/Report/main.pdf \
+➤ (alternate link: https://github.com/puddles31/HonoursProject/blob/main/Report/main.pdf)
 
 ## System Requirements & Dependencies
 
